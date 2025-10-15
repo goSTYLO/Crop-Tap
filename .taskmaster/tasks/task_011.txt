@@ -1,0 +1,43 @@
+# Task ID: 11
+# Title: Integrate Stripe and Create Payment Intent Endpoint
+# Status: pending
+# Dependencies: 9
+# Priority: high
+# Description: Set up the Stripe Node.js SDK and create a backend endpoint that generates a Stripe Payment Intent for a given order.
+# Details:
+Install the `stripe` npm package. Initialize Stripe in a config file with the secret key from `.env`. Create a new route, `POST /api/payments/create-intent`. The controller should take an `orderId` from the request body. It will fetch the order, verify its status is 'pending', calculate the total amount in cents, and use `stripe.paymentIntents.create()` to generate an intent. The response should send the `client_secret` from the PaymentIntent object back to the client.
+
+# Test Strategy:
+After creating an order, use Postman to call `POST /api/payments/create-intent` with the `orderId`. Verify a 200 OK response containing a `client_secret` string. Check the Stripe Dashboard (in test mode) to confirm a new, incomplete payment intent has been created for the correct amount.
+
+# Subtasks:
+## 1. Install Stripe SDK and Configure Environment [pending]
+### Dependencies: None
+### Description: Install the `stripe` npm package and add the Stripe secret key to the environment variables. Create a dedicated configuration file to initialize and export the Stripe instance.
+### Details:
+Run `npm install stripe`. Add `STRIPE_SECRET_KEY=your_secret_key` to the `.env` file. Create `src/config/stripe.js`. In this file, require `stripe`, initialize it with `process.env.STRIPE_SECRET_KEY`, and export the instance for use in other parts of the application.
+
+## 2. Create Payment Routes and Controller Files [pending]
+### Dependencies: None
+### Description: Generate the necessary files for handling payment-related logic. This includes a new route file for payment endpoints and a corresponding controller file. Register the new route in the main application file.
+### Details:
+Create `src/routes/payment.routes.js` and `src/controllers/payment.controller.js`. In `src/app.js` (or the main server file), import the new payment routes and mount them using `app.use('/api/payments', paymentRoutes);` following the existing pattern for other routes like auth and products.
+
+## 3. Define POST /api/payments/create-intent Route [pending]
+### Dependencies: 11.2
+### Description: In the newly created payment routes file, define the `POST /create-intent` endpoint. This route should be protected by the existing authentication middleware to ensure only logged-in users can access it.
+### Details:
+In `src/routes/payment.routes.js`, import the Express router, the `auth` middleware from `src/middleware/auth.js`, and a placeholder controller function from `payment.controller.js`. Define the route as `router.post('/create-intent', auth, paymentController.createPaymentIntent);`.
+
+## 4. Implement Order Retrieval and Amount Calculation in Controller [pending]
+### Dependencies: 11.3
+### Description: In the payment controller, implement the initial logic for the `createPaymentIntent` function. This includes fetching the order by its ID from the request body, verifying it belongs to the authenticated user, checking its status, and calculating the total amount to be charged.
+### Details:
+In `src/controllers/payment.controller.js`, get `orderId` from `req.body` and `userId` from `req.user`. Use the `Order` model to find the order, including its associated `OrderItems`. Verify the order's status is 'pending'. Sum the `price * quantity` for all items to get the total. Convert the final amount to cents (`totalAmount * 100`). Handle cases where the order is not found or invalid.
+
+## 5. Integrate Stripe API and Finalize Endpoint Response [pending]
+### Dependencies: 11.1, 11.4
+### Description: Complete the `createPaymentIntent` controller by calling the Stripe API. Use the calculated amount to create a Payment Intent and return the `client_secret` to the client.
+### Details:
+Import the configured Stripe instance from `src/config/stripe.js`. Within the controller, after calculating the amount, call `await stripe.paymentIntents.create({ amount: totalInCents, currency: 'usd', metadata: { orderId: order.id } });`. Wrap this in a try-catch block. On success, respond with a JSON object `{ clientSecret: paymentIntent.client_secret }`. On failure, return a 500 error.
+

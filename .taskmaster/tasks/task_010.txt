@@ -1,0 +1,43 @@
+# Task ID: 10
+# Title: Implement Order Management API Endpoints
+# Status: pending
+# Dependencies: 9
+# Priority: medium
+# Description: Develop API endpoints for users to view their order history and for farmers/admins to manage and update order statuses.
+# Details:
+In `order.routes.js`, add endpoints: `GET /` (for a buyer to get their own order history), `GET /:id` (for a buyer to get a specific order), `GET /all` (admin/farmer route to see all relevant orders), and `PUT /:id/status` (admin/farmer route to update order status, e.g., 'processing', 'shipped', 'fulfilled'). Use middleware to enforce role permissions. The GET endpoints should use Sequelize's `include` to fetch associated `OrderItems` and `Products`.
+
+# Test Strategy:
+As a buyer, call `GET /api/orders` to see your order history. As a farmer, call `PUT /api/orders/:id/status` to update an order's status and verify the change in the database. As an admin, call `GET /api/orders/all` to see all orders on the platform.
+
+# Subtasks:
+## 1. Setup Order Routes and Controller Structure [pending]
+### Dependencies: None
+### Description: Create the necessary files `order.routes.js` and `order.controller.js`. Define placeholder functions for all required endpoints and wire up the router in the main application file.
+### Details:
+Create `routes/order.routes.js` and `controllers/order.controller.js`. In the main app file, likely `app.js`, add `app.use('/api/orders', orderRoutes);`. In `order.controller.js`, create empty async functions: `getMyOrders`, `getOrderById`, `getAllOrders`, and `updateOrderStatus`. In `order.routes.js`, define the routes and link them to these new controller functions.
+
+## 2. Implement Buyer Order History Endpoints (GET / and GET /:id) [pending]
+### Dependencies: 10.1
+### Description: Implement the logic for a logged-in buyer to retrieve their own list of orders and a single specific order. These endpoints must be protected and accessible only to users with the 'buyer' role.
+### Details:
+In `order.controller.js`, implement `getMyOrders` and `getOrderById`. Use `req.user.id` from the auth middleware to filter orders. Use Sequelize's `findAll` and `findOne` with an `include` option to join `OrderItems` which should then also include the associated `Product` model. In `order.routes.js`, apply the `protect` and `authorize(['buyer'])` middleware to these two routes.
+
+## 3. Implement Admin/Farmer Endpoint to Get All Orders (GET /all) [pending]
+### Dependencies: 10.1
+### Description: Create the endpoint for administrators and farmers to retrieve a list of all orders relevant to them. This route must be protected and restricted to 'admin' and 'farmer' roles.
+### Details:
+In `order.controller.js`, implement the `getAllOrders` function. The function will fetch all orders from the database using Sequelize's `findAll`, including `OrderItems` and `Products`. In `order.routes.js`, secure this route using the `protect` and `authorize(['admin', 'farmer'])` middleware.
+
+## 4. Implement Endpoint to Update Order Status (PUT /:id/status) [pending]
+### Dependencies: 10.1
+### Description: Develop the endpoint for administrators and farmers to update the status of a specific order. The endpoint should validate the new status against the allowed values in the model.
+### Details:
+In `order.controller.js`, implement `updateOrderStatus`. It should extract the `status` from `req.body`. Find the order by `req.params.id`. Validate the new status against the ENUM values defined in the Order model. Update the order's status property and save it. Secure the route in `order.routes.js` with `protect` and `authorize(['admin', 'farmer'])`.
+
+## 5. Finalize Middleware and Add Comprehensive Error Handling [pending]
+### Dependencies: 10.2, 10.3, 10.4
+### Description: Review all newly created order endpoints to ensure the `protect` and `authorize` middleware are correctly applied. Add robust try-catch blocks and consistent error responses for all controller functions.
+### Details:
+In `order.routes.js`, double-check that every new route has the correct `protect` and `authorize` middleware sequence. In `order.controller.js`, wrap the logic of each implemented function in a `try-catch` block. Ensure that database errors, 'not found' errors (404), and invalid input errors (400) are handled gracefully, returning appropriate status codes and JSON error messages.
+

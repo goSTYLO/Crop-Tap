@@ -1,0 +1,43 @@
+# Task ID: 1
+# Title: Initialize Node.js Project and Setup Core Backend
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Set up the initial Node.js project structure, install all specified npm dependencies, and create a basic Express.js server. Configure environment variables using `dotenv` for database credentials and application secrets.
+# Details:
+Run `npm init -y`. Install dependencies: `express`, `mysql2`, `sequelize`, `bcrypt`, `jsonwebtoken`, `cors`, `dotenv`, `multer`, `sharp`, `body-parser`. Create `app.js` as the main entry point. Set up a basic Express server that listens on a port defined in a `.env` file. Configure `cors` and `body-parser` middleware. Create a `.env.example` file with keys for `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `STRIPE_SECRET_KEY`, and `PORT`.
+
+# Test Strategy:
+Run `npm run dev` (after configuring package.json scripts). Verify that the server starts without errors. Make a GET request to a test endpoint (e.g., `/`) and receive a successful response (e.g., `{"status": "ok"}`).
+
+# Subtasks:
+## 1. Initialize Node.js Project and Install Dependencies [pending]
+### Dependencies: None
+### Description: Create a `package.json` file using npm and install all the required production and development dependencies for the project.
+### Details:
+Execute `npm init -y` in the project root directory. Then, run the command `npm install express mysql2 sequelize bcrypt jsonwebtoken cors dotenv multer sharp body-parser`. Finally, install nodemon as a development dependency using `npm install --save-dev nodemon`.
+
+## 2. Set Up Environment Configuration Files [pending]
+### Dependencies: 1.1
+### Description: Create the necessary files for managing environment variables. This includes a gitignored `.env` file for local secrets and an example file for repository tracking.
+### Details:
+Create a `.env.example` file with the keys: `PORT`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, and `STRIPE_SECRET_KEY`. Create a `.env` file, copy the keys from the example, and provide local values. Create a `.gitignore` file and add `node_modules/` and `.env` to it.
+
+## 3. Create Basic Express Server Entry Point [pending]
+### Dependencies: 1.2
+### Description: Create the main application file `app.js`, initialize the Express server, and configure it to listen on the port defined in the `.env` file.
+### Details:
+Create an `app.js` file. At the top, require `dotenv` and call `dotenv.config()`. Require `express` and create an app instance `const app = express()`. Define a port variable from `process.env.PORT` or a default. Use `app.listen()` to start the server and log a confirmation message to the console.
+
+## 4. Configure Core Express Middleware [pending]
+### Dependencies: 1.3
+### Description: Integrate and configure essential middleware for handling Cross-Origin Resource Sharing (CORS) and parsing incoming request bodies.
+### Details:
+In `app.js`, import the `cors` module and apply it globally using `app.use(cors())`. Use the built-in Express middleware for parsing JSON and URL-encoded payloads: `app.use(express.json())` and `app.use(express.urlencoded({ extended: true }))`.
+
+## 5. Add Health Check Endpoint and Dev Script [pending]
+### Dependencies: 1.4
+### Description: Implement a simple root GET endpoint ('/') to serve as a health check. Add a 'dev' script to `package.json` for convenient server execution with `nodemon`.
+### Details:
+In `app.js`, create a GET route for `/` that sends a JSON response like `res.json({ status: 'ok' })`. Open `package.json`, navigate to the `scripts` section, and add a new script: `"dev": "nodemon app.js"`.
+

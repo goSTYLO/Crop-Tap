@@ -20,6 +20,7 @@ const cartItemRoutes = require('./routes/cartItem_routes');
 const orderRoutes = require('./routes/order_routes');
 const orderItemRoutes = require('./routes/orderItem_routes');
 const paymentRoutes = require('./routes/payment_routes');
+const authRoutes = require('./routes/auth_routes');
 
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
@@ -28,6 +29,7 @@ app.use('/cart-items', cartItemRoutes);
 app.use('/orders', orderRoutes);
 app.use('/order-items', orderItemRoutes);
 app.use('/payments', paymentRoutes);
+app.use('/auth', authRoutes);
 app.use('/productImgs', express.static('productImgs'));
 
 // Health check

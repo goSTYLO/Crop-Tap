@@ -1,0 +1,43 @@
+# Task ID: 5
+# Title: Create Authentication and Role-Based Access Middleware
+# Status: pending
+# Dependencies: 4
+# Priority: high
+# Description: Develop an Express middleware to protect routes. This middleware will verify the JWT from the Authorization header and can be extended to check for specific user roles (admin, farmer).
+# Details:
+Create a `middleware/auth.js` file. The primary function will extract the token from `req.headers.authorization` (e.g., 'Bearer TOKEN'). Use `jwt.verify()` to decode it with the `JWT_SECRET`. If valid, attach the decoded payload (e.g., `req.user = decodedUser`) and call `next()`. Create a higher-order function `authorize(roles)` that returns a middleware. This inner middleware checks if `req.user.role` is included in the `roles` array. If not, it returns a 403 Forbidden error.
+
+# Test Strategy:
+Create a test route (e.g., GET `/api/profile`) protected by the new middleware. Attempt to access it without a token (expect 401), with an invalid token (expect 401), and with a valid token (expect 200). Create another route protected by `authorize(['admin'])` and test access with a buyer token (expect 403) and an admin token (expect 200).
+
+# Subtasks:
+## 1. Create Middleware Directory and auth.js File [pending]
+### Dependencies: None
+### Description: Set up the basic file structure for the authentication middleware by creating a 'middleware' directory and an 'auth.js' file within it. Also, install the 'jsonwebtoken' package.
+### Details:
+In the root of the project, create a new directory named 'middleware'. Inside this new directory, create a file named 'auth.js'. Open the terminal and run 'npm install jsonwebtoken' to add the necessary package for JWT handling.
+
+## 2. Implement JWT Extraction and Verification Middleware [pending]
+### Dependencies: 5.1
+### Description: Create the core authentication function that extracts the JWT from the 'Authorization' header and verifies its validity using the secret key.
+### Details:
+In 'middleware/auth.js', create a function `authenticate(req, res, next)`. It should check for `req.headers.authorization` and ensure it starts with 'Bearer '. Extract the token. If no token is found, return a 401 Unauthorized error. Use a try-catch block to wrap `jwt.verify(token, process.env.JWT_SECRET)`. In the catch block, handle invalid tokens by returning a 401 error.
+
+## 3. Attach User Payload to Request and Call next() [pending]
+### Dependencies: 5.2
+### Description: Upon successful JWT verification, attach the decoded user payload to the request object (`req.user`) and pass control to the next middleware in the stack.
+### Details:
+Inside the `try` block of the `authenticate` function, after a successful `jwt.verify`, assign the decoded payload to `req.user`. For example, `req.user = decoded;`. Immediately after, call `next()` to allow the request to proceed to the next middleware or the final route handler.
+
+## 4. Create Role-Based Authorization Higher-Order Function [pending]
+### Dependencies: 5.3
+### Description: Develop a higher-order function `authorize` that takes an array of roles and returns a middleware. This middleware will check if the authenticated user's role is permitted.
+### Details:
+In 'middleware/auth.js', create a function `authorize(roles = [])`. This function should return another middleware function `(req, res, next)`. The inner function must check if `req.user` exists and if `roles.includes(req.user.role)`. If the role is not included, return a 403 Forbidden error. Otherwise, call `next()`.
+
+## 5. Export Middleware Functions for Application-Wide Use [pending]
+### Dependencies: 5.4
+### Description: Export the `authenticate` and `authorize` functions from the `auth.js` module to make them available for import and use in the application's route definition files.
+### Details:
+At the end of the 'middleware/auth.js' file, add the export statement: `module.exports = { authenticate, authorize };`. This allows other files, such as `user.routes.js` or `product.routes.js`, to import these functions using `require`.
+

@@ -1,0 +1,43 @@
+# Task ID: 7
+# Title: Integrate Multer and Sharp for Product Image Uploads
+# Status: pending
+# Dependencies: 6
+# Priority: medium
+# Description: Enhance the product creation and update endpoints to handle file uploads. Use Multer to process `multipart/form-data` and Sharp to resize images before saving them.
+# Details:
+Configure Multer with `multer.diskStorage` to define file destination and naming conventions. In `product.routes.js`, add the Multer middleware to the POST and PUT endpoints (e.g., `router.post('/', auth, multerUpload.single('productImage'), productController.create)`). In the controller, after Multer saves the file, use Sharp to read the uploaded image, resize it (e.g., to 500x500), and overwrite the original file. Store the file path/URL in the `imageUrl` field of the `products` table.
+
+# Test Strategy:
+In Postman, change the body type of the `POST /api/products` request to `form-data`. Add fields for product details and a `File` field for the image. Send the request and verify that the image is saved to the server's filesystem, resized, and the path is correctly stored in the database.
+
+# Subtasks:
+## 1. Install Multer and Sharp npm Packages [pending]
+### Dependencies: None
+### Description: Add Multer for handling multipart/form-data and Sharp for image processing to the project's dependencies.
+### Details:
+Run `npm install multer sharp` in the project's root directory. Verify that `multer` and `sharp` are added as dependencies in the `package.json` file.
+
+## 2. Create Multer Configuration Middleware [pending]
+### Dependencies: 7.1
+### Description: Create a new middleware file to configure Multer for image uploads, including storage engine, destination, filename conventions, and file type filtering.
+### Details:
+Create a new file at `src/middleware/upload.js`. Inside, configure `multer.diskStorage` to save files to a `public/images/products` directory. The filename should be unique, e.g., `product-${Date.now()}-${file.originalname}`. Add a `fileFilter` to accept only image mimetypes like `image/jpeg` and `image/png`. Export the configured multer instance.
+
+## 3. Integrate Multer Middleware into Product Routes [pending]
+### Dependencies: 7.2
+### Description: Update the `product.routes.js` file to include the newly created Multer middleware for the product creation and update endpoints.
+### Details:
+In `src/routes/product.routes.js`, import the configured multer middleware from `src/middleware/upload.js`. Add the middleware `upload.single('productImage')` to the `router.post('/')` and `router.put('/:id')` routes, placing it after the authentication middleware but before the controller function.
+
+## 4. Update Create Product Controller to Process and Save Image [pending]
+### Dependencies: 7.3
+### Description: Modify the `createProduct` controller function to process the uploaded image using Sharp for resizing and to save the resulting file path to the database.
+### Details:
+In `src/controllers/product.controller.js`, update the `createProduct` function. Check if `req.file` exists. If it does, use Sharp to read `req.file.path`, resize the image to 500x500, and save it back to the same path, overwriting the original upload. Construct the publicly accessible path (e.g., `/images/products/filename.jpg`) and save this string to the `imageUrl` field when creating the product record in the database.
+
+## 5. Update 'Update Product' Controller for Image Replacement [pending]
+### Dependencies: 7.3
+### Description: Modify the `updateProduct` controller function to handle optional new image uploads. If a new image is provided, it should replace the old one, which must be deleted from the filesystem.
+### Details:
+In `src/controllers/product.controller.js`, update `updateProduct`. Check if `req.file` exists. If so, first find the old product's `imageUrl` from the database. Process the new file with Sharp as in the create step. Update the product record with the new `imageUrl`. After a successful database update, use the `fs` module to delete the old image file from the filesystem. If no new file is uploaded, the image should not be changed.
+
