@@ -79,3 +79,41 @@ exports.updateDelivery = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.getOrdersByBuyer = async (req, res) => {
+  try {
+    const buyer_id = req.params.buyer_id;
+
+    const orders = await Order.findAll({
+      where: { buyer_id },
+      include: [db.OrderItem]
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ error: 'No orders found for this buyer' });
+    }
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getOrdersByFarmer = async (req, res) => {
+  try {
+    const farmer_id = req.params.farmer_id;
+
+    const orders = await Order.findAll({
+      where: { farmer_id },
+      include: [db.OrderItem]
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ error: 'No orders found for this farmer' });
+    }
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

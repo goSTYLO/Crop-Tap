@@ -69,3 +69,22 @@ exports.deleteCart = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getCartsByBuyer = async (req, res) => {
+  try {
+    const buyer_id = req.params.buyer_id;
+
+    const carts = await Cart.findAll({
+      where: { buyer_id },
+      include: [db.CartItem]
+    });
+
+    if (!carts || carts.length === 0) {
+      return res.status(404).json({ error: 'No carts found for this buyer' });
+    }
+
+    res.json(carts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

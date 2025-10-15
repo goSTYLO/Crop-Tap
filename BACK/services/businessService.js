@@ -31,8 +31,8 @@ const addToCart = async (buyer_id, product_id, quantity = 1, existingCartId = nu
   console.log(`✅ Farmer ID extracted: ${farmer_id}`);
 
   let cart = existingCartId
-  ? await Cart.findByPk(existingCartId)
-  : await Cart.create({ buyer_id, farmer_id });
+    ? await Cart.findByPk(existingCartId)
+    : await Cart.create({ buyer_id, farmer_id });
 
   if (cart) {
     console.log(`📦 Reusing existing cart: cart_id=${cart.cart_id}`);
@@ -61,6 +61,7 @@ const addToCart = async (buyer_id, product_id, quantity = 1, existingCartId = nu
   if (existingItem) {
     console.log(`🔄 Updating existing CartItem: cart_item_id=${existingItem.cart_item_id}`);
     existingItem.quantity += quantity;
+    existingItem.price_at_add = parseFloat(product.price) * existingItem.quantity; // ✅ recompute total price
     await existingItem.save();
   } else {
     console.log(`➕ Creating new CartItem for cart_id=${cart.cart_id}, product_id=${product_id}`);
