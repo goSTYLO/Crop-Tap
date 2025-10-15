@@ -9,16 +9,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    farmer_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     total_amount: {
-      type: DataTypes.DECIMAL(12,2),
+      type: DataTypes.DECIMAL(12, 2),
       allowNull: false
     },
     status: {
-      type: DataTypes.ENUM('pending','paid','confirmed','in_transit','delivered','cancelled'),
+      type: DataTypes.ENUM('pending', 'paid', 'confirmed', 'in_transit', 'delivered', 'cancelled'),
       defaultValue: 'pending'
     },
     payment_status: {
-      type: DataTypes.ENUM('unpaid','paid','failed'),
+      type: DataTypes.ENUM('unpaid', 'paid', 'failed'),
       defaultValue: 'unpaid'
     },
     shipping_method: {
@@ -30,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     delivery_status: {
-      type: DataTypes.ENUM('pending','in_transit','delivered'),
+      type: DataTypes.ENUM('pending', 'in_transit', 'delivered'),
       defaultValue: 'pending'
     },
     estimated_delivery: {
@@ -52,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.associate = models => {
     Order.belongsTo(models.User, { foreignKey: 'buyer_id' });
+    Order.belongsTo(models.User, { foreignKey: 'farmer_id', as: 'farmer' });
     Order.hasMany(models.OrderItem, { foreignKey: 'order_id' });
     Order.hasOne(models.Payment, { foreignKey: 'order_id' });
   };

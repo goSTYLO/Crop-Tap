@@ -1,6 +1,6 @@
-// controllers/user_controller.js
 const db = require('../models');
 const User = db.User;
+const loginMiddleware = require('../middleware/loginMiddleware');
 
 exports.createUser = async (req, res) => {
   try {
@@ -52,5 +52,16 @@ exports.deleteUser = async (req, res) => {
     res.json({ message: 'User deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+// ✅ New: Login endpoint
+exports.loginUser = async (req, res, next) => {
+  try {
+    await loginMiddleware(req, res, () => {
+      res.json({ user: req.user });
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Login failed: ' + err.message });
   }
 };

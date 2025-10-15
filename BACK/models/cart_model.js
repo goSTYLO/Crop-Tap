@@ -1,4 +1,3 @@
-// models/cart_model.js
 module.exports = (sequelize, DataTypes) => {
   const Cart = sequelize.define('Cart', {
     cart_id: {
@@ -9,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     buyer_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    farmer_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+      // 🔥 Foreign key constraint removed — no `references` block
     },
     created_at: {
       type: DataTypes.DATE,

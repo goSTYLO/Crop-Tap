@@ -1,9 +1,25 @@
 const db = require('../models');
 const Cart = db.Cart;
+const businessService = require('../services/businessService');
 
 exports.createCart = async (req, res) => {
   try {
-    const cart = await Cart.create(req.body);
+    const { buyer_id, cart_items } = req.body;
+
+    if (!buyer_id || !Array.isArray(cart_items) || cart_items.length === 0) {
+      return res.status(400).json({ error: 'buyer_id and cart_items[] are required' });
+    }
+
+    let cart = null;
+
+    for (const item of cart_items) {
+      const { product_id, quantity } = item;
+      if (!product_id) continue;
+
+      // Pass existing cart_id to reuse the same cart
+      cart = await businessService.addToCart(buyer_id, product_id, quantity || 1, cart?.cart_id);
+    }
+
     res.status(201).json(cart);
   } catch (err) {
     res.status(400).json({ error: err.message });

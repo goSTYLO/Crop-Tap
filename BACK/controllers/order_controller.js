@@ -1,9 +1,20 @@
 const db = require('../models');
 const Order = db.Order;
+const businessService = require('../services/businessService');
 
 exports.createOrder = async (req, res) => {
   try {
-    const order = await Order.create(req.body);
+    const { cart_id, shipping_address } = req.body;
+
+    if (!cart_id || !shipping_address) {
+      return res.status(400).json({ error: 'cart_id and shipping_address are required' });
+    }
+
+    const order = await businessService.createOrderFromCart(cart_id, shipping_address);
+
+    // ✅ Clear cart after successful order
+    await businessService.clearCart(cart_id);
+
     res.status(201).json(order);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -54,7 +65,6 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
-// ✅ New: Update delivery status and ETA
 exports.updateDelivery = async (req, res) => {
   try {
     const { delivery_status, estimated_delivery } = req.body;
