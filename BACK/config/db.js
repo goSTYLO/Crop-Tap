@@ -3,7 +3,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,     // 'crop-tap'
+  process.env.DB_NAME,     // 'Crop-Tap'
   process.env.DB_USER,     // e.g., 'root'
   process.env.DB_PASS,     // your MySQL password
   {

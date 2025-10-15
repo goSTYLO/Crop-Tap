@@ -1,4 +1,3 @@
-// models/order_model.js
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define('Order', {
     order_id: {
@@ -29,6 +28,14 @@ module.exports = (sequelize, DataTypes) => {
     shipping_address: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    delivery_status: {
+      type: DataTypes.ENUM('pending','in_transit','delivered'),
+      defaultValue: 'pending'
+    },
+    estimated_delivery: {
+      type: DataTypes.DATE,
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,

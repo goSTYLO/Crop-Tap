@@ -1,14 +1,7 @@
-const sequelize = require('../config/db');
 const fs = require('fs');
 const path = require('path');
 const { Sequelize, DataTypes } = require('sequelize');
-
-// Load environment variables or hardcode for local dev
-const sequelize = new Sequelize('crop_tap_db', 'root', 'your_password', {
-  host: 'localhost',
-  dialect: 'mysql',
-  logging: false
-});
+const sequelize = require('../config/db'); // ✅ Use configured instance only
 
 const db = {};
 const basename = path.basename(__filename);

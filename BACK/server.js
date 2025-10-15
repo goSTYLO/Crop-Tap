@@ -28,6 +28,7 @@ app.use('/cart-items', cartItemRoutes);
 app.use('/orders', orderRoutes);
 app.use('/order-items', orderItemRoutes);
 app.use('/payments', paymentRoutes);
+app.use('/productImgs', express.static('productImgs'));
 
 // Health check
 app.get('/', (req, res) => {

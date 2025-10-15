@@ -53,3 +53,19 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// ✅ New: Update delivery status and ETA
+exports.updateDelivery = async (req, res) => {
+  try {
+    const { delivery_status, estimated_delivery } = req.body;
+    const [updated] = await Order.update(
+      { delivery_status, estimated_delivery },
+      { where: { order_id: req.params.id } }
+    );
+    if (!updated) return res.status(404).json({ error: 'Order not found' });
+    const order = await Order.findByPk(req.params.id);
+    res.json(order);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
