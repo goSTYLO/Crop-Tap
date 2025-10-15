@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop-Tap - Login</title>
+    <link rel="stylesheet" href="../CSS/Login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="side-panel">
+            <div class="side-panel-content">
+                <div class="logo">
+                    <div class="logo-icon">🌾</div>
+                    CROP-TAP
+                </div>
+                <div class="tagline">CONNECTING FARMERS TO FAIR MARKETS</div>
+                <ul class="features">
+                    <li>Direct access to fair market prices</li>
+                    <li>Real-time crop demand updates</li>
+                    <li>Secure payment processing</li>
+                    <li>Connect with verified buyers</li>
+                    <li>Track your sales and inventory</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-panel">
+             <!-- Back Button -->
+            <div class="back-btn">
+                <a href="../HTML/landing_page.html">← Back</a>
+            </div>
+
+            <!-- Login Form -->
+            <div class="form-container active" id="loginForm">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Log in to access your Dashboard</p>
+                
+                <form onsubmit="handleLogin(event)">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Log In</button>
+                    <div class="forgot-password">
+                        <a href="./forgotPassword.html">Forgot Password?</a>
+                    </div>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="social-btn"><span>🔍</span> Google</button>
+                    <button class="social-btn"><span>📘</span> Facebook</button>
+                </div>
+
+                <div class="toggle-link">
+                    Don't have an account? <a href="./signUp.html">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JS/Login.js"></script>
+</body>
+</html>

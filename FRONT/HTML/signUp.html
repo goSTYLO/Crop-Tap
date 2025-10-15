@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop-Tap - Sign Up</title>
+    <link rel="stylesheet" href="../CSS/signUp.css">
+</head>
+<body>
+    <div class="container">
+        <div class="side-panel">
+            <!-- Back Button -->
+            <div class="back-btn">
+                <a href="../HTML/landing_page.html">← Back</a>
+            </div>
+            <div class="side-panel-content">
+                <div class="logo">
+                    <div class="logo-icon">🌾</div>
+                    CROP-TAP
+                </div>
+                <div class="tagline">CONNECTING FARMERS TO FAIR MARKETS</div>
+                <ul class="features">
+                    <li>Direct access to fair market prices</li>
+                    <li>Real-time crop demand updates</li>
+                    <li>Secure payment processing</li>
+                    <li>Connect with verified buyers</li>
+                    <li>Track your sales and inventory</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            
+            <!-- Sign Up Form -->
+            <div class="form-container" id="signupForm">
+                <h2>Create Account</h2>
+                <p class="subtitle">Join thousands of farmers already on Crop-Tap</p>
+                
+                <form onsubmit="handleSignup(event)">
+                    <div class="role-selection">
+                        <button type="button" class="role-btn active" data-role="farmer">Farmer</button>
+                        <button type="button" class="role-btn" data-role="consumer">Consumer</button>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Enter your fullname" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="password" placeholder="Create a strong password" required>
+                        <div id="passwordRules" class="password-rules" style="display: none;">
+                            <p id="length" class="invalid">• At least 6 characters</p>
+                            <p id="case" class="invalid">• Contains uppercase & lowercase letters</p>
+                            <p id="number" class="invalid">• Contains at least 1 number</p>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Sign Up</button>
+                </form>
+
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <div class="social-login">
+                    <button class="social-btn"><span>🔍</span> Google</button>
+                    <button class="social-btn"><span>📘</span> Facebook</button>
+                </div>
+
+                <div class="toggle-link">
+                    Already have an account? 
+                    <a href="./Login.html">Log In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JS/signUp.js"></script>
+</body>
+</html>
