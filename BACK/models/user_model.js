@@ -34,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    is_subscribed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    date_subscribed: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
@@ -50,6 +58,12 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.OrderItem, { foreignKey: 'farmer_id' }); // denormalized
     User.hasMany(models.Cart, { foreignKey: 'buyer_id' });
   };
+
+  User.beforeUpdate((user, options) => {
+    if (user.changed('is_subscribed') && user.is_subscribed === true) {
+      user.date_subscribed = new Date();
+    }
+  });
 
   return User;
 };
