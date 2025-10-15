@@ -68,7 +68,7 @@ const addToCart = async (buyer_id, product_id, quantity = 1, existingCartId = nu
       cart_id: cart.cart_id,
       product_id,
       quantity,
-      price_at_add: product.price
+      price_at_add: parseFloat(product.price) * quantity // ✅ total price for this item
     });
   }
 
@@ -87,16 +87,16 @@ const getCartTotal = async (cart_id) => {
 
 const createOrderFromCart = async (cart_id, shipping_address) => {
   const cart = await Cart.findByPk(cart_id);
-  if (!cart) {
-    throw new Error('Cart not found');
-  }
+  if (!cart) throw new Error('Cart not found');
 
-  const items = await CartItem.findAll({ where: { cart_id }, include: [Product] });
-  if (items.length === 0) {
-    throw new Error('Cart is empty');
-  }
+  const items = await CartItem.findAll({
+    where: { cart_id },
+    include: [{ model: Product }]
+  });
 
-  const total_amount = await getCartTotal(cart_id);
+  if (items.length === 0) throw new Error('Cart is empty');
+
+  const total_amount = items.reduce((sum, item) => sum + parseFloat(item.price_at_add || 0), 0);
 
   const order = await Order.create({
     buyer_id: cart.buyer_id,
@@ -105,14 +105,27 @@ const createOrderFromCart = async (cart_id, shipping_address) => {
     shipping_address
   });
 
-  for (const item of items) {
-    await OrderItem.create({
+  const orderItems = items.map(item => {
+    const quantity = parseInt(item.quantity);
+    const subtotal = parseFloat(item.price_at_add || 0);
+    const priceEach = quantity > 0 ? parseFloat((subtotal / quantity).toFixed(2)) : 0;
+    const farmerId = item.Product?.farmer_id;
+
+    if (!farmerId || !priceEach || !subtotal) {
+      throw new Error(`Missing required fields for product_id=${item.product_id}`);
+    }
+
+    return {
       order_id: order.order_id,
       product_id: item.product_id,
-      quantity: item.quantity,
-      price: item.Product?.price || 0
-    });
-  }
+      farmer_id: farmerId,
+      quantity,
+      price_each: priceEach,
+      subtotal
+    };
+  });
+
+  await OrderItem.bulkCreate(orderItems);
 
   return order;
 };
