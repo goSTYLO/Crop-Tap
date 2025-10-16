@@ -1,6 +1,62 @@
 function handleSignup(e) {
     e.preventDefault();
-    alert('Sign up functionality will be connected to your backend here!');
+    
+    const formData = new FormData(e.target);
+    const name = e.target.querySelector('input[type="text"]').value;
+    const email = e.target.querySelector('input[type="email"]').value;
+    const password = e.target.querySelector('#password').value;
+    const confirmPassword = e.target.querySelector('#confirmPassword').value;
+    
+    // Get selected role
+    const selectedRoleBtn = document.querySelector('.role-btn.active');
+    const role = selectedRoleBtn ? selectedRoleBtn.dataset.role : 'farmer';
+    
+    // Validation
+    if (!name || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields.');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+    }
+    
+    if (password.length < 6) {
+        alert('Password must be at least 6 characters long.');
+        return;
+    }
+    
+    // Create user data
+    const userData = {
+        name: name,
+        email: email,
+        password: password,
+        role: role
+    };
+    
+    const result = auth.register(userData);
+    
+    if (result.success) {
+        alert(result.message);
+        
+        // Auto-login after successful registration
+        const loginResult = auth.login(email, password);
+        if (loginResult.success) {
+            // Redirect based on user role
+            if (role === 'farmer') {
+                window.location.href = 'admin_dashboard.html';
+            } else if (role === 'consumer') {
+                window.location.href = 'user_dashboard.html';
+            } else {
+                window.location.href = '../HTML/landing_page.html';
+            }
+        } else {
+            window.location.href = 'Login.html';
+        }
+    } else {
+        alert(result.message);
+    }
 }
 
 // Role selection functionality

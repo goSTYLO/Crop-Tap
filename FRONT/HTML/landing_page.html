@@ -18,7 +18,7 @@
                 <li><a href="#gallery">Photo Gallery</a></li>
                 <li><a href="#pricelist">Pricelist</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <div class="auth-buttons">
+                <div class="auth-buttons" id="authButtons">
                     <a href="Login.html" class="btn btn-login">Login</a>
                     <a href="signUp.html" class="btn btn-signup">Sign Up</a>
                 </div>
@@ -103,100 +103,14 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
+    <!-- Marketplace Section -->
     <section id="pricelist">
-        <h2>Crop Prices</h2>
-        <div class="pricing-grid">
-            <div class="price-card">
-                <h3>Onion</h3>
-                <div class="price">₱50 / kg</div>
-                <ul>
-                    <li>Fresh, farm-direct onions</li>
-                    <li>High-quality bulbs</li>
-                    <li>Available in bulk</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Eggplant</h3>
-                <div class="price">₱35 / kg</div>
-                <ul>
-                    <li>Locally grown eggplants</li>
-                    <li>Firm and fresh</li>
-                    <li>Organic options available</li>
-                </ul>
-            </div>
-            <div class="price-card featured">
-                <h3>Calamansi</h3>
-                <div class="price">₱120 / kg</div>
-                <ul>
-                    <li>Fresh citrus fruit</li>
-                    <li>Perfect for juice and cooking</li>
-                    <li>Direct from farm</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Banana</h3>
-                <div class="price">₱40 / kg</div>
-                <ul>
-                    <li>Sweet and ripe bananas</li>
-                    <li>Locally sourced</li>
-                    <li>Available year-round</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Tomatoes</h3>
-                <div class="price">₱45 / kg</div>
-                <ul>
-                    <li>Juicy red tomatoes</li>
-                    <li>Freshly harvested</li>
-                    <li>Ideal for sauces and salads</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Carrots</h3>
-                <div class="price">₱60 / kg</div>
-                <ul>
-                    <li>Crunchy and fresh</li>
-                    <li>Rich in vitamins</li>
-                    <li>Farm-direct produce</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Sweet Potato</h3>
-                <div class="price">₱55 / kg</div>
-                <ul>
-                    <li>Nutritious and fresh</li>
-                    <li>Direct from farms</li>
-                    <li>Perfect for snacks and cooking</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Pineapple</h3>
-                <div class="price">₱70 / kg</div>
-                <ul>
-                    <li>Sweet and juicy</li>
-                    <li>Locally harvested</li>
-                    <li>Ideal for fresh consumption and desserts</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Cabbage</h3>
-                <div class="price">₱40 / kg</div>
-                <ul>
-                    <li>Fresh leafy cabbage</li>
-                    <li>Great for salads and cooking</li>
-                    <li>Farm-direct supply</li>
-                </ul>
-            </div>
-            <div class="price-card">
-                <h3>Ginger</h3>
-                <div class="price">₱150 / kg</div>
-                <ul>
-                    <li>Fresh and aromatic</li>
-                    <li>Perfect for cooking and beverages</li>
-                    <li>High-quality roots</li>
-                </ul>
-            </div>
+        <h2>Fresh Products Available</h2>
+        <div class="search-container">
+            <input type="text" id="productSearch" placeholder="Search for products..." class="search-input">
+        </div>
+        <div class="pricing-grid" id="productGrid">
+            <!-- Products will be dynamically loaded here -->
         </div>
     </section>
 
@@ -239,6 +153,10 @@
         <p>&copy; 2025 Crop-Tap. All rights reserved. Connecting Farmers to Fair Markets.</p>
     </footer>
 
+    <script src="../JS/storage.js"></script>
+    <script src="../JS/auth.js"></script>
+    <script src="../JS/products.js"></script>
+    <script src="../JS/cart.js"></script>
     <script src="../JS/landing_page.js"></script>
 </body>
 </html>

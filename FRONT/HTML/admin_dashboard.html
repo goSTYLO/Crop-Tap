@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crop-Tap Dashboard</title>
+    <title>Crop-Tap Farmer Dashboard</title>
     <link rel="stylesheet" href="../CSS/admin_dashboard.css">
 
 </head>
@@ -17,8 +17,8 @@
                     <span>Crop-Tap</span>
                 </div>
                 <div class="user-info">
-                    <div id="userName">Admin User</div>
-                    <span class="user-role" id="userRole">Administrator</span>
+                    <div id="userName">Farmer User</div>
+                    <span class="user-role" id="userRole">Farmer</span>
                 </div>
             </div>
 
@@ -27,9 +27,9 @@
                     <span class="nav-icon">📊</span>
                     <span>Dashboard</span>
                 </div>
-                <div class="nav-item" data-page="users">
-                    <span class="nav-icon">👥</span>
-                    <span>User Management</span>
+                <div class="nav-item" data-page="profile">
+                    <span class="nav-icon">👤</span>
+                    <span>Profile</span>
                 </div>
                 <div class="nav-item" data-page="products">
                     <span class="nav-icon">🌽</span>
@@ -46,6 +46,10 @@
                 <div class="nav-item" data-page="logs">
                     <span class="nav-icon">📝</span>
                     <span>Activity Logs</span>
+                </div>
+                <div class="nav-item" data-page="data">
+                    <span class="nav-icon">💾</span>
+                    <span>Data Management</span>
                 </div>
                 <div class="nav-item" data-page="settings">
                     <span class="nav-icon">⚙️</span>
@@ -303,6 +307,56 @@
                     </div>
                 </div>
 
+                <!-- Data Management Page -->
+                <div id="dataPage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">Data Management</h1>
+                        <p class="breadcrumb">Home / Data Management</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Data Operations</h2>
+                        </div>
+                        <div class="data-management-grid">
+                            <div class="data-section">
+                                <h3>📥 Export Data</h3>
+                                <p>Export all your data to a JSON file for backup or transfer.</p>
+                                <button class="btn-primary" onclick="exportData()">Export Data</button>
+                            </div>
+
+                            <div class="data-section">
+                                <h3>📤 Import Data</h3>
+                                <p>Import data from a previously exported JSON file.</p>
+                                <input type="file" id="importFile" accept=".json" style="margin: 1rem 0; width: 100%;">
+                                <button class="btn-secondary" onclick="importData()">Import Data</button>
+                            </div>
+
+                            <div class="data-section">
+                                <h3>🌱 Sample Data</h3>
+                                <p>Create sample data for testing the application.</p>
+                                <button class="btn-warning" onclick="createSampleData()">Create Sample Data</button>
+                            </div>
+
+                            <div class="data-section">
+                                <h3>🗑️ Clear All Data</h3>
+                                <p>⚠️ This will permanently delete all data. Use with caution!</p>
+                                <button class="btn-danger" onclick="clearAllData()">Clear All Data</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Data Statistics</h2>
+                        </div>
+                        <div id="dataStats" class="stats-display">
+                            <p>Click "Refresh Stats" to see current data statistics.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="refreshDataStats()">📊 Refresh Stats</button>
+                    </div>
+                </div>
+
                 <!-- Settings Page -->
                 <div id="settingsPage" class="page hidden">
                     <div class="page-header">
@@ -475,6 +529,11 @@
         </div>
     </div>
 
+    <script src="../JS/storage.js"></script>
+    <script src="../JS/auth.js"></script>
+    <script src="../JS/products.js"></script>
+    <script src="../JS/cart.js"></script>
+    <script src="../JS/dataManager.js"></script>
     <script src="../JS/admin_dashboard.js"></script>
 </body>
 </html>

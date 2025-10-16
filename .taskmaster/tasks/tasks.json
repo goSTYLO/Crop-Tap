@@ -3,1009 +3,627 @@
     "tasks": [
       {
         "id": 1,
-        "title": "Initialize Node.js Project and Setup Core Backend",
-        "description": "Set up the initial Node.js project structure, install all specified npm dependencies, and create a basic Express.js server. Configure environment variables using `dotenv` for database credentials and application secrets.",
-        "status": "done",
+        "title": "Initial Project Structure and LocalStorage Data Model Setup",
+        "description": "Create the basic project folder structure including HTML, CSS, and JavaScript files. Initialize the localStorage with the required data models (users, products, carts, etc.) to ensure the application has a persistent data foundation from the start.",
+        "status": "pending",
         "dependencies": [],
         "priority": "high",
-        "details": "Run `npm init -y`. Install dependencies: `express`, `mysql2`, `sequelize`, `bcrypt`, `jsonwebtoken`, `cors`, `dotenv`, `multer`, `sharp`, `body-parser`. Create `app.js` as the main entry point. Set up a basic Express server that listens on a port defined in a `.env` file. Configure `cors` and `body-parser` middleware. Create a `.env.example` file with keys for `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `STRIPE_SECRET_KEY`, and `PORT`.",
-        "testStrategy": "Run `npm run dev` (after configuring package.json scripts). Verify that the server starts without errors. Make a GET request to a test endpoint (e.g., `/`) and receive a successful response (e.g., `{\"status\": \"ok\"}`).",
+        "details": "Create a project folder containing `index.html`, `styles.css`, and `app.js`. In `app.js`, write an initialization function that runs on page load. This function will check for the existence of the following keys in localStorage: 'users', 'products', 'carts', 'cart_items', 'orders', 'order_items', and 'payments'. If a key is not found, it should be created and initialized with an empty array. \n\nPseudo-code:\n```javascript\nconst dataModels = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  dataModels.forEach(model => {\n    if (!localStorage.getItem(model)) {\n      localStorage.setItem(model, JSON.stringify([]));\n    }\n  });\n});\n```",
+        "testStrategy": "Open the application in a modern web browser. Use the developer tools to inspect the browser's localStorage. Verify that all specified keys ('users', 'products', etc.) have been created and their values are empty arrays ('[]').",
         "subtasks": [
           {
             "id": 1,
-            "title": "Initialize Node.js Project and Install Dependencies",
-            "description": "Create a `package.json` file using npm and install all the required production and development dependencies for the project.",
+            "title": "Create Project Directory and Core Files",
+            "description": "Establish the root project folder and create the three essential empty files (`index.html`, `styles.css`, `app.js`) that will form the basis of the application.",
             "dependencies": [],
-            "details": "Execute `npm init -y` in the project root directory. Then, run the command `npm install express mysql2 sequelize bcrypt jsonwebtoken cors dotenv multer sharp body-parser`. Finally, install nodemon as a development dependency using `npm install --save-dev nodemon`.",
-            "status": "done",
-            "testStrategy": "Verify the creation of `package.json`, `package-lock.json`, and the `node_modules` directory. Inspect `package.json` to confirm all specified dependencies are listed correctly."
+            "details": "Create a new directory for the project. Inside this directory, create three empty files: `index.html`, `styles.css`, and `app.js`. This sets up the fundamental file structure.",
+            "status": "pending",
+            "testStrategy": "Verify that the project folder and the three specified files exist in the file system using a file explorer or command line."
           },
           {
             "id": 2,
-            "title": "Set Up Environment Configuration Files",
-            "description": "Create the necessary files for managing environment variables. This includes a gitignored `.env` file for local secrets and an example file for repository tracking.",
+            "title": "Set Up `index.html` Boilerplate and Link Assets",
+            "description": "Populate the `index.html` file with the standard HTML5 document structure, including linking the CSS and JavaScript files to ensure they are loaded by the browser.",
             "dependencies": [
               1
             ],
-            "details": "Create a `.env.example` file with the keys: `PORT`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, and `STRIPE_SECRET_KEY`. Create a `.env` file, copy the keys from the example, and provide local values. Create a `.gitignore` file and add `node_modules/` and `.env` to it.",
-            "status": "done",
-            "testStrategy": "Check that the `.env.example` file exists and contains all the required keys. Verify that the `.gitignore` file includes an entry for `.env` to prevent committing secrets."
+            "details": "Edit `index.html` to add the `<!DOCTYPE html>`, `<html>`, `<head>`, and `<body>` tags. In the `<head>`, include a `<title>`, a `<link rel=\"stylesheet\" href=\"styles.css\">`. At the end of the `<body>`, add `<script defer src=\"app.js\"></script>`.",
+            "status": "pending",
+            "testStrategy": "Open `index.html` in a browser. Use the developer tools' 'View Page Source' and 'Network' tab to confirm that the HTML structure is correct and that both `styles.css` and `app.js` are being requested and loaded."
           },
           {
             "id": 3,
-            "title": "Create Basic Express Server Entry Point",
-            "description": "Create the main application file `app.js`, initialize the Express server, and configure it to listen on the port defined in the `.env` file.",
+            "title": "Define Data Models and Initialization Function in `app.js`",
+            "description": "In `app.js`, create the array of data model keys and write the core function responsible for checking and initializing these keys in localStorage if they do not already exist.",
             "dependencies": [
-              2
+              1
             ],
-            "details": "Create an `app.js` file. At the top, require `dotenv` and call `dotenv.config()`. Require `express` and create an app instance `const app = express()`. Define a port variable from `process.env.PORT` or a default. Use `app.listen()` to start the server and log a confirmation message to the console.",
-            "status": "done",
-            "testStrategy": "Run `node app.js` from the terminal. Verify that the server starts successfully and logs the 'Server is running...' message with the correct port number."
+            "details": "In `app.js`, define a constant array `const dataModels = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];`. Then, create a function `function initializeLocalStorage() { dataModels.forEach(model => { if (!localStorage.getItem(model)) { localStorage.setItem(model, JSON.stringify([])); } }); }`.",
+            "status": "pending",
+            "testStrategy": "After creating the function, manually paste and run `initializeLocalStorage()` in the browser console. Then, inspect the 'Application' > 'LocalStorage' tab in the developer tools to confirm the keys were created with `[]` as their value."
           },
           {
             "id": 4,
-            "title": "Configure Core Express Middleware",
-            "description": "Integrate and configure essential middleware for handling Cross-Origin Resource Sharing (CORS) and parsing incoming request bodies.",
+            "title": "Attach Initialization Function to DOMContentLoaded Event",
+            "description": "Ensure the data model initialization logic runs automatically as soon as the HTML document is fully loaded and parsed by using the appropriate event listener.",
             "dependencies": [
+              2,
               3
             ],
-            "details": "In `app.js`, import the `cors` module and apply it globally using `app.use(cors())`. Use the built-in Express middleware for parsing JSON and URL-encoded payloads: `app.use(express.json())` and `app.use(express.urlencoded({ extended: true }))`.",
-            "status": "done",
-            "testStrategy": "This will be tested as part of the next subtask. Proper middleware configuration will be confirmed when a JSON response is successfully received from an endpoint."
+            "details": "In `app.js`, add an event listener at the top level of the script: `document.addEventListener('DOMContentLoaded', initializeLocalStorage);`. This will execute the previously created function upon page load.",
+            "status": "pending",
+            "testStrategy": "In the browser developer tools, clear all data from localStorage. Refresh the `index.html` page. Inspect the 'Application' > 'LocalStorage' tab again to verify that all specified keys have been automatically recreated."
           },
           {
             "id": 5,
-            "title": "Add Health Check Endpoint and Dev Script",
-            "description": "Implement a simple root GET endpoint ('/') to serve as a health check. Add a 'dev' script to `package.json` for convenient server execution with `nodemon`.",
+            "title": "Add Basic CSS and HTML Placeholders for Verification",
+            "description": "Add minimal content to the HTML and CSS files to provide visual confirmation that the project structure is correctly linked and functional.",
             "dependencies": [
-              4
+              2
             ],
-            "details": "In `app.js`, create a GET route for `/` that sends a JSON response like `res.json({ status: 'ok' })`. Open `package.json`, navigate to the `scripts` section, and add a new script: `\"dev\": \"nodemon app.js\"`.",
-            "status": "done",
-            "testStrategy": "Run `npm run dev`. The server should start. Access `http://localhost:[PORT]/` in a browser or API client and verify that the `{\"status\": \"ok\"}` JSON response is returned."
+            "details": "In `styles.css`, add a simple rule like `body { background-color: #f4f4f4; font-family: sans-serif; }`. In `index.html`'s body, add an `<h1>Welcome to Crop-Tap</h1>` to have visible content on the page.",
+            "status": "pending",
+            "testStrategy": "Load `index.html` in the browser. Verify that the 'Welcome to Crop-Tap' heading is visible and that the background color and font specified in the CSS have been applied to the page."
           }
         ]
       },
       {
         "id": 2,
-        "title": "Configure Sequelize ORM and Define User Model",
-        "description": "Establish the database connection using Sequelize and the MySQL2 driver. Define the `User` model including fields for `username`, `email`, `password` (hashed), and `role` (ENUM: 'buyer', 'farmer', 'admin').",
-        "status": "done",
+        "title": "Implement User Authentication with LocalStorage",
+        "description": "Develop registration and login functionality for both Farmers and Buyers. User profiles, including their role, will be stored in the 'users' array in localStorage. A simple session management system will use localStorage to track the currently logged-in user.",
+        "status": "pending",
         "dependencies": [
           1
         ],
         "priority": "high",
-        "details": "Create a `config/database.js` file to initialize the Sequelize instance using credentials from `.env`. In a `models/user.js` file, define the `User` model with `Sequelize.STRING` for username/email, and `Sequelize.ENUM` for the role. Add a `beforeCreate` hook to the User model to automatically hash the password using `bcrypt.hash()` before saving it to the database. Sync the model with the database using `sequelize.sync()` to create the `users` table.",
-        "testStrategy": "After starting the application, connect to the MySQL database using a GUI client (like MySQL Workbench) or the command line. Verify that the `users` table has been created with the correct columns and data types.",
+        "details": "Create HTML forms for registration (email, password, role dropdown) and login. In `app.js`, write functions to handle form submissions. The registration function should hash the password (using a simple client-side library like `crypto-js` is a good practice for a school project, but not strictly required by the PRD), create a user object with a unique ID, and add it to the 'users' array in localStorage. The login function should find a user by email, verify the password, and if successful, store the user object in a session key (e.g., `localStorage.setItem('session', JSON.stringify(user))`). A logout function should clear this session key.",
+        "testStrategy": "1. Register a new Farmer and a new Buyer. Verify they are added to the 'users' array in localStorage. 2. Attempt to register with an existing email to ensure duplicates are prevented. 3. Log in with each user and confirm a 'session' object is created in localStorage. 4. Log out and confirm the 'session' object is removed. 5. Attempt to log in with incorrect credentials to verify failure.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Install Sequelize and Related Dependencies",
-            "description": "Install the necessary npm packages for database interaction: Sequelize ORM, MySQL2 driver, bcrypt for hashing, and dotenv for environment variables.",
+            "title": "Create Registration and Login HTML Forms",
+            "description": "Add HTML forms to `index.html` for user registration and login. The registration form should include fields for email, password, and a dropdown for selecting the user role (Farmer or Buyer). The login form needs email and password fields.",
             "dependencies": [],
-            "details": "Execute 'npm install sequelize mysql2 bcrypt dotenv' in the project's root directory. This will add the packages to the `dependencies` section of the `package.json` file.",
-            "status": "done",
-            "testStrategy": "After installation, verify that the packages are listed in `package.json` and that `node_modules` contains `sequelize`, `mysql2`, `bcrypt`, and `dotenv` directories."
+            "details": "In `index.html`, create two `<form>` elements. The registration form should have an id like `registration-form` and include inputs for email, password, and a `<select>` element for 'role'. The login form should have an id like `login-form` and include inputs for email and password. Both forms need a submit button.",
+            "status": "pending",
+            "testStrategy": "Open `index.html` in a web browser and visually confirm that both the registration and login forms are rendered correctly with all specified input fields and buttons."
           },
           {
             "id": 2,
-            "title": "Create Sequelize Database Configuration File",
-            "description": "Create a new file to house the Sequelize instance and configure it to connect to the MySQL database using credentials from environment variables.",
+            "title": "Implement User Registration Logic in app.js",
+            "description": "Write a JavaScript function to handle user registration. This function will be triggered by the registration form submission, validate the data, create a new user object, and store it in the 'users' array in localStorage.",
             "dependencies": [
               1
             ],
-            "details": "Create a file at `config/database.js`. Import `Sequelize` and `dotenv`. Use `dotenv.config()` to load `.env` variables. Initialize a new Sequelize instance with `DB_NAME`, `DB_USER`, `DB_PASSWORD`, and `DB_HOST` from `process.env`. Export the instance.",
-            "status": "done",
-            "testStrategy": "Create a temporary test script that imports the configured Sequelize instance and calls `sequelize.authenticate()`. A successful connection should log a confirmation message without errors."
+            "details": "In `app.js`, create a `handleRegistration` function. Add an event listener to the `registration-form`. Inside the function, prevent default form submission, get values from the form, and check if the email already exists in the 'users' array from localStorage. If not, create a new user object with a unique ID, email, password, and role. Save the updated users array back to `localStorage`.",
+            "status": "pending",
+            "testStrategy": "1. Submit the registration form with valid data. 2. Use browser developer tools to inspect localStorage and verify the 'users' array contains the new user object. 3. Attempt to register again with the same email and confirm that the registration is rejected and no duplicate user is added."
           },
           {
             "id": 3,
-            "title": "Define the User Model Schema",
-            "description": "Create the User model file and define its schema, including fields for username, email, password, and role, according to the task requirements.",
+            "title": "Implement User Login Functionality in app.js",
+            "description": "Develop the JavaScript logic for user login. This function will verify user credentials against the data stored in localStorage and establish a user session upon successful authentication.",
             "dependencies": [
               2
             ],
-            "details": "Create `models/user.js`. Import `DataTypes` from `sequelize` and the configured sequelize instance from `config/database.js`. Define the `User` model with `username` (STRING), `email` (STRING, unique), `password` (STRING), and `role` (ENUM('buyer', 'farmer', 'admin')).",
-            "status": "done",
-            "testStrategy": "Review the `models/user.js` file to ensure all fields are defined with the correct Sequelize data types, constraints (like unique email), and ENUM values."
+            "details": "In `app.js`, create a `handleLogin` function and attach it to the `login-form`'s submit event. This function will retrieve the email and password from the form inputs. It will then load the 'users' array from `localStorage`, find a user with a matching email, and verify the password. If credentials are correct, store the complete user object in `localStorage` under the key 'session' as a JSON string.",
+            "status": "pending",
+            "testStrategy": "1. After registering a user, attempt to log in with the correct credentials. 2. Verify in localStorage that a 'session' key has been created and its value is the JSON string of the logged-in user. 3. Attempt to log in with incorrect credentials and ensure the 'session' key is not created or is empty."
           },
           {
             "id": 4,
-            "title": "Implement `beforeCreate` Hook for Password Hashing",
-            "description": "Add a `beforeCreate` hook to the User model to automatically and securely hash user passwords before they are stored in the database.",
+            "title": "Implement User Logout and Session Clearing",
+            "description": "Create a function to handle user logout. This involves clearing the session data from localStorage and providing a UI element for the user to trigger this action.",
             "dependencies": [
               3
             ],
-            "details": "In `models/user.js`, within the User model definition options, add a `hooks` object. Define a `beforeCreate` async function that takes the user instance as an argument. Inside the hook, generate a salt and hash the `user.password` using `bcrypt.hash()`. Assign the resulting hash back to `user.password`.",
-            "status": "done",
-            "testStrategy": "Create a unit test that instantiates a new User with a plain-text password. Before saving, check that the password is plain text. After a mock `create` call, assert that the password field has been replaced by a hashed string."
+            "details": "Add a 'Logout' button to `index.html`, which will be shown conditionally. In `app.js`, create a `handleLogout` function. This function will remove the 'session' item from `localStorage` using `localStorage.removeItem('session')`. Attach an event listener to the logout button to call this function. After logout, the UI should be updated to reflect the logged-out state.",
+            "status": "pending",
+            "testStrategy": "1. Log in as a user, confirming the 'session' key exists in localStorage. 2. Click the 'Logout' button. 3. Verify that the 'session' key has been completely removed from localStorage."
           },
           {
             "id": 5,
-            "title": "Sync Sequelize Models with the Database",
-            "description": "Integrate the database connection into the main application and use Sequelize's sync method to automatically create the 'users' table based on the defined model.",
+            "title": "Implement Session-Based UI State Management",
+            "description": "Add logic to dynamically update the UI based on the user's authentication state. This includes showing or hiding elements like login/registration forms, user-specific content, and the logout button.",
             "dependencies": [
               4
             ],
-            "details": "In the main application entry point (e.g., `server.js` or `app.js`), import the sequelize instance from `config/database.js`. After setting up the server to listen, call `sequelize.sync()`. Using `{ force: true }` during development can be helpful to drop and recreate tables on every restart. Start the application.",
-            "status": "done",
-            "testStrategy": "After starting the application, connect to the MySQL database using a GUI client or command line. Verify that a `users` table has been created and that its columns (`id`, `username`, `email`, `password`, `role`, `createdAt`, `updatedAt`) match the model definition."
+            "details": "Create a function in `app.js`, e.g., `updateUI()`, that checks for the 'session' key in `localStorage`. If a session exists, hide the login and registration forms and show the logout button and a welcome message. If no session exists, show the forms and hide the user-specific elements. This function must be called on page load and after any login or logout action to ensure the UI is always in sync.",
+            "status": "pending",
+            "testStrategy": "1. On initial page load, verify only login/registration forms are visible. 2. After logging in, verify the forms are hidden and user-specific elements (like logout button) appear. 3. Refresh the page and confirm the logged-in UI state persists. 4. After logging out, verify the UI reverts to its initial logged-out state."
           }
         ]
       },
       {
         "id": 3,
-        "title": "Implement User Registration Endpoint",
-        "description": "Create the `POST /api/auth/register` endpoint to allow new users to sign up. The endpoint should validate input, check for existing users, hash the password, and save the new user to the database.",
-        "status": "done",
+        "title": "Develop Product Listing and Browsing UI",
+        "description": "Create the main marketplace page where all users can browse available products. This page will dynamically render product data fetched from the 'products' array in localStorage.",
+        "status": "pending",
         "dependencies": [
-          2
+          1
         ],
         "priority": "high",
-        "details": "In your `auth.controller.js`, create a `register` function. It should accept `username`, `email`, `password`, and `role` in the request body. Use a `try-catch` block for error handling. Check if a user with the same email already exists. If not, create a new user instance using the `User` model. The `beforeCreate` hook will handle hashing. Respond with a success message and user data (excluding password).",
-        "testStrategy": "Use Postman or a similar API client to send a POST request to `/api/auth/register` with valid user data. Verify a 201 Created status and the new user's data in the response. Check the database to confirm the user was added with a properly hashed password. Test edge cases like duplicate email registration.",
+        "details": "Develop a function `renderProducts()` in `app.js`. This function will:\n1. Fetch the products array: `JSON.parse(localStorage.getItem('products'))`.\n2. Iterate through the array.\n3. For each product, dynamically create an HTML card element displaying its name, image, price, and description.\n4t. Append these cards to a main container in `index.html`. \nImplement a simple search bar that filters products by name on keyup events.",
+        "testStrategy": "Manually add a few sample product objects to the 'products' key in localStorage using browser dev tools. Refresh the page and verify that all products are displayed correctly. Use the search bar to filter the products and confirm it works as expected.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Define the POST /register Route in auth.routes.js",
-            "description": "Define a new POST route for `/register` within the `auth.routes.js` file. This route will be linked to the `register` controller function which will handle the user registration logic.",
+            "title": "Define HTML Structure for a Single Product Card",
+            "description": "Create a function within `app.js` that takes a product object and returns the corresponding HTML string or DOM element for a product card. This will serve as the template for rendering each product.",
             "dependencies": [],
-            "details": "In the `routes/auth.routes.js` file, import the `register` controller function. Then, add the route definition: `router.post('/register', register);`. This establishes the endpoint for the API.",
-            "status": "done",
-            "testStrategy": "After adding the route, start the server and ensure it doesn't crash. A 404 or an error from the non-existent controller function is acceptable at this stage, but the route should be recognized by the Express router."
+            "details": "In `app.js`, create a helper function, e.g., `createProductCard(product)`. This function will receive a product object and generate a `div` element with the class 'product-card'. The card must contain elements to display the product's image (imageUrl), name, price, and description.",
+            "status": "pending",
+            "testStrategy": "Manually call this function with a mock product object in the browser console and verify that it returns the expected HTML structure."
           },
           {
             "id": 2,
-            "title": "Create the `register` Controller Function Shell",
-            "description": "In `controllers/auth.controller.js`, create an asynchronous `register` function. This function will serve as the handler for the registration logic and must include a `try-catch` block for robust error handling as specified.",
+            "title": "Develop the `renderProducts` Function to Display Products",
+            "description": "Create the main `renderProducts` function in `app.js`. This function will be responsible for clearing the existing product list and rendering a new list of products passed to it.",
             "dependencies": [
               1
             ],
-            "details": "In `controllers/auth.controller.js`, add `exports.register = async (req, res) => { ... };`. The basic structure should include a `try {} catch (error) {}` block. The catch block should log the error and send a generic 500 server error response.",
-            "status": "done",
-            "testStrategy": "Send a POST request to `/api/auth/register`. The server should not crash, and depending on the placeholder logic, it should return a success or error response from within the controller function, proving it's being called correctly."
+            "details": "The `renderProducts(products)` function should first get the `#product-listing-container` element. It must clear any existing content within this container (e.g., using `innerHTML = ''`). Then, it will iterate through the `products` array passed as an argument. For each product, it will call `createProductCard(product)` and append the returned element to the container.",
+            "status": "pending",
+            "testStrategy": "Create a mock array of product objects and pass it to `renderProducts()` from the console. Verify that the correct number of product cards appear on the page."
           },
           {
             "id": 3,
-            "title": "Implement Input Validation and Existing User Check",
-            "description": "Within the `register` controller's `try` block, extract user details from the request body and validate them. Then, query the database to check if a user with the provided email already exists.",
+            "title": "Fetch Products and Trigger Initial Render on Page Load",
+            "description": "Integrate the product rendering logic into the page's startup sequence. When the DOM is fully loaded, fetch the products from localStorage and display them.",
             "dependencies": [
               2
             ],
-            "details": "Destructure `username`, `email`, `password`, and `role` from `req.body`. Check if any are missing. Use the `User` model (`User.findOne({ where: { email } })`) to check for an existing user. If a user is found, return a `400 Bad Request` response with an appropriate message.",
-            "status": "done",
-            "testStrategy": "Use Postman to test two scenarios: 1) Send a request with a missing field (e.g., no email) and verify a 400 error. 2) Send a request with an email that is already in the database and verify a 400 error with the message 'Email is already in use'."
+            "details": "Within the existing `DOMContentLoaded` event listener in `app.js`, add logic to get the 'products' item from `localStorage`. Parse the JSON string into an array. If the array is not null or empty, call the `renderProducts()` function, passing the full product array to it.",
+            "status": "pending",
+            "testStrategy": "Use the `initializeMockData()` function (or manually add products to localStorage) and then refresh the page. Verify that all products from localStorage are displayed correctly on initial load."
           },
           {
             "id": 4,
-            "title": "Implement New User Creation Logic",
-            "description": "After validation confirms the data is valid and the email is unique, create a new user record in the database using the `User` model. The `beforeCreate` hook will handle password hashing automatically.",
-            "dependencies": [
-              3
-            ],
-            "details": "Following the email uniqueness check, call `const user = await User.create({ username, email, password, role });`. This Sequelize method will create the new user entry and trigger the pre-configured model hook to hash the password before saving.",
-            "status": "done",
-            "testStrategy": "After a successful API call with new user data, query the `users` table in the database directly. Confirm that a new row exists with the correct data and that the `password` column contains a hashed string, not the plain text password."
+            "title": "Add Event Listener for the Search Bar",
+            "description": "Attach a 'keyup' event listener to the search bar element to capture user input for filtering products.",
+            "dependencies": [],
+            "details": "In `app.js`, likely within the `DOMContentLoaded` listener, get the element with `id='search-bar'`. Add a 'keyup' event listener to this element. The callback function for this listener will contain the filtering logic.",
+            "status": "pending",
+            "testStrategy": "Type into the search bar and add a `console.log` inside the event listener to confirm that it fires on each key press and captures the input value correctly."
           },
           {
             "id": 5,
-            "title": "Format and Send Success Response",
-            "description": "Upon successful user creation, sanitize the new user object to remove the password hash, and then send a `201 Created` HTTP response containing the clean user data and a success message.",
+            "title": "Implement Search Filtering and Re-rendering Logic",
+            "description": "Implement the logic within the search bar's event listener to filter the products by name and update the UI.",
             "dependencies": [
+              3,
               4
             ],
-            "details": "The `user` object returned from `User.create` will include the password hash. Create a safe, sanitized version of the user object by excluding the password field. Respond with `res.status(201).json({ success: true, data: sanitizedUser });`.",
-            "status": "done",
-            "testStrategy": "Using Postman, send a valid POST request to `/api/auth/register` with unique user data. Verify that the HTTP status code is `201 Created` and that the JSON response body contains the new user's information, specifically excluding the `password` field."
+            "details": "Inside the 'keyup' event listener, get the current search term from the search bar and convert it to lowercase. Fetch the complete list of products from `localStorage`. Use `Array.prototype.filter()` to create a new array of products where the product's name (also converted to lowercase) includes the search term. Finally, call `renderProducts()` with this new filtered array to update the display.",
+            "status": "pending",
+            "testStrategy": "With products displayed, type a partial name of a product (e.g., 'app' for 'Apples') into the search bar. Verify that the product list updates in real-time to show only matching products. Deleting text from the search bar should show more products again."
           }
         ]
       },
       {
         "id": 4,
-        "title": "Implement User Login Endpoint and JWT Generation",
-        "description": "Create the `POST /api/auth/login` endpoint. It will authenticate a user by comparing the provided password with the stored hash and, upon success, issue a JSON Web Token (JWT).",
-        "status": "done",
+        "title": "Implement Product CRUD Operations for Farmers",
+        "description": "Build the interface and logic for authenticated farmers to perform Create, Read, Update, and Delete (CRUD) operations on their own product listings. Product data is managed within the 'products' array in localStorage.",
+        "status": "pending",
         "dependencies": [
+          2,
           3
         ],
         "priority": "high",
-        "details": "In `auth.controller.js`, create a `login` function. Find the user by email. If the user exists, use `bcrypt.compare()` to check if the provided password matches the stored hash. If it matches, generate a JWT using `jsonwebtoken.sign()`. The token payload should include `userId` and `role`. Send the token back to the client in the response body. Use the `JWT_SECRET` from the `.env` file.",
-        "testStrategy": "Using Postman, send a POST request to `/api/auth/login` with credentials for a user created in the previous task. Verify a 200 OK response containing a JWT string. Test with incorrect credentials to ensure a 401 Unauthorized error is returned.",
+        "details": "Create a separate HTML page or a modal for adding/editing products, with fields for name, description, price, and an initial text input for an image URL. Conditionally render 'Add Product', 'Edit', and 'Delete' buttons on the UI only for logged-in farmers. The 'Add' function will push a new product object (with a unique ID and the farmer's ID) to the 'products' array. The 'Edit' and 'Delete' functions must verify that the `product.farmerId` matches the logged-in farmer's ID before modifying or removing the product from the array. All changes should be persisted to localStorage.",
+        "testStrategy": "1. Log in as a farmer. 2. Create a new product and verify it appears on the main product listing. 3. Edit the product's details and confirm the changes are reflected. 4. Delete the product and ensure it's removed from the listing. 5. Manually create a product for a different farmer and log in as the first farmer; verify that the edit/delete options are not available for that product.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Install jsonwebtoken and Configure JWT_SECRET Environment Variable",
-            "description": "Ensure the `jsonwebtoken` library is installed as a project dependency and add a secure secret key to the environment variables file for token signing.",
+            "title": "Conditionally Render Farmer CRUD Buttons",
+            "description": "Modify the `renderProducts` function in `app.js` to conditionally display 'Edit' and 'Delete' buttons on product cards. These buttons should only appear if the logged-in user is a 'farmer' and their ID matches the product's `farmerId`. Also, add an 'Add New Product' button, visible only to logged-in farmers, likely above the product list.",
             "dependencies": [],
-            "details": "Execute 'npm install jsonwebtoken' in the project root. Then, open the `.env` file and add a new entry: `JWT_SECRET=your-secure-random-string`. This secret is critical for securing the tokens.",
-            "status": "done",
-            "testStrategy": "Verify that `jsonwebtoken` is present in the `dependencies` section of `package.json`. Also, confirm that `process.env.JWT_SECRET` can be accessed from within the Node.js application."
+            "details": "In app.js, locate the `renderProducts` function. Inside the loop that generates product card HTML, get the current user via `getCurrentUser()`. Add a conditional block: `if (currentUser && currentUser.role === 'farmer' && currentUser.id === product.farmerId)`. If true, append the HTML for edit and delete buttons with `data-product-id` attributes. Similarly, in `updateUI`, show/hide a dedicated 'Add Product' button (`#add-product-btn`).",
+            "status": "pending",
+            "testStrategy": "Log in as a farmer. Verify 'Add Product' button is visible. Verify 'Edit' and 'Delete' buttons appear only on products they own. Log in as a buyer or log out and confirm no CRUD buttons are visible."
           },
           {
             "id": 2,
-            "title": "Create Login Controller Shell and Implement User Lookup",
-            "description": "In `src/controllers/auth.controller.js`, create the `login` function. This function will extract the email from the request body and query the database to find the corresponding user.",
+            "title": "Create HTML and CSS for Product Form Modal",
+            "description": "Add a hidden modal to `index.html` that will serve as the form for creating and editing products. The modal should include a form with input fields for product name, description, price, and image URL, along with 'Save' and 'Cancel' buttons.",
             "dependencies": [],
-            "details": "Define `exports.login = async (req, res) => { ... }`. Inside a try-catch block, destructure `email` from `req.body`. Use the Sequelize model `User.findOne({ where: { email: email } })` to retrieve the user. If the user is not found, send a 404 Not Found response.",
-            "status": "done",
-            "testStrategy": "After creating the route in a later task, send a request with an email that exists and one that doesn't. Temporarily respond with the user object to confirm the lookup works, and verify a 404 is returned for a non-existent user."
+            "details": "In `index.html`, create a `div` with an ID like `product-modal` and a class for styling (e.g., 'hidden'). Inside, build a form with `<label>` and `<input>` elements for 'name' (text), 'description' (textarea), 'price' (number), and 'imageUrl' (text). Add a hidden input to store the `productId` for editing. Add 'Save' and 'Cancel' buttons. Use CSS in `style.css` to style the modal, overlay, and position it, ensuring it is hidden by default.",
+            "status": "pending",
+            "testStrategy": "Verify the modal is not visible on page load. Manually remove the 'hidden' class using browser dev tools to check its layout and styling."
           },
           {
             "id": 3,
-            "title": "Implement Password Verification with bcrypt",
-            "description": "Within the `login` controller function, after successfully finding a user, compare the plain-text password from the request with the stored hashed password using `bcrypt.compare()`.",
+            "title": "Implement 'Create Product' Functionality",
+            "description": "Wire up the 'Add New Product' button and the product form modal to allow farmers to create new products. The new product should be saved to localStorage with a unique ID and the farmer's ID.",
             "dependencies": [
+              1,
               2
             ],
-            "details": "Import `bcryptjs` at the top of `auth.controller.js`. Inside the `login` function, after the `user` object is fetched, call `const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);`. If `passwordIsValid` is false, return a 401 Unauthorized response with an 'Invalid Password!' message.",
-            "status": "done",
-            "testStrategy": "Using an API client like Postman, send a request with a valid user email but an incorrect password. Verify that the API returns a 401 status code and the appropriate error message."
+            "details": "In `app.js`, add a click listener to the 'Add Product' button that shows the modal. Add a submit listener to the modal's form. In the handler, prevent default submission, read form values, get the logged-in farmer's ID from `getCurrentUser()`, and create a new product object `{ id: Date.now(), farmerId: ..., ... }`. Fetch the current products array using `getProducts()`, push the new product, save it using `saveProducts()`, then re-render the list and hide the modal.",
+            "status": "pending",
+            "testStrategy": "As a farmer, click 'Add New Product'. Fill out and submit the form. Verify the new product appears on the page and is persisted in localStorage with the correct `farmerId` after a page refresh."
           },
           {
             "id": 4,
-            "title": "Generate JSON Web Token on Successful Authentication",
-            "description": "Upon successful password verification, generate a JWT. The token's payload should contain the user's ID and role, and it must be signed with the `JWT_SECRET`.",
+            "title": "Implement 'Delete Product' Functionality",
+            "description": "Add logic to handle clicks on the 'Delete' button. This should remove the specified product from the `products` array in localStorage, but only if the action is performed by the farmer who owns the product.",
             "dependencies": [
-              1,
-              3
+              1
             ],
-            "details": "Import `jsonwebtoken` at the top of `auth.controller.js`. After the password is validated, create the token: `const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: 86400 });`. The expiration is set to 24 hours.",
-            "status": "done",
-            "testStrategy": "In the controller, temporarily use `console.log(token)` to print the generated token to the server console. Verify that a long, structured string is logged upon a successful login attempt."
+            "details": "In `app.js`, use event delegation to add a click listener to the `#product-list` container. Check if the clicked element is a 'Delete' button. If so, get the `productId` from its `data-product-id` attribute. Get the current user and products array. Use `Array.filter()` to create a new array excluding the product where `id` matches `productId` AND `farmerId` matches the current user's ID. Save the new array to localStorage and re-render the product list.",
+            "status": "pending",
+            "testStrategy": "As a farmer, click 'Delete' on a product you own. Verify it is removed from the UI and localStorage. Try to delete another farmer's product (by manipulating the DOM if necessary) and confirm the action fails."
           },
           {
             "id": 5,
-            "title": "Add Login Route and Send Token in Response",
-            "description": "Define the `POST /api/auth/login` route in `src/routes/auth.routes.js` and connect it to the `login` controller. Finalize the `login` function to send a 200 OK response containing the access token.",
+            "title": "Implement 'Update Product' Functionality",
+            "description": "Enable farmers to edit their existing product listings. The 'Edit' button should populate the modal with existing data, and saving the form should update the correct product in localStorage.",
             "dependencies": [
-              4
+              1,
+              2,
+              3
             ],
-            "details": "In `src/routes/auth.routes.js`, add the line `router.post('/login', controller.login);`. Then, in `auth.controller.js`, replace any temporary logging with the final response: `res.status(200).send({ id: user.id, username: user.username, email: user.email, role: user.role, accessToken: token });`.",
-            "status": "done",
-            "testStrategy": "Using Postman, send a POST request with correct credentials to `/api/auth/login`. Verify the response is 200 OK and that the JSON body contains user information and a valid `accessToken` string."
+            "details": "Extend the event delegation on `#product-list`. On 'Edit' button click, get the `productId`. Find the product in the `products` array. Populate the modal form fields with the product's data. Store the `productId` in the modal's hidden input. Show the modal. Modify the form's submit handler: if the hidden `productId` input has a value, it's an update. Find the product by ID, update its properties, save the full array back to localStorage, and re-render. Clear the hidden input after submission.",
+            "status": "pending",
+            "testStrategy": "As a farmer, click 'Edit' on a product. Verify the modal appears with the correct data pre-filled. Change the data and save. Confirm the product is updated on the page and in localStorage."
           }
         ]
       },
       {
         "id": 5,
-        "title": "Create Authentication and Role-Based Access Middleware",
-        "description": "Develop an Express middleware to protect routes. This middleware will verify the JWT from the Authorization header and can be extended to check for specific user roles (admin, farmer).",
-        "status": "done",
+        "title": "Implement Client-Side Image Handling for Products",
+        "description": "Enhance the product creation/editing form to allow farmers to upload an image from their device. The image will be converted to a Base64 data URL and stored directly within the product object in localStorage.",
+        "status": "pending",
         "dependencies": [
           4
         ],
-        "priority": "high",
-        "details": "Create a `middleware/auth.js` file. The primary function will extract the token from `req.headers.authorization` (e.g., 'Bearer TOKEN'). Use `jwt.verify()` to decode it with the `JWT_SECRET`. If valid, attach the decoded payload (e.g., `req.user = decodedUser`) and call `next()`. Create a higher-order function `authorize(roles)` that returns a middleware. This inner middleware checks if `req.user.role` is included in the `roles` array. If not, it returns a 403 Forbidden error.",
-        "testStrategy": "Create a test route (e.g., GET `/api/profile`) protected by the new middleware. Attempt to access it without a token (expect 401), with an invalid token (expect 401), and with a valid token (expect 200). Create another route protected by `authorize(['admin'])` and test access with a buyer token (expect 403) and an admin token (expect 200).",
+        "priority": "medium",
+        "details": "In the product form, replace the image URL text input with `<input type=\"file\" accept=\"image/*\">`. Use the `FileReader` API in JavaScript to handle the file selection. Create an `onChange` event listener for the file input. Inside the listener, initialize a `new FileReader()`, and use `reader.readAsDataURL(file)`. In the `reader.onload` event handler, the `reader.result` will contain the Base64 string, which can be saved as the `image` property of the product object. When rendering product cards, set the `src` attribute of the `<img>` tag to this Base64 string.",
+        "testStrategy": "As a logged-in farmer, create a new product and upload a local image file. Verify the product is saved to localStorage with an 'image' property containing a 'data:image/...' string. Confirm the image is correctly displayed on the product listing page.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Create Middleware Directory and auth.js File",
-            "description": "Set up the basic file structure for the authentication middleware by creating a 'middleware' directory and an 'auth.js' file within it. Also, install the 'jsonwebtoken' package.",
+            "title": "Update Product Form HTML with File Input and Image Preview Element",
+            "description": "Modify the product creation/editing form in `farmer-dashboard.html` to replace the image URL text input with a file input, and add an `<img>` tag for previewing the selected image.",
             "dependencies": [],
-            "details": "In the root of the project, create a new directory named 'middleware'. Inside this new directory, create a file named 'auth.js'. Open the terminal and run 'npm install jsonwebtoken' to add the necessary package for JWT handling.",
-            "status": "done",
-            "testStrategy": "Verify that the 'middleware/auth.js' file exists in the project structure and that 'jsonwebtoken' is listed as a dependency in the 'package.json' file."
+            "details": "In `farmer-dashboard.html`, locate the product form (e.g., `#product-form`). Replace the `<input type=\"text\" id=\"product-image\">` with `<input type=\"file\" id=\"product-image-upload\" accept=\"image/*\">`. Immediately after, add an `<img>` element with an ID like `image-preview` to display the selected image.",
+            "status": "pending",
+            "testStrategy": "Open `farmer-dashboard.html` in the browser. Verify the product form now shows a 'Choose File' button instead of a text input for the image. Confirm an empty image preview element is present."
           },
           {
             "id": 2,
-            "title": "Implement JWT Extraction and Verification Middleware",
-            "description": "Create the core authentication function that extracts the JWT from the 'Authorization' header and verifies its validity using the secret key.",
+            "title": "Implement an Event Listener for File Input and Image Conversion",
+            "description": "In `js/product.js`, create an `onChange` event listener for the new file input. This listener will handle the selected file and convert it to a Base64 data URL using the FileReader API.",
             "dependencies": [
               1
             ],
-            "details": "In 'middleware/auth.js', create a function `authenticate(req, res, next)`. It should check for `req.headers.authorization` and ensure it starts with 'Bearer '. Extract the token. If no token is found, return a 401 Unauthorized error. Use a try-catch block to wrap `jwt.verify(token, process.env.JWT_SECRET)`. In the catch block, handle invalid tokens by returning a 401 error.",
-            "status": "done",
-            "testStrategy": "Use Postman to call a protected test route. Test without an 'Authorization' header (expect 401). Test with an invalid or expired token (expect 401). A valid token should not yet pass, as `next()` is not called."
+            "details": "Add a `change` event listener to the `#product-image-upload` element. Inside the handler, check if a file has been selected. If so, create a `new FileReader()`. Use `reader.readAsDataURL(file)` to start the conversion process. This sets up the foundation for previewing and saving the image.",
+            "status": "pending",
+            "testStrategy": "Select an image file using the new input. Use browser developer tools to place a breakpoint inside the event listener and confirm that a file object is received and `readAsDataURL` is called."
           },
           {
             "id": 3,
-            "title": "Attach User Payload to Request and Call next()",
-            "description": "Upon successful JWT verification, attach the decoded user payload to the request object (`req.user`) and pass control to the next middleware in the stack.",
+            "title": "Display Selected Image Preview in the Form",
+            "description": "Extend the file input's event listener to display the converted Base64 image in the preview `<img>` element on the form.",
             "dependencies": [
               2
             ],
-            "details": "Inside the `try` block of the `authenticate` function, after a successful `jwt.verify`, assign the decoded payload to `req.user`. For example, `req.user = decoded;`. Immediately after, call `next()` to allow the request to proceed to the next middleware or the final route handler.",
-            "status": "done",
-            "testStrategy": "Create a temporary test route `/api/test/profile` protected by the `authenticate` middleware. The route handler should return `req.user`. Call this route with a valid token and verify that the response body contains the correct user payload (userId, role)."
+            "details": "Inside the `FileReader`'s `onload` event handler, get the Base64 string from `reader.result`. Set the `src` attribute of the `#image-preview` element to this result. This provides immediate visual feedback to the user.",
+            "status": "pending",
+            "testStrategy": "As a user, select a valid image file from your device. Verify that a preview of the selected image appears within the product form immediately after selection."
           },
           {
             "id": 4,
-            "title": "Create Role-Based Authorization Higher-Order Function",
-            "description": "Develop a higher-order function `authorize` that takes an array of roles and returns a middleware. This middleware will check if the authenticated user's role is permitted.",
+            "title": "Integrate Base64 Image into Product Save/Update Logic",
+            "description": "Modify the product form's submission handler to save the Base64 string as the `image` property of the product object in localStorage.",
             "dependencies": [
               3
             ],
-            "details": "In 'middleware/auth.js', create a function `authorize(roles = [])`. This function should return another middleware function `(req, res, next)`. The inner function must check if `req.user` exists and if `roles.includes(req.user.role)`. If the role is not included, return a 403 Forbidden error. Otherwise, call `next()`.",
-            "status": "done",
-            "testStrategy": "Create a test route protected by `authenticate` and `authorize(['admin'])`. Attempt to access it with a JWT from a 'farmer' user and assert a 403 Forbidden response. Then, attempt access with an 'admin' user's JWT and assert a 200 OK response."
+            "details": "In the `submit` handler for the product form in `js/product.js`, retrieve the Base64 string from the `#image-preview` element's `src` attribute. When creating the `product` object, set its `image` property to this Base64 string before saving it to localStorage. Ensure that if no new image is selected during an edit, the existing image data is preserved.",
+            "status": "pending",
+            "testStrategy": "Create a new product and upload an image. Use browser developer tools to inspect localStorage. Verify the new product object in the 'products' array has an `image` property that starts with 'data:image/...'. Edit a product without changing the image and confirm the original image data is not lost."
           },
           {
             "id": 5,
-            "title": "Export Middleware Functions for Application-Wide Use",
-            "description": "Export the `authenticate` and `authorize` functions from the `auth.js` module to make them available for import and use in the application's route definition files.",
+            "title": "Verify Product Images Render Correctly from Base64 Data",
+            "description": "Ensure that product cards on all relevant pages correctly display images using the Base64 data URL stored in the product object.",
             "dependencies": [
               4
             ],
-            "details": "At the end of the 'middleware/auth.js' file, add the export statement: `module.exports = { authenticate, authorize };`. This allows other files, such as `user.routes.js` or `product.routes.js`, to import these functions using `require`.",
-            "status": "done",
-            "testStrategy": "In a route file (e.g., a new `routes/test.routes.js`), import the functions via `const { authenticate, authorize } = require('../middleware/auth');`. Apply them to a test route and start the server. The application should run without any import errors."
+            "details": "The existing product rendering functions (e.g., in `js/app.js` or `js/product.js`) likely use `<img src=\"${product.image}\">`. This should work with Base64 strings. Manually test by creating a product with an image and navigating to the product list page (`index.html`) and the farmer's dashboard to confirm the image is displayed correctly.",
+            "status": "pending",
+            "testStrategy": "Log in as a farmer, create a product with an uploaded image. Log out. Log in as a buyer and view the main product page. Confirm the new product's image is visible. Go back to the farmer dashboard and confirm the image is also visible there."
           }
         ]
       },
       {
         "id": 6,
-        "title": "Define Product Model and Implement CRUD API",
-        "description": "Define the `Product` model and its association with the `User` model (a product belongs to a farmer). Implement the full set of RESTful CRUD endpoints at `/api/products`.",
-        "status": "done",
+        "title": "Implement Shopping Cart Functionality",
+        "description": "Enable buyers to add products to a shopping cart, view the cart's contents, update item quantities, and remove items. The cart state will be persisted across sessions using localStorage.",
+        "status": "pending",
         "dependencies": [
-          5
+          2,
+          3
         ],
         "priority": "high",
-        "details": "In `models/product.js`, define the Product model with fields like `name`, `description`, `price`, `quantity`, and `imageUrl`. In your main models file (`models/index.js`), define the association: `User.hasMany(Product)` and `Product.belongsTo(User, { foreignKey: 'farmerId' })`. Create `product.controller.js` and `product.routes.js`. Implement `createProduct`, `getAllProducts`, `getProductById`, `updateProduct`, and `deleteProduct`. Protect C/U/D routes with `authorize(['farmer', 'admin'])` middleware.",
-        "testStrategy": "Use Postman with a valid 'farmer' JWT. Test POST to `/api/products` to create a product. Test GET to view all and a single product. Test PUT/PATCH to update the product. Test DELETE to remove it. Attempt C/U/D operations with a 'buyer' token to ensure 403 Forbidden errors are returned.",
+        "details": "On product cards, add an 'Add to Cart' button. When clicked, an item is added to the 'cart_items' array in localStorage, containing `cartId` (linked to user), `productId`, and `quantity`. If the user has no cart, create one in the 'carts' array. Create a `cart.html` page that reads the user's cart data and displays each item, its quantity, and subtotal. Implement '+' and '-' buttons to update quantities and a 'Remove' button to delete items from 'cart_items'. The total price should be calculated and displayed dynamically. All changes must immediately update localStorage.",
+        "testStrategy": "1. Log in as a buyer. 2. Add several different products to the cart. 3. Navigate to the cart page and verify all items and the total are correct. 4. Update the quantity of an item and check that the subtotal and grand total update. 5. Remove an item and confirm it's gone. 6. Log out and log back in to ensure the cart's contents are preserved.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Define the Sequelize Product Model",
-            "description": "Create a new file for the Product model and define its schema using Sequelize, including all necessary fields for product information.",
+            "title": "Implement 'Add to Cart' Button on Product Cards",
+            "description": "Modify the product rendering logic to include an 'Add to Cart' button for each product. Implement the corresponding click handler to add items to the user's cart in localStorage.",
             "dependencies": [],
-            "details": "Create the file `models/product.js`. Inside this file, define a Sequelize model named 'Product' with the following attributes: `name` (STRING), `description` (TEXT), `price` (DECIMAL(10, 2)), `quantity` (INTEGER), and `imageUrl` (STRING).",
-            "status": "done",
-            "testStrategy": "After creating the model and adding it to `models/index.js`, run the application's database sync. Connect to the database using a client (like DBeaver or MySQL Workbench) and verify that a 'products' table has been created with the correct columns and data types."
+            "details": "Locate the function responsible for rendering product listings. For each product card, append a button with the text 'Add to Cart'. Create a click event handler for this button that identifies the current logged-in user, finds or creates a corresponding cart in the 'carts' localStorage array, and then adds or updates the item in the 'cart_items' array. If the item already exists for that cart, increment its quantity; otherwise, create a new entry with `cartId`, `productId`, and `quantity: 1`.",
+            "status": "pending",
+            "testStrategy": "Log in as a buyer. Click 'Add to Cart' on a product. Inspect localStorage to verify 'carts' and 'cart_items' arrays are correctly populated. Click the same button again and confirm the quantity is incremented in 'cart_items'."
           },
           {
             "id": 2,
-            "title": "Establish User-Product Model Association",
-            "description": "Update the main models index file to define the relationship between the User and Product models, specifying that a Product belongs to a User (farmer).",
-            "dependencies": [
-              1
-            ],
-            "details": "In `models/index.js`, import the new Product model. Then, establish the one-to-many relationship: `db.User.hasMany(db.Product, { foreignKey: 'farmerId' });` and `db.Product.belongsTo(db.User, { as: 'farmer', foreignKey: 'farmerId' });`. This will add the `farmerId` foreign key to the products table.",
-            "status": "done",
-            "testStrategy": "Restart the application to trigger a database sync. Inspect the 'products' table schema to confirm that the `farmerId` column has been added and that a foreign key constraint to the 'users' table's 'id' column has been created."
+            "title": "Create HTML Structure for the Shopping Cart Page",
+            "description": "Create a new `cart.html` file that will serve as the shopping cart view. This file will contain the basic layout for displaying cart items, the total price, and navigation.",
+            "dependencies": [],
+            "details": "Create a new file named `cart.html`. This file should include the shared site header and footer. In the main content area, add a container element (e.g., `<div id=\"cart-items-container\">`) for the list of items and a separate element to display the grand total (e.g., `<h2>Total: <span id=\"cart-total\">$0.00</span></h2>`). Also, add a link to `cart.html` in the main site navigation bar so users can access it.",
+            "status": "pending",
+            "testStrategy": "Open `cart.html` in a browser. Verify that the basic page structure, including header, footer, and placeholder sections for items and total, is rendered correctly. Confirm the navigation link to the cart page works."
           },
           {
             "id": 3,
-            "title": "Create Product API Routes and Controller Scaffolding",
-            "description": "Set up the necessary routing and controller files for the product API. This involves creating the files and wiring them into the main application.",
+            "title": "Fetch and Display Cart Contents on cart.html",
+            "description": "Implement the JavaScript logic for `cart.html` to fetch the current user's cart data from localStorage and render the items dynamically on the page.",
             "dependencies": [
               2
             ],
-            "details": "Create `routes/product.routes.js` and `controllers/product.controller.js`. In `app.js`, register the new routes with `app.use('/api/products', productRoutes);`. In `product.routes.js`, define router entries for `GET /`, `GET /:id`, `POST /`, `PUT /:id`, and `DELETE /:id`, linking them to empty placeholder functions in `product.controller.js`.",
-            "status": "done",
-            "testStrategy": "Start the server. Use Postman or curl to make a request to `GET http://localhost:PORT/api/products`. Verify that the request hits the placeholder function and returns a success response (e.g., 200 OK with an empty object), confirming the route is active."
+            "details": "Create a script for `cart.html` that runs on page load. This script will: 1. Get the logged-in user. 2. Find their cart and associated items from localStorage. 3. For each item in 'cart_items', retrieve the full product details (name, image, price) from the 'products' array. 4. Dynamically generate and insert HTML into `#cart-items-container` to display each item's details, quantity, and subtotal. Include `+`, `-`, and 'Remove' buttons for each item.",
+            "status": "pending",
+            "testStrategy": "After adding several items to the cart, navigate to `cart.html`. Verify that all items are displayed with the correct image, name, price, quantity, and a calculated subtotal for each."
           },
           {
             "id": 4,
-            "title": "Implement Public Read Endpoints for Products",
-            "description": "Implement the logic for the public-facing GET endpoints to fetch all products and a single product by its ID.",
+            "title": "Implement Item Quantity and Removal Controls",
+            "description": "Add event listeners to the quantity update (`+`, `-`) and 'Remove' buttons for each item in the cart, allowing users to modify their cart contents.",
             "dependencies": [
               3
             ],
-            "details": "In `product.controller.js`, implement the `getAllProducts` function using `Product.findAll({ include: 'farmer' })` to retrieve all products and their associated farmer. Implement `getProductById` using `Product.findByPk(req.params.id, { include: 'farmer' })` to retrieve a single product.",
-            "status": "done",
-            "testStrategy": "Manually add a few product records to the database with valid `farmerId`s. Use Postman to test `GET /api/products` and verify it returns an array of products. Test `GET /api/products/:id` with a valid ID and verify it returns a single product object including the nested farmer data."
+            "details": "Using event delegation on the `#cart-items-container`, add listeners for clicks on the `+`, `-`, and 'Remove' buttons. The '+' handler increments the item's quantity in localStorage. The '-' handler decrements quantity (and removes the item if quantity reaches 0). The 'Remove' handler deletes the item from the 'cart_items' array. After any change to localStorage, re-render the cart display to show the updated state.",
+            "status": "pending",
+            "testStrategy": "On the cart page, click '+' on an item and verify its quantity and subtotal update. Click '-' and verify the change. Click 'Remove' on an item and verify it is removed from the view. Confirm localStorage reflects all changes immediately."
           },
           {
             "id": 5,
-            "title": "Implement and Secure C/U/D Product Endpoints",
-            "description": "Implement the create, update, and delete logic in the product controller and secure these routes to ensure only authorized users can perform these actions.",
+            "title": "Calculate and Dynamically Update Cart Total",
+            "description": "Create and integrate a function to calculate the total price of all items in the cart. This total must update automatically whenever the cart's contents change.",
             "dependencies": [
+              3,
               4
             ],
-            "details": "In `product.routes.js`, apply the `authorize(['farmer', 'admin'])` middleware to the POST, PUT, and DELETE routes. In `product.controller.js`, implement `createProduct`, setting `farmerId` from `req.user.id`. For `updateProduct` and `deleteProduct`, first find the product, then verify that `product.farmerId` matches `req.user.id` before proceeding with the operation.",
-            "status": "done",
-            "testStrategy": "Using Postman, obtain a JWT for a 'farmer' user. Test `POST /api/products` to create a product. Test `PUT /api/products/:id` and `DELETE /api/products/:id` on the created product. Then, obtain a JWT for a 'buyer' user and attempt the same POST, PUT, and DELETE operations, verifying that a 403 Forbidden status is returned."
+            "details": "Create a `updateGrandTotal` function. This function will read the current user's `cart_items` from localStorage, retrieve the price for each product, calculate the subtotal for each item (`price * quantity`), and sum them up to get the grand total. This function must be called on the initial load of `cart.html` and after any action performed in subtask 4 (quantity change or item removal). The result should be displayed in the `#cart-total` element.",
+            "status": "pending",
+            "testStrategy": "Add multiple items to cart. Go to `cart.html` and verify the total is correct. Increase an item's quantity and see the total increase. Remove an item and see the total decrease. Empty the cart and verify the total is $0.00."
           }
         ]
       },
       {
         "id": 7,
-        "title": "Integrate Multer and Sharp for Product Image Uploads",
-        "description": "Enhance the product creation and update endpoints to handle file uploads. Use Multer to process `multipart/form-data` and Sharp to resize images before saving them.",
-        "status": "done",
+        "title": "Develop Order Creation and Checkout Flow",
+        "description": "Implement the process for a buyer to convert their shopping cart into a formal order. This action will create new records in the 'orders' and 'order_items' collections in localStorage and clear the user's cart.",
+        "status": "pending",
         "dependencies": [
           6
         ],
-        "priority": "medium",
-        "details": "Configure Multer with `multer.diskStorage` to define file destination and naming conventions. In `product.routes.js`, add the Multer middleware to the POST and PUT endpoints (e.g., `router.post('/', auth, multerUpload.single('productImage'), productController.create)`). In the controller, after Multer saves the file, use Sharp to read the uploaded image, resize it (e.g., to 500x500), and overwrite the original file. Store the file path/URL in the `imageUrl` field of the `products` table.",
-        "testStrategy": "In Postman, change the body type of the `POST /api/products` request to `form-data`. Add fields for product details and a `File` field for the image. Send the request and verify that the image is saved to the server's filesystem, resized, and the path is correctly stored in the database.",
+        "priority": "high",
+        "details": "On the cart page, add a 'Proceed to Checkout' button. Clicking this should navigate the user to a checkout summary page. On this page, a 'Confirm Order' button will trigger the core logic: \n1. Create a new order object in the 'orders' array with a unique ID, the current `userId`, `totalAmount`, and an initial `status` of 'pending_payment'. \n2. Iterate through the user's 'cart_items', create corresponding 'order_items' linked to the new `orderId`, and add them to the 'order_items' array. \n3. Clear the user's 'cart' and 'cart_items' from localStorage. \n4. Redirect the user to the payment step.",
+        "testStrategy": "As a buyer, add items to the cart and proceed to checkout. After confirming the order, use developer tools to inspect localStorage. Verify that a new entry exists in 'orders', corresponding entries exist in 'order_items', and that the 'carts' and 'cart_items' for that user are now empty.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Install Multer and Sharp npm Packages",
-            "description": "Add Multer for handling multipart/form-data and Sharp for image processing to the project's dependencies.",
+            "title": "Add 'Proceed to Checkout' Button and Navigation",
+            "description": "Add a 'Proceed to Checkout' button to the cart page. This button should be prominently displayed, likely near the cart total. When clicked, it should navigate the user to a new checkout summary page.",
             "dependencies": [],
-            "details": "Run `npm install multer sharp` in the project's root directory. Verify that `multer` and `sharp` are added as dependencies in the `package.json` file.",
-            "status": "done",
-            "testStrategy": "After running the install command, inspect the `package.json` file to confirm `multer` and `sharp` are present in the `dependencies` section. Start the server to ensure no installation-related errors occur."
+            "details": "In `cart.html`, add a button element with an ID like `checkout-btn`. In `js/cart.js`, add an event listener for this button that triggers `window.location.href = 'checkout.html';`. Ensure this button is only enabled when the cart is not empty.",
+            "status": "pending",
+            "testStrategy": "1. Add items to the cart and go to `cart.html`. Verify the 'Proceed to Checkout' button is visible. 2. Click the button and confirm it redirects to a (currently blank) `checkout.html` page. 3. Empty the cart and verify the button is disabled or hidden."
           },
           {
             "id": 2,
-            "title": "Create Multer Configuration Middleware",
-            "description": "Create a new middleware file to configure Multer for image uploads, including storage engine, destination, filename conventions, and file type filtering.",
+            "title": "Create Checkout Summary Page UI",
+            "description": "Create a new `checkout.html` file to serve as the order summary page. This page will display a summary of the items from the cart, the total amount, and a 'Confirm Order' button.",
             "dependencies": [
               1
             ],
-            "details": "Create a new file at `src/middleware/upload.js`. Inside, configure `multer.diskStorage` to save files to a `public/images/products` directory. The filename should be unique, e.g., `product-${Date.now()}-${file.originalname}`. Add a `fileFilter` to accept only image mimetypes like `image/jpeg` and `image/png`. Export the configured multer instance.",
-            "status": "done",
-            "testStrategy": "Manually review the `src/middleware/upload.js` file for correct configuration of storage path, filename logic, and file filter. No direct execution test is needed for this configuration file itself."
+            "details": "Create `checkout.html`. It should include a container (e.g., `<div id=\"order-summary-container\"></div>`) to dynamically display items, a placeholder for the total amount (e.g., `<span id=\"total-amount\"></span>`), and a '<button id=\"confirm-order-btn\">Confirm Order</button>'. Link to the relevant JS files.",
+            "status": "pending",
+            "testStrategy": "Navigate to `checkout.html` directly in the browser. Verify that the basic page structure, including the title, summary container, and 'Confirm Order' button, renders correctly without any data."
           },
           {
             "id": 3,
-            "title": "Integrate Multer Middleware into Product Routes",
-            "description": "Update the `product.routes.js` file to include the newly created Multer middleware for the product creation and update endpoints.",
+            "title": "Implement Order Summary Display Logic",
+            "description": "Write the JavaScript logic to fetch the user's cart data from localStorage and dynamically render it on the `checkout.html` page. This gives the user a final review before confirming.",
             "dependencies": [
               2
             ],
-            "details": "In `src/routes/product.routes.js`, import the configured multer middleware from `src/middleware/upload.js`. Add the middleware `upload.single('productImage')` to the `router.post('/')` and `router.put('/:id')` routes, placing it after the authentication middleware but before the controller function.",
-            "status": "done",
-            "testStrategy": "Use Postman to send a request to the `POST /api/products` endpoint with a non-image file type. The request should be rejected by the middleware with an error. A request with a valid image type should pass through to the controller (which may initially fail until the next step is complete)."
+            "details": "Create a new `js/checkout.js` file or add to `app.js`. On page load for `checkout.html`, call a function like `renderOrderSummary()`. This function will retrieve items from 'cart_items' and 'products' in localStorage, calculate the total, and populate the `order-summary-container` and `total-amount` elements created in the previous task.",
+            "status": "pending",
+            "testStrategy": "1. Add items to the cart and proceed to the checkout page. 2. Verify that all items, their quantities, prices, and the correct total amount are displayed on the checkout summary page, matching the contents of the cart."
           },
           {
             "id": 4,
-            "title": "Update Create Product Controller to Process and Save Image",
-            "description": "Modify the `createProduct` controller function to process the uploaded image using Sharp for resizing and to save the resulting file path to the database.",
+            "title": "Implement Core Order Creation in LocalStorage",
+            "description": "Implement the core logic that executes when the 'Confirm Order' button is clicked. This will create new records in the 'orders' and 'order_items' arrays in localStorage.",
             "dependencies": [
               3
             ],
-            "details": "In `src/controllers/product.controller.js`, update the `createProduct` function. Check if `req.file` exists. If it does, use Sharp to read `req.file.path`, resize the image to 500x500, and save it back to the same path, overwriting the original upload. Construct the publicly accessible path (e.g., `/images/products/filename.jpg`) and save this string to the `imageUrl` field when creating the product record in the database.",
-            "status": "done",
-            "testStrategy": "Use Postman to send a `multipart/form-data` POST request to `/api/products` with product details and an image file. Verify a 201 response. Check the database to confirm the new product has the correct `imageUrl`. Check the `public/images/products` directory to confirm the image was saved and resized."
+            "details": "In the checkout JS file, add an event listener to the `confirm-order-btn`. The handler should: 1. Get current `userId` and cart total. 2. Create a new order object (with unique ID, userId, totalAmount, status 'pending_payment', timestamp) and add it to the 'orders' array in localStorage. 3. Iterate through 'cart_items', create corresponding 'order_items' (linking to the new orderId), and add them to the 'order_items' array in localStorage.",
+            "status": "pending",
+            "testStrategy": "Click 'Confirm Order'. Use browser dev tools to inspect localStorage. Verify that a new object has been added to the 'orders' array and that corresponding objects for each cart item have been added to the 'order_items' array with the correct `orderId`."
           },
           {
             "id": 5,
-            "title": "Update 'Update Product' Controller for Image Replacement",
-            "description": "Modify the `updateProduct` controller function to handle optional new image uploads. If a new image is provided, it should replace the old one, which must be deleted from the filesystem.",
+            "title": "Clear Cart and Redirect to Payment",
+            "description": "After successfully creating the order and order_items records in localStorage, clear the user's cart data and redirect them to the payment page to complete the transaction.",
             "dependencies": [
-              3
+              4
             ],
-            "details": "In `src/controllers/product.controller.js`, update `updateProduct`. Check if `req.file` exists. If so, first find the old product's `imageUrl` from the database. Process the new file with Sharp as in the create step. Update the product record with the new `imageUrl`. After a successful database update, use the `fs` module to delete the old image file from the filesystem. If no new file is uploaded, the image should not be changed.",
-            "status": "done",
-            "testStrategy": "First, create a product with an image. Then, send a PUT request to its endpoint with a new image. Verify the `imageUrl` in the database is updated, the new image exists on the filesystem, and the old image file has been deleted. Send another PUT request without an image file and verify the `imageUrl` remains unchanged."
+            "details": "Extend the 'Confirm Order' button's event handler. After the new order records are saved to localStorage, find and remove the user's cart from the 'carts' array and all their items from the 'cart_items' array. Finally, redirect the user using `window.location.href = 'payment.html?orderId=<new_order_id>';`.",
+            "status": "pending",
+            "testStrategy": "After confirming an order, inspect localStorage to verify that the user's 'cart' and 'cart_items' records have been deleted. Check that the browser is redirected to the payment page with the correct new order ID in the URL query string."
           }
         ]
       },
       {
         "id": 8,
-        "title": "Define Cart and CartItem Models and API",
-        "description": "Create the database models for `carts` and `cart_items` and implement API endpoints for buyers to manage their shopping cart.",
-        "status": "done",
+        "title": "Integrate Stripe for Payment Processing",
+        "description": "Integrate the Stripe.js client-side library to handle payments. After an order is confirmed, the user will complete payment via a Stripe-hosted checkout. A successful payment will update the order's status in localStorage.",
+        "status": "pending",
         "dependencies": [
-          6
+          7
         ],
-        "priority": "medium",
-        "details": "Define `Cart` and `CartItem` models. A `Cart` belongs to a `User`. A `Cart` has many `CartItems`. A `CartItem` belongs to a `Cart` and a `Product`. Create `cart.controller.js` and `cart.routes.js` under `/api/cart`. Implement endpoints for: `GET /` (get user's cart), `POST /` (add item to cart, with `productId` and `quantity`), `PUT /:itemId` (update quantity), and `DELETE /:itemId` (remove item). All routes must be protected and operate on the authenticated user's cart.",
-        "testStrategy": "Log in as a 'buyer'. Use Postman to POST a `productId` to `/api/cart` and verify the item is added. GET `/api/cart` to see the contents. PUT to change a quantity and DELETE to remove an item. Verify all database changes are correct. Attempt to access another user's cart to ensure it's not possible.",
+        "priority": "high",
+        "details": "For this client-side-only project, use Stripe Checkout. \n1. Include the Stripe.js script in your HTML: `<script src=\"https://js.stripe.com/v3/\"></script>`. \n2. On the payment page, initialize Stripe with your public test key. \n3. When the 'Pay with Stripe' button is clicked, store the `orderId` in `sessionStorage` to retrieve it after redirection. \n4. Call `stripe.redirectToCheckout` with `line_items` (prices must be pre-configured in your Stripe Dashboard), `mode: 'payment'`, and `successUrl` / `cancelUrl` pointing to pages in your project. \n5. On the `success.html` page, retrieve the `orderId` from `sessionStorage`, find the corresponding order in localStorage, and update its status to 'paid'.",
+        "testStrategy": "Using Stripe's test keys and test card numbers, complete a checkout. Verify that the user is redirected to the Stripe-hosted page, and after successful payment, lands on your `successUrl`. Inspect localStorage to confirm the relevant order's status has been updated from 'pending_payment' to 'paid'. Test the cancellation flow as well.",
         "subtasks": [
           {
             "id": 1,
-            "title": "Define Cart Model and User Association",
-            "description": "Create the Sequelize model for `Cart`. A user should have one cart. This model will serve as the container for items a user wants to purchase.",
+            "title": "Create Payment-Related HTML Pages and Include Stripe.js",
+            "description": "Create the necessary success and cancellation pages for the Stripe redirect flow. Include the Stripe.js V3 script tag in all relevant HTML files to enable Stripe functionality.",
             "dependencies": [],
-            "details": "Create a new file `models/cart.js`. Define a Sequelize model named `Cart` with a `userId` foreign key. In `models/index.js`, establish a one-to-one relationship: `User.hasOne(Cart)` and `Cart.belongsTo(User)`. Run a sync to create the `carts` table in the database.",
-            "status": "done",
-            "testStrategy": "After creating the model and running the application, check the database schema to ensure the `carts` table exists with a `userId` column and the foreign key constraint is correctly set up."
+            "details": "Create two new files: `success.html` and `cancel.html`. In `order-confirmation.html`, `success.html`, and `cancel.html`, add the following script tag inside the `<head>` section: `<script src=\"https://js.stripe.com/v3/\"></script>`.",
+            "status": "pending",
+            "testStrategy": "Verify that the new files `success.html` and `cancel.html` exist. Inspect the source code of `order-confirmation.html`, `success.html`, and `cancel.html` to confirm the Stripe.js script tag is present in the head of each document."
           },
           {
             "id": 2,
-            "title": "Define CartItem Model and Associations",
-            "description": "Create the Sequelize model for `CartItem`. This model represents a specific product and its quantity within a user's cart.",
+            "title": "Implement Stripe Initialization and Checkout Redirection",
+            "description": "On the order confirmation page, initialize Stripe and add an event listener to the payment button that triggers the redirect to Stripe's hosted checkout page.",
             "dependencies": [
               1
             ],
-            "details": "Create `models/cartItem.js`. Define a model named `CartItem` with `cartId`, `productId`, and `quantity` fields. In `models/index.js`, add the associations: `Cart.hasMany(CartItem)`, `CartItem.belongsTo(Cart)`, and `CartItem.belongsTo(Product)`. This links a cart to its items, and each item to a product.",
-            "status": "done",
-            "testStrategy": "Check the database schema to ensure the `cart_items` table is created with `cartId`, `productId`, and `quantity` columns. Verify that foreign key constraints to `carts` and `products` tables are present."
+            "details": "In a script tag on `order-confirmation.html`, initialize Stripe using a test public key: `const stripe = Stripe('YOUR_TEST_PUBLIC_KEY');`. Add a click event listener to the `#pay-button`. Inside the handler, call `stripe.redirectToCheckout` with hardcoded `successUrl: 'success.html'`, `cancelUrl: 'cancel.html'`, and a placeholder for `line_items`.",
+            "status": "pending",
+            "testStrategy": "On `order-confirmation.html`, click the 'Proceed to Payment' button. Verify that the browser redirects to a Stripe checkout page. This test will fail payment due to placeholder line items, but the redirection успех is the key metric."
           },
           {
             "id": 3,
-            "title": "Setup Cart API Routes and Controller Shell",
-            "description": "Create the router and controller files for the cart API. Define the routes and protect them to ensure only authenticated users can access their cart.",
+            "title": "Dynamically Generate `line_items` for Stripe Checkout",
+            "description": "Enhance the checkout redirection logic to dynamically build the `line_items` array based on the contents of the user's order stored in localStorage.",
             "dependencies": [
               2
             ],
-            "details": "Create `routes/cart.routes.js` and `controllers/cart.controller.js`. In the routes file, define `GET /`, `POST /`, `PUT /:itemId`, and `DELETE /:itemId`. Apply the `authJwt.verifyToken` middleware to all routes. In `app.js`, register the router with `app.use('/api/cart', cartRoutes)`. The controller file should have exported placeholder functions for each endpoint.",
-            "status": "done",
-            "testStrategy": "Start the server. Make a request to a cart endpoint (e.g., `GET /api/cart`) without a JWT and verify a 403 or 401 error is returned. Then, use a valid JWT and ensure the placeholder function is reached (e.g., returns a dummy success message)."
+            "details": "In the `#pay-button` event listener on `order-confirmation.html`, retrieve the `currentOrderId` from `sessionStorage`. Fetch the `orders` from `localStorage` and find the matching order. Create a mapping object like `const productToPriceId = { 'prod_id_1': 'price_id_abc', ... };`. Iterate through the order items, use the map to find the Stripe Price ID for each product, and construct the final `line_items` array for `redirectToCheckout`.",
+            "status": "pending",
+            "testStrategy": "Use browser dev tools to set up an order in localStorage. Click the payment button and inspect the network request or Stripe logs (if available) to ensure the `line_items` sent to `redirectToCheckout` correctly match the items and quantities from the order."
           },
           {
             "id": 4,
-            "title": "Implement GET Cart and POST Add Item Logic",
-            "description": "Implement the controller logic to retrieve the user's current cart and to add a new item to it.",
+            "title": "Implement Payment Success Handling and Order Status Update",
+            "description": "On the `success.html` page, retrieve the order ID, find the corresponding order in localStorage, and update its status to 'paid'.",
             "dependencies": [
-              3
+              1
             ],
-            "details": "In `cart.controller.js`, implement `getCart` and `addItem`. For `getCart`: find the cart for `req.userId`, creating it if it doesn't exist. Eagerly load `CartItems` and their associated `Product` data. For `addItem`: find the user's cart, check if the `productId` from `req.body` is already in the cart. If so, update its quantity. If not, create a new `CartItem` record.",
-            "status": "done",
-            "testStrategy": "Using Postman with a buyer's JWT, send a `POST` request to `/api/cart` with a `productId` and `quantity`. Verify a 201 response. Then, send a `GET` request to `/api/cart` and verify the response contains the added item and its product details."
+            "details": "Create a script in `success.html` that runs on `DOMContentLoaded`. It will get the `currentOrderId` from `sessionStorage`. Then, it will retrieve the 'orders' array from `localStorage`, find the order with the matching `orderId`, change its `status` property from 'pending_payment' to 'paid', and write the modified array back to `localStorage`. Display a user-friendly success message and clear the `currentOrderId` from sessionStorage.",
+            "status": "pending",
+            "testStrategy": "After a successful test payment, land on `success.html`. Open developer tools and inspect localStorage. Verify that the `status` of the relevant order inside the 'orders' array has been updated to 'paid'."
           },
           {
             "id": 5,
-            "title": "Implement PUT Update and DELETE Remove Item Logic",
-            "description": "Implement the controller logic for updating the quantity of an item in the cart and for removing an item completely.",
+            "title": "Create Payment Cancellation Page User Experience",
+            "description": "Develop the `cancel.html` page to provide clear feedback to the user that their payment was not completed and offer them a path acessórios to try again.",
             "dependencies": [
-              3
+              1
             ],
-            "details": "In `cart.controller.js`, implement `updateItemQuantity` and `removeItem`. For `updateItemQuantity`: find the `CartItem` by its ID (`req.params.itemId`). Verify it belongs to the authenticated user's cart before updating its `quantity` from `req.body`. For `removeItem`: find the `CartItem` by its ID, verify ownership, and then delete the record.",
-            "status": "done",
-            "testStrategy": "After adding an item, use a `PUT` request to `/api/cart/:itemId` with a new quantity and verify the change. Then, use a `DELETE` request to `/api/cart/:itemId` and verify the item is removed from the cart. Attempting to modify an item belonging to another user's cart should fail."
+            "details": "In `cancel.html`, add HTML content that informs the user their payment was canceled or failed. Include at least one anchor tag (`<a>`) linking back to `order-confirmation.html` so they can attempt payment again.",
+            "status": "pending",
+            "testStrategy": "During a Stripe checkout session, click the 'back' or 'cancel' link provided by the Stripe UI. Verify that you are redirected to your `cancel.html` page and that it displays the expected cancellation message and a link to return to the payment process."
           }
         ]
       },
       {
         "id": 9,
-        "title": "Define Order and OrderItem Models and Create Order Logic",
-        "description": "Create the `orders` and `order_items` models. Implement the logic to convert a user's cart into a formal order record in the database.",
-        "status": "done",
+        "title": "Create Farmer Dashboard for Order and Product Management",
+        "description": "Build a dedicated dashboard for farmers to view their incoming orders and manage their product listings. This provides farmers with central control over their sales and inventory.",
+        "status": "pending",
         "dependencies": [
+          4,
           8
         ],
-        "priority": "high",
-        "details": "Define `Order` and `OrderItem` models. An `Order` belongs to a `User`. An `Order` has many `OrderItems`. An `OrderItem` belongs to an `Order` and a `Product`. Create an endpoint `POST /api/orders`. This controller function should: 1. Find the user's cart. 2. Create a new `Order` record with a `totalAmount` and `status` ('pending'). 3. Move all `CartItem` records to new `OrderItem` records associated with the new order. 4. Clear the user's cart. Wrap this logic in a Sequelize transaction to ensure atomicity.",
-        "testStrategy": "Add items to a buyer's cart. Call `POST /api/orders`. Verify that a new record is created in the `orders` table and that corresponding records are created in `order_items`. Check that the `cart_items` and `carts` tables are now empty for that user. Ensure the product's available quantity is decremented.",
+        "priority": "medium",
+        "details": "Create a `dashboard.html` page protected for farmer roles. On load, the script will:\n1. Get all `orders` and `order_items` from localStorage. \n2. Get all `products` belonging to the logged-in farmer. \n3. Filter `order_items` to find only those that match the farmer's product IDs. \n4. Group these items by `orderId` and display the relevant orders, showing buyer info, product details, and quantity. \n5. For each order, provide a dropdown or buttons to update the status (e.g., 'Paid' -> 'Processing' -> 'Shipped'). This action will update the status field in the main 'orders' object in localStorage. The dashboard should also link to the product management (CRUD) interface.",
+        "testStrategy": "1. As a buyer, place an order containing products from two different farmers. 2. Log in as Farmer A. Verify their dashboard shows only the order items related to their products. 3. Update an order's status to 'Shipped'. 4. Log in as Farmer B and verify they see their portion of the order and that the status change from Farmer A is not reflected on their view of the same order (as status is on the order level, this requires careful UI design).",
         "subtasks": [
           {
             "id": 1,
-            "title": "Define the Order Model and its Association with User",
-            "description": "Create the Sequelize model for `Order` in a new file `models/order.js`. An order must belong to a user.",
+            "title": "Create and Secure Farmer Dashboard HTML and JS Files",
+            "description": "Create the basic `dashboard.html` file and its corresponding JavaScript file (`dashboard.js`). Implement route protection to ensure only users with the 'farmer' role can access this page.",
             "dependencies": [],
-            "details": "Create a new file at `models/order.js`. Define the `Order` model with fields: `userId` (ForeignKey to User), `totalAmount` (DECIMAL), and `status` (ENUM['pending', 'paid', 'shipped', 'delivered', 'cancelled']). In `models/index.js`, import the new model and establish the `Order.belongsTo(User)` and `User.hasMany(Order)` associations.",
-            "status": "done",
-            "testStrategy": "After creating the model, run the application's database sync to ensure the `orders` table is created correctly with the specified columns and foreign key constraints."
+            "details": "Create a new `dashboard.html` file within the project root. This file should have a basic structure with a main container for orders and a link for product management. Link a new `js/dashboard.js` script. In this script, add a function that runs on page load to check `localStorage` for a session object and verify the user's role is 'farmer'. If the check fails, redirect the user to `login.html`.",
+            "status": "pending",
+            "testStrategy": "1. Attempt to navigate directly to `dashboard.html` while not logged in; verify redirection to the login page. 2. Log in as a 'Buyer' and attempt to access `dashboard.html`; verify redirection. 3. Log in as a 'Farmer' and verify `dashboard.html` loads successfully."
           },
           {
             "id": 2,
-            "title": "Define the OrderItem Model and its Associations",
-            "description": "Create the Sequelize model for `OrderItem` in a new file `models/orderItem.js`. An OrderItem links an Order to a Product.",
+            "title": "Fetch and Render Farmer-Specific Orders on Dashboard",
+            "description": "Implement the core logic in `dashboard.js` to retrieve data from localStorage, identify orders relevant to the logged-in farmer, and display them on the page.",
             "dependencies": [
               1
             ],
-            "details": "Create a new file at `models/orderItem.js`. Define the `OrderItem` model with fields: `orderId` (ForeignKey to Order), `productId` (ForeignKey to Product), `quantity` (INTEGER), and `price` (DECIMAL, to store the price at time of purchase). In `models/index.js`, import the model and establish the `OrderItem.belongsTo(Order)`, `Order.hasMany(OrderItem)`, and `OrderItem.belongsTo(Product)` associations.",
-            "status": "done",
-            "testStrategy": "Run the database sync again to ensure the `order_items` table is created with the correct columns and foreign key relationships to the `orders` and `products` tables."
+            "details": "Within `dashboard.js`, create a function to be called after the role check. This function will: 1. Get the logged-in farmer's ID from the session. 2. Load 'products', 'orders', and 'order_items' from localStorage. 3. Create a list of product IDs owned by the farmer. 4. Filter 'order_items' to find only those matching the farmer's product IDs. 5. Group the filtered items by `orderId`. 6. For each unique order, dynamically generate and inject HTML into the dashboard to display the order details, including the specific products, quantities, and prices for that farmer.",
+            "status": "pending",
+            "testStrategy": "1. As a buyer, place an order with products from two different farmers. 2. Log in as Farmer A. Verify their dashboard shows an order containing only their products. 3. Log in as Farmer B and verify their dashboard shows the same order but only with their products listed."
           },
           {
             "id": 3,
-            "title": "Implement the Order Creation Controller Logic",
-            "description": "In a new file `controllers/order.controller.js`, create the `createOrder` function that converts a user's cart into a new order, wrapped in a Sequelize transaction.",
+            "title": "Implement Order Status Update Functionality",
+            "description": "Add an interactive element, such as a dropdown menu, to each displayed order, allowing the farmer to update the order's status. The change should be saved back to localStorage.",
             "dependencies": [
               2
             ],
-            "details": "The `createOrder` function will accept `req` and `res`. It will use `sequelize.transaction(async (t) => { ... })`. Inside the transaction: 1. Find the user's cart and cart items using `req.user.id`. 2. Calculate the total price from the cart items. 3. Create a new `Order` record. 4. Use `OrderItem.bulkCreate` to create new `OrderItem` records from the `CartItem` data. 5. Delete all `CartItem` records for that user's cart.",
-            "status": "done",
-            "testStrategy": "This logic is not directly testable via an endpoint yet. A unit test could be written to mock the models and verify the transaction logic, ensuring all steps (create order, create items, delete cart items) are called correctly."
+            "details": "For each order rendered on the dashboard, append a `<select>` element populated with status options (e.g., 'Paid', 'Processing', 'Shipped'). Set the dropdown's initial value to the order's current status. Attach an 'change' event listener that, when triggered, gets the `orderId` (from a data-attribute) and the new status. The listener will then load the 'orders' array from localStorage, find the corresponding order object by ID, update its 'status' field, and save the entire 'orders' array back to localStorage.",
+            "status": "pending",
+            "testStrategy": "1. Log in as a farmer and view an order with 'Paid' status. 2. Change the status to 'Processing' using the dropdown. 3. Refresh the page and verify the status remains 'Processing'. 4. Use browser developer tools to inspect localStorage and confirm the 'status' field for that specific order object has been updated."
           },
           {
             "id": 4,
-            "title": "Decrement Product Quantity on Order Creation",
-            "description": "Update the order creation logic to decrement the `availableQuantity` of each product when an order is successfully placed.",
+            "title": "Display Buyer Information and Add Product Management Link",
+            "description": "Enhance the order display by showing the buyer's information. Also, add a clear and functional link for the farmer to navigate to their product management page.",
             "dependencies": [
-              3
+              2
             ],
-            "details": "Within the Sequelize transaction in `order.controller.js`, after retrieving the cart items, iterate through them. For each item, find the corresponding `Product` and decrement its `availableQuantity` by the `quantity` in the cart item. Ensure there is sufficient quantity available before proceeding with the order. If any product is out of stock, the transaction should be rolled back.",
-            "status": "done",
-            "testStrategy": "Update unit tests to check that `Product.update` is called with the decremented quantity for each item in the order. Add a test case where an order for an out-of-stock item fails and rolls back the transaction."
+            "details": "In `dashboard.html`, add a prominent `<a>` tag or button with the text 'Manage My Products' that links to the existing product CRUD page. In `dashboard.js`, modify the order rendering logic: for each order, use the `userId` from the order object to find the corresponding user in the 'users' array from localStorage. Display the buyer's email or name next to the order details.",
+            "status": "pending",
+            "testStrategy": "1. On the farmer dashboard, verify each order displays the correct buyer's email. 2. Click the 'Manage My Products' link. 3. Verify that you are successfully navigated to the product creation/editing interface."
           },
           {
             "id": 5,
-            "title": "Create and Secure the Order Creation API Endpoint",
-            "description": "Create `routes/order.routes.js` to define the `POST /api/orders` endpoint and protect it with authentication middleware.",
+            "title": "Style Dashboard UI for Consistency and Readability",
+            "description": "Apply CSS to the dashboard to ensure its appearance is consistent with the rest of the application, the layout is organized, and the information is presented clearly.",
             "dependencies": [
+              3,
               4
             ],
-            "details": "Create the new route file. Import the Express router and the `createOrder` function from `order.controller.js`. Import the `authenticate` and `authorize` middleware from `middleware/auth.js`. Define the route: `router.post('/', [authenticate, authorize(['buyer'])], createOrder)`. Finally, mount this router in `app.js` under the `/api/orders` path.",
-            "status": "done",
-            "testStrategy": "Using Postman, log in as a 'buyer' to get a JWT. Add items to the cart. Make a `POST` request to `/api/orders` with the token. Verify a 201 response and check the database to confirm the `orders` and `order_items` tables are populated, `cart_items` is empty, and `products`.`availableQuantity` is reduced."
+            "details": "Create or update a project-wide CSS file to style the elements on `dashboard.html`. Use Flexbox or CSS Grid to structure the main layout. Style the individual order 'cards' to clearly separate them. Apply consistent styling to buttons, dropdowns, and typography to match the application's theme. Ensure the layout is responsive and usable on smaller screens.",
+            "status": "pending",
+            "testStrategy": "1. Open the dashboard in a desktop browser and verify the layout is clean and all information is readable. 2. Use browser developer tools to simulate a mobile device viewport. 3. Verify the layout adjusts correctly and remains usable without horizontal scrolling."
           }
         ]
       },
       {
         "id": 10,
-        "title": "Implement Order Management API Endpoints",
-        "description": "Develop API endpoints for users to view their order history and for farmers/admins to manage and update order statuses.",
-        "status": "done",
+        "title": "Implement Buyer Order History and UI/UX Refinements",
+        "description": "Create a dashboard for buyers to view their order history and track statuses. Implement global UI/UX improvements such as notifications, form validation, and mobile-responsive design.",
+        "status": "pending",
         "dependencies": [
+          8,
           9
         ],
         "priority": "medium",
-        "details": "In `order.routes.js`, add endpoints: `GET /` (for a buyer to get their own order history), `GET /:id` (for a buyer to get a specific order), `GET /all` (admin/farmer route to see all relevant orders), and `PUT /:id/status` (admin/farmer route to update order status, e.g., 'processing', 'shipped', 'fulfilled'). Use middleware to enforce role permissions. The GET endpoints should use Sequelize's `include` to fetch associated `OrderItems` and `Products`.",
-        "testStrategy": "As a buyer, call `GET /api/orders` to see your order history. As a farmer, call `PUT /api/orders/:id/status` to update an order's status and verify the change in the database. As an admin, call `GET /api/orders/all` to see all orders on the platform.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Setup Order Routes and Controller Structure",
-            "description": "Create the necessary files `order.routes.js` and `order.controller.js`. Define placeholder functions for all required endpoints and wire up the router in the main application file.",
-            "dependencies": [],
-            "details": "Create `routes/order.routes.js` and `controllers/order.controller.js`. In the main app file, likely `app.js`, add `app.use('/api/orders', orderRoutes);`. In `order.controller.js`, create empty async functions: `getMyOrders`, `getOrderById`, `getAllOrders`, and `updateOrderStatus`. In `order.routes.js`, define the routes and link them to these new controller functions.",
-            "status": "done",
-            "testStrategy": "Verify the server starts without errors after adding the new route file. Making a request to any `/api/orders` endpoint should not result in a 'Cannot GET/PUT' error, but rather hang or return the empty response from the placeholder function."
-          },
-          {
-            "id": 2,
-            "title": "Implement Buyer Order History Endpoints (GET / and GET /:id)",
-            "description": "Implement the logic for a logged-in buyer to retrieve their own list of orders and a single specific order. These endpoints must be protected and accessible only to users with the 'buyer' role.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `order.controller.js`, implement `getMyOrders` and `getOrderById`. Use `req.user.id` from the auth middleware to filter orders. Use Sequelize's `findAll` and `findOne` with an `include` option to join `OrderItems` which should then also include the associated `Product` model. In `order.routes.js`, apply the `protect` and `authorize(['buyer'])` middleware to these two routes.",
-            "status": "done",
-            "testStrategy": "Log in as a buyer. Send a GET request to `/api/orders` and verify the response contains an array of only that user's orders. Send a GET request to `/api/orders/:id` for one of those orders and verify the correct details and associated items are returned."
-          },
-          {
-            "id": 3,
-            "title": "Implement Admin/Farmer Endpoint to Get All Orders (GET /all)",
-            "description": "Create the endpoint for administrators and farmers to retrieve a list of all orders relevant to them. This route must be protected and restricted to 'admin' and 'farmer' roles.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `order.controller.js`, implement the `getAllOrders` function. The function will fetch all orders from the database using Sequelize's `findAll`, including `OrderItems` and `Products`. In `order.routes.js`, secure this route using the `protect` and `authorize(['admin', 'farmer'])` middleware.",
-            "status": "done",
-            "testStrategy": "Log in as an admin or farmer. Send a GET request to `/api/orders/all` and verify all system orders are returned. Log in as a buyer and attempt to access the same endpoint, expecting a 403 Forbidden error."
-          },
-          {
-            "id": 4,
-            "title": "Implement Endpoint to Update Order Status (PUT /:id/status)",
-            "description": "Develop the endpoint for administrators and farmers to update the status of a specific order. The endpoint should validate the new status against the allowed values in the model.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `order.controller.js`, implement `updateOrderStatus`. It should extract the `status` from `req.body`. Find the order by `req.params.id`. Validate the new status against the ENUM values defined in the Order model. Update the order's status property and save it. Secure the route in `order.routes.js` with `protect` and `authorize(['admin', 'farmer'])`.",
-            "status": "done",
-            "testStrategy": "Log in as a farmer. Send a PUT request to `/api/orders/:id/status` with `{\"status\": \"shipped\"}` in the body. Verify a 200 OK response and check the database to confirm the status was updated. Attempt with an invalid status and expect a 400 Bad Request error."
-          },
-          {
-            "id": 5,
-            "title": "Finalize Middleware and Add Comprehensive Error Handling",
-            "description": "Review all newly created order endpoints to ensure the `protect` and `authorize` middleware are correctly applied. Add robust try-catch blocks and consistent error responses for all controller functions.",
-            "dependencies": [
-              2,
-              3,
-              4
-            ],
-            "details": "In `order.routes.js`, double-check that every new route has the correct `protect` and `authorize` middleware sequence. In `order.controller.js`, wrap the logic of each implemented function in a `try-catch` block. Ensure that database errors, 'not found' errors (404), and invalid input errors (400) are handled gracefully, returning appropriate status codes and JSON error messages.",
-            "status": "done",
-            "testStrategy": "Perform a full regression test. Attempt to access each endpoint without a token (expect 401), with the wrong role (expect 403), with a non-existent order ID (expect 404), and with invalid body data for the PUT request (expect 400). Verify success cases still work as expected."
-          }
-        ]
-      },
-      {
-        "id": 11,
-        "title": "Integrate Stripe and Create Payment Intent Endpoint",
-        "description": "Set up the Stripe Node.js SDK and create a backend endpoint that generates a Stripe Payment Intent for a given order.",
-        "status": "pending",
-        "dependencies": [
-          9
-        ],
-        "priority": "high",
-        "details": "Install the `stripe` npm package. Initialize Stripe in a config file with the secret key from `.env`. Create a new route, `POST /api/payments/create-intent`. The controller should take an `orderId` from the request body. It will fetch the order, verify its status is 'pending', calculate the total amount in cents, and use `stripe.paymentIntents.create()` to generate an intent. The response should send the `client_secret` from the PaymentIntent object back to the client.",
-        "testStrategy": "After creating an order, use Postman to call `POST /api/payments/create-intent` with the `orderId`. Verify a 200 OK response containing a `client_secret` string. Check the Stripe Dashboard (in test mode) to confirm a new, incomplete payment intent has been created for the correct amount.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Install Stripe SDK and Configure Environment",
-            "description": "Install the `stripe` npm package and add the Stripe secret key to the environment variables. Create a dedicated configuration file to initialize and export the Stripe instance.",
-            "dependencies": [],
-            "details": "Run `npm install stripe`. Add `STRIPE_SECRET_KEY=your_secret_key` to the `.env` file. Create `src/config/stripe.js`. In this file, require `stripe`, initialize it with `process.env.STRIPE_SECRET_KEY`, and export the instance for use in other parts of the application.",
-            "status": "pending",
-            "testStrategy": "Verify that the `stripe` package is added to `package.json`. Check that the application starts without errors, indicating the Stripe instance is initialized correctly."
-          },
-          {
-            "id": 2,
-            "title": "Create Payment Routes and Controller Files",
-            "description": "Generate the necessary files for handling payment-related logic. This includes a new route file for payment endpoints and a corresponding controller file. Register the new route in the main application file.",
-            "dependencies": [],
-            "details": "Create `src/routes/payment.routes.js` and `src/controllers/payment.controller.js`. In `src/app.js` (or the main server file), import the new payment routes and mount them using `app.use('/api/payments', paymentRoutes);` following the existing pattern for other routes like auth and products.",
-            "status": "pending",
-            "testStrategy": "Start the server and make a request to a test endpoint on `/api/payments` (e.g., `/api/payments/test`). A 404 is acceptable, but it should not crash the server, proving the route file is correctly registered."
-          },
-          {
-            "id": 3,
-            "title": "Define POST /api/payments/create-intent Route",
-            "description": "In the newly created payment routes file, define the `POST /create-intent` endpoint. This route should be protected by the existing authentication middleware to ensure only logged-in users can access it.",
-            "dependencies": [
-              2
-            ],
-            "details": "In `src/routes/payment.routes.js`, import the Express router, the `auth` middleware from `src/middleware/auth.js`, and a placeholder controller function from `payment.controller.js`. Define the route as `router.post('/create-intent', auth, paymentController.createPaymentIntent);`.",
-            "status": "pending",
-            "testStrategy": "Using Postman, send a POST request to `/api/payments/create-intent` without an Authorization token. Verify that a 401 Unauthorized error is returned, confirming the auth middleware is active."
-          },
-          {
-            "id": 4,
-            "title": "Implement Order Retrieval and Amount Calculation in Controller",
-            "description": "In the payment controller, implement the initial logic for the `createPaymentIntent` function. This includes fetching the order by its ID from the request body, verifying it belongs to the authenticated user, checking its status, and calculating the total amount to be charged.",
-            "dependencies": [
-              3
-            ],
-            "details": "In `src/controllers/payment.controller.js`, get `orderId` from `req.body` and `userId` from `req.user`. Use the `Order` model to find the order, including its associated `OrderItems`. Verify the order's status is 'pending'. Sum the `price * quantity` for all items to get the total. Convert the final amount to cents (`totalAmount * 100`). Handle cases where the order is not found or invalid.",
-            "status": "pending",
-            "testStrategy": "Add `console.log` statements for the calculated amount and use Postman with a valid `orderId` and auth token. Verify the correct total amount in cents is logged to the console."
-          },
-          {
-            "id": 5,
-            "title": "Integrate Stripe API and Finalize Endpoint Response",
-            "description": "Complete the `createPaymentIntent` controller by calling the Stripe API. Use the calculated amount to create a Payment Intent and return the `client_secret` to the client.",
-            "dependencies": [
-              1,
-              4
-            ],
-            "details": "Import the configured Stripe instance from `src/config/stripe.js`. Within the controller, after calculating the amount, call `await stripe.paymentIntents.create({ amount: totalInCents, currency: 'usd', metadata: { orderId: order.id } });`. Wrap this in a try-catch block. On success, respond with a JSON object `{ clientSecret: paymentIntent.client_secret }`. On failure, return a 500 error.",
-            "status": "pending",
-            "testStrategy": "Using Postman, call the endpoint with a valid `orderId` and auth token. Verify a 200 OK response is received with a non-null `clientSecret` string. Check the Stripe Dashboard in test mode to confirm a new payment intent was created for the correct amount."
-          }
-        ]
-      },
-      {
-        "id": 12,
-        "title": "Define Payment Model and Implement Payment Confirmation",
-        "description": "Create a `Payment` model and an endpoint to handle post-payment confirmation. This will update the order status and record the payment details.",
-        "status": "pending",
-        "dependencies": [],
-        "priority": "medium",
-        "details": "Define a `Payment` model with fields like `orderId`, `stripePaymentId`, `amount`, and `status`. Create a webhook endpoint `POST /api/payments/webhook` to listen for Stripe events (e.g., `payment_intent.succeeded`). In the webhook handler, verify the event signature, extract the payment intent ID, find the corresponding order in your DB, create a record in your `payments` table, and update the order's status to 'paid' or 'processing'.",
-        "testStrategy": "Use the Stripe CLI to trigger a `payment_intent.succeeded` event pointed at your local webhook endpoint. Verify that the webhook receives the event, creates a new record in the `payments` table, and correctly updates the `status` of the associated order in the `orders` table.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Define Payment Sequelize Model",
-            "description": "Create the Sequelize model for payments, including its attributes and associations with the Order model. This will establish the database table structure for storing payment records.",
-            "dependencies": [],
-            "details": "Create a new file `models/payment.js`. Define a 'Payment' model with fields: `orderId` (INTEGER, foreign key), `stripePaymentId` (STRING), `amount` (DECIMAL), `currency` (STRING), and `status` (STRING, e.g., 'succeeded', 'failed'). In `models/index.js`, establish the relationship: `Order.hasOne(db.Payment)` and `db.Payment.belongsTo(db.Order)`. Sync the model to create the table.",
-            "status": "pending",
-            "testStrategy": "Run the application and use a database client to verify that the `payments` table has been created with the correct columns and that a foreign key constraint to the `orders` table exists."
-          },
-          {
-            "id": 2,
-            "title": "Create Payment Routes and Controller Files",
-            "description": "Set up the necessary routing and controller files to handle payment-related API endpoints. This includes creating the initial webhook endpoint structure.",
-            "dependencies": [],
-            "details": "Create `controllers/payment.controller.js` and `routes/payment.routes.js`. In `payment.routes.js`, define a router and a `POST /webhook` route. In `app.js`, register the payment router under the `/api/payments` path. The controller function should initially just log the request and send a 200 OK response.",
-            "status": "pending",
-            "testStrategy": "Start the server and make a POST request to `/api/payments/webhook` using Postman. Verify that the server logs the request and returns a 200 status code."
-          },
-          {
-            "id": 3,
-            "title": "Implement Stripe Webhook Signature Verification",
-            "description": "Secure the webhook endpoint by implementing Stripe's signature verification logic. This ensures that incoming requests originate from Stripe and have not been tampered with.",
-            "dependencies": [
-              2
-            ],
-            "details": "Install the Stripe Node.js library (`npm install stripe`). In `app.js`, configure a special `express.raw({type: 'application/json'})` middleware specifically for the `/api/payments/webhook` route. In `payment.controller.js`, use `stripe.webhooks.constructEvent` to validate the request body against the `stripe-signature` header and a new `STRIPE_WEBHOOK_SECRET` environment variable. Handle verification errors by returning a 400 status.",
-            "status": "pending",
-            "testStrategy": "Use the Stripe CLI to forward a test event to your local endpoint. First, test with an incorrect webhook secret to ensure a 400 error is returned. Then, test with the correct secret to verify the request is processed successfully."
-          },
-          {
-            "id": 4,
-            "title": "Implement Business Logic for 'payment_intent.succeeded' Event",
-            "description": "Write the core logic inside the webhook handler to process successful payments. This involves creating a payment record and updating the corresponding order status.",
-            "dependencies": [
-              1,
-              3
-            ],
-            "details": "Inside the verified webhook handler in `payment.controller.js`, add a switch statement for `event.type`. For `payment_intent.succeeded`, extract the `paymentIntent` object. Use the `orderId` from the payment intent's metadata to find the corresponding `Order` in the database. Use a Sequelize transaction to: 1. Create a new record in the `payments` table with details from the `paymentIntent`. 2. Update the `status` of the `Order` record to 'paid'.",
-            "status": "pending",
-            "testStrategy": "Using the Stripe CLI, trigger a `payment_intent.succeeded` event that includes an `orderId` in its metadata. Verify in the database that a new record is created in the `payments` table and that the status of the associated order in the `orders` table is updated to 'paid'."
-          },
-          {
-            "id": 5,
-            "title": "Add Environment Variables and Update Documentation",
-            "description": "Add the new required environment variable for the Stripe webhook secret to the example configuration and document the setup process for other developers.",
-            "dependencies": [
-              3
-            ],
-            "details": "Add `STRIPE_WEBHOOK_SECRET` to the `.env.example` file with a placeholder value. Update the project's README.md with instructions on how to obtain a webhook signing secret from the Stripe Dashboard and set it up locally. Include a command for using the Stripe CLI to test the webhook.",
-            "status": "pending",
-            "testStrategy": "Have a new developer follow the updated documentation to set up the environment for payment webhooks. Verify they can successfully run the project and receive test webhook events from Stripe."
-          }
-        ]
-      },
-      {
-        "id": 13,
-        "title": "Implement Admin User Management API Endpoints",
-        "description": "Create a full set of CRUD API endpoints at `/api/users` for administrators to manage all users on the platform.",
-        "status": "done",
-        "dependencies": [
-          5
-        ],
-        "priority": "medium",
-        "details": "Create `user.controller.js` and `user.routes.js`. Implement `getAllUsers`, `getUserById`, `updateUser`, and `deleteUser` functions. Secure all these routes using the `authorize(['admin'])` middleware to ensure only administrators can perform these actions. The `updateUser` endpoint can be used to change user roles or other details.",
-        "testStrategy": "Using an admin JWT, test all CRUD operations on the `/api/users` endpoints. Verify you can get a list of users, update a user's role, and delete a user. Attempt to access these endpoints with a buyer or farmer JWT and verify a 403 Forbidden error is returned.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create User Management Controller and Route Files",
-            "description": "Set up the necessary files for user management API endpoints. This includes creating a new controller file for the logic and a new routes file for defining the endpoint paths, and integrating them into the main application.",
-            "dependencies": [],
-            "details": "Create `src/controllers/user.controller.js` and `src/routes/user.routes.js`. In `user.routes.js`, initialize an Express router. In `server.js`, require the new user routes file and mount it on the `/api/users` path using `app.use('/api/users', userRoutes);`.",
-            "status": "done",
-            "testStrategy": "After integrating the routes in `server.js`, start the server and make a request to a dummy endpoint on `/api/users`. A 404 is acceptable, but the server should not crash, indicating the router is correctly mounted."
-          },
-          {
-            "id": 2,
-            "title": "Implement GET /api/users Endpoint to List All Users",
-            "description": "Create the controller function and route for administrators to retrieve a complete list of all users in the system. The returned data should not include sensitive information like passwords.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `user.controller.js`, create an `async` function `getAllUsers`. Use the `User.findAll()` Sequelize method with the `attributes: { exclude: ['password'] }` option. In `user.routes.js`, define the `GET /` route, linking it to the `getAllUsers` controller. Secure this route using the `authenticate` and `authorize(['admin'])` middleware.",
-            "status": "done",
-            "testStrategy": "Using an API client like Postman, send a GET request to `/api/users` with a valid admin JWT. Verify a 200 OK response and an array of user objects. Ensure the 'password' field is not present in the response. Test with a non-admin JWT and verify a 403 Forbidden error."
-          },
-          {
-            "id": 3,
-            "title": "Implement GET /api/users/:id Endpoint to Fetch a Single User",
-            "description": "Create the controller function and route for an administrator to fetch a single user's details by their ID. This endpoint should handle cases where the user is not found.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `user.controller.js`, create an `async` function `getUserById`. Use `User.findByPk(req.params.id, { attributes: { exclude: ['password'] } })`. If the user is not found, return a 404 error. In `user.routes.js`, define the `GET /:id` route and secure it with `authenticate` and `authorize(['admin'])` middleware.",
-            "status": "done",
-            "testStrategy": "Using an API client, send a GET request to `/api/users/:id` with an admin JWT and a valid user ID. Verify a 200 OK response with the correct user's data (excluding password). Test with an invalid ID to ensure a 404 response. Test with a non-admin JWT to ensure a 403 response."
-          },
-          {
-            "id": 4,
-            "title": "Implement PUT /api/users/:id Endpoint to Update User Details",
-            "description": "Create the controller function and route for an administrator to update a user's information, such as their role or username. The endpoint should find the user, apply the updates, and save the changes.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `user.controller.js`, create `updateUser`. Find the user using `User.findByPk(req.params.id)`. If found, update the user object with fields from `req.body` (e.g., `username`, `email`, `role`). Call `user.save()` and return the updated user object (excluding password). In `user.routes.js`, create the `PUT /:id` route and secure it with `authenticate` and `authorize(['admin'])` middleware.",
-            "status": "done",
-            "testStrategy": "With an admin JWT, send a PUT request to `/api/users/:id` with a JSON body like `{\"role\": \"farmer\"}`. Verify a 200 OK response with the updated user object. Check the database or use the GET endpoint to confirm the user's role has changed. Test with a non-admin JWT to ensure a 403 response."
-          },
-          {
-            "id": 5,
-            "title": "Implement DELETE /api/users/:id Endpoint to Remove a User",
-            "description": "Create the controller function and route for an administrator to permanently delete a user from the database. This is the final piece of the CRUD functionality.",
-            "dependencies": [
-              1
-            ],
-            "details": "In `user.controller.js`, create `deleteUser`. Find the user by `req.params.id`. If the user exists, call the `user.destroy()` method. Respond with a 204 No Content or a success message. Handle cases where the user is not found. In `user.routes.js`, create the `DELETE /:id` route and secure it with `authenticate` and `authorize(['admin'])` middleware.",
-            "status": "done",
-            "testStrategy": "With an admin JWT, send a DELETE request to `/api/users/:id` for a test user. Verify a 204 or 200 response. Attempt to fetch the same user via `GET /api/users/:id` and verify a 404 Not Found response. Test with a non-admin JWT to ensure a 403 response."
-          }
-        ]
-      },
-      {
-        "id": 14,
-        "title": "Set Up Basic Frontend Structure (HTML, CSS, JS)",
-        "description": "Create the foundational HTML files for the main user-facing pages, link a CSS framework like Bootstrap, and set up the basic JavaScript file structure.",
-        "status": "done",
-        "dependencies": [
-          1
-        ],
-        "priority": "low",
-        "details": "In a `public` directory served by Express static middleware, create HTML files: `index.html` (product listing), `login.html`, `register.html`, `cart.html`, `checkout.html`, and separate dashboard pages for `admin.html` and `farmer.html`. Link the Bootstrap CDN in the `<head>` of each file for styling. Create a `js/` folder with files like `main.js`, `auth.js`, `products.js` to organize frontend logic.",
-        "testStrategy": "Start the server and navigate to the URLs corresponding to the static HTML files (e.g., `http://localhost:3000/login.html`). Verify that the pages render correctly with Bootstrap styles applied. Check the browser console for any errors.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Create Public Directory and Main `index.html` File",
-            "description": "Establish the root directory for static frontend assets and create the primary entry point, `index.html`, which will serve as the product listing page. This is the foundational step for all frontend files.",
-            "dependencies": [],
-            "details": "Create a `public` directory in the project root. Inside `public`, create a new file named `index.html`. Add standard HTML5 boilerplate, a title like 'Crop-Tap - Home', and link the Bootstrap 5 CSS CDN in the `<head>`.",
-            "status": "done",
-            "testStrategy": "Start the Express server. Navigate to `http://localhost:3000/`. Verify that the browser displays the basic `index.html` page with Bootstrap styles applied (e.g., check for Bootstrap's default font)."
-          },
-          {
-            "id": 2,
-            "title": "Create `login.html` and `register.html` Authentication Pages",
-            "description": "Develop the HTML files for user login and registration. These pages will contain the forms necessary for users to authenticate or create a new account.",
-            "dependencies": [
-              1
-            ],
-            "details": "Inside the `public` directory, create `login.html` and `register.html`. Each file should have HTML5 boilerplate and link to the Bootstrap CDN. `login.html` will have a form with email and password fields. `register.html` will have a form with username, email, and password fields.",
-            "status": "done",
-            "testStrategy": "After starting the server, navigate to `http://localhost:3000/login.html` and `http://localhost:3000/register.html`. Verify both pages render correctly and display their respective forms."
-          },
-          {
-            "id": 3,
-            "title": "Create `cart.html` and `checkout.html` E-commerce Pages",
-            "description": "Build the HTML structure for the shopping cart and checkout process pages, which are central to the user's purchasing journey.",
-            "dependencies": [
-              1
-            ],
-            "details": "In the `public` directory, create `cart.html` and `checkout.html`. Add HTML5 boilerplate and link the Bootstrap CDN to both. Add placeholder content, such as a table for cart items on `cart.html` and a form for shipping details on `checkout.html`.",
-            "status": "done",
-            "testStrategy": "Navigate to `http://localhost:3000/cart.html` and `http://localhost:3000/checkout.html` in a browser. Confirm that both pages load with their placeholder content and Bootstrap styling."
-          },
-          {
-            "id": 4,
-            "title": "Create `admin.html` and `farmer.html` Dashboard Pages",
-            "description": "Set up the basic HTML files for the role-specific dashboards, providing dedicated interfaces for administrators and farmers.",
-            "dependencies": [
-              1
-            ],
-            "details": "In the `public` directory, create `admin.html` and `farmer.html`. Add HTML5 boilerplate and Bootstrap CDN links to each. Include a prominent `<h1>` tag like 'Admin Dashboard' and 'Farmer Dashboard' respectively to differentiate them.",
-            "status": "done",
-            "testStrategy": "Navigate to `http://localhost:3000/admin.html` and `http://localhost:3000/farmer.html`. Verify that both dashboard pages load correctly and display their respective headings."
-          },
-          {
-            "id": 5,
-            "title": "Set Up Frontend JavaScript File Structure and Link Scripts",
-            "description": "Create the directory and initial files for organizing client-side JavaScript logic and link them to the newly created HTML pages.",
-            "dependencies": [
-              1,
-              2,
-              3,
-              4
-            ],
-            "details": "Inside the `public` directory, create a new folder named `js`. Inside `public/js`, create empty files: `main.js`, `auth.js`, and `products.js`. Add `<script>` tags to the HTML files to load these scripts (e.g., `auth.js` in `login.html`, `products.js` in `index.html`).",
-            "status": "done",
-            "testStrategy": "Open an HTML file like `index.html` in the browser. Use the developer tools' 'Sources' or 'Network' tab to confirm that the linked JavaScript files (e.g., `/js/main.js`, `/js/products.js`) are being requested and loaded without 404 errors."
-          }
-        ]
-      },
-      {
-        "id": 15,
-        "title": "Implement Frontend User Auth and Product Display",
-        "description": "Write JavaScript to interact with the backend API. Implement the user registration/login flow and fetch and display products on the main page.",
-        "status": "pending",
-        "dependencies": [
-          4,
-          6,
-          14
-        ],
-        "priority": "medium",
-        "details": "In `auth.js`, add event listeners to the login and registration forms. On submit, use `fetch()` to call `POST /api/auth/login` or `/register`. On successful login, save the returned JWT to `localStorage`. Create a function to add the `Authorization: Bearer <token>` header to subsequent API requests. In `products.js`, use `fetch()` to call `GET /api/products` on page load, then dynamically generate HTML content (e.g., product cards) and append it to the product listing container on `index.html`.",
-        "testStrategy": "Open the web application. Register a new user and verify you are redirected or see a success message. Log in with the new user and check `localStorage` in the browser's developer tools to see the JWT. Navigate to the homepage and verify that product cards, fetched from the backend, are displayed on the page.",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Implement User Registration Form Handler",
-            "description": "In `public/js/auth.js`, add an event listener to the registration form. On submit, prevent the default form action, collect user input (username, email, password, role), and send it to the backend.",
-            "dependencies": [],
-            "details": "Select the registration form element (e.g., `#register-form`). Use the 'submit' event. Create a payload object from the form's input values. Use `fetch()` to make a `POST` request to `/api/auth/register` with the payload. Handle the response, showing an alert or message to the user on success or failure.",
-            "status": "pending",
-            "testStrategy": "Open `register.html`. Fill out the form and submit. Check the browser's network tab to verify the `POST` request to `/api/auth/register`. Verify a success message is shown and the backend confirms user creation."
-          },
-          {
-            "id": 2,
-            "title": "Implement User Login Form Handler and Store JWT",
-            "description": "In `public/js/auth.js`, add an event listener to the login form. On submit, send the credentials to the login endpoint and store the returned JSON Web Token in `localStorage` upon success.",
-            "dependencies": [],
-            "details": "Select the login form element (e.g., `#login-form`). On 'submit', use `fetch()` to make a `POST` request to `/api/auth/login` with the user's email and password. If the response is successful (e.g., status 200), parse the JSON to get the token and save it to `localStorage.setItem('token', response.token)`. Redirect to the main page or update the UI.",
-            "status": "pending",
-            "testStrategy": "Open `login.html`. Log in with a registered user. Check the browser's developer tools under Application > Local Storage to confirm a 'token' key has been saved with a JWT string. Test with incorrect credentials to ensure an error message is displayed."
-          },
-          {
-            "id": 3,
-            "title": "Create a Utility Function for Authenticated API Requests",
-            "description": "Create a helper function that retrieves the JWT from `localStorage` and adds the `Authorization: Bearer <token>` header to `fetch` requests. This will be used for all subsequent authenticated API calls.",
-            "dependencies": [
-              2
-            ],
-            "details": "In a shared utility script or within `auth.js`, create a function like `getAuthHeaders()`. This function will read the token from `localStorage.getItem('token')`. If a token exists, it will return a headers object: `{ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }`. If not, it returns a basic header object.",
-            "status": "pending",
-            "testStrategy": "This is a utility function, so it will be tested indirectly by other features that use it. Manually call the function in the browser console after logging in to verify it returns the correct header object."
-          },
-          {
-            "id": 4,
-            "title": "Fetch Products on Page Load",
-            "description": "In `public/js/products.js`, create a function that executes when the main page (`index.html`) loads. This function will use `fetch()` to make a `GET` request to the `/api/products` endpoint to retrieve the list of all available products.",
-            "dependencies": [],
-            "details": "Use a `DOMContentLoaded` event listener to trigger the fetch call. The request will be a simple `GET` to `/api/products`. The function should handle the response, parse the JSON into an array of product objects, and then pass this array to a rendering function.",
-            "status": "pending",
-            "testStrategy": "Load `index.html`. Open the browser's network tab and verify that a `GET` request is made to `/api/products`. Check the response payload to ensure it is a JSON array of product objects from the backend."
-          },
-          {
-            "id": 5,
-            "title": "Dynamically Generate and Display Product Cards",
-            "description": "Create a function that takes an array of product data and dynamically generates HTML content (product cards) for each product, appending them to the main product listing container on the page.",
-            "dependencies": [
-              4
-            ],
-            "details": "In `products.js`, create a function `renderProducts(products)`. This function will iterate over the `products` array. For each product object, it will create HTML string or DOM elements for a 'card' containing the product's name, image, price, and description. Append each new card element to the product container element (e.g., `#product-listing`) in `index.html`.",
-            "status": "pending",
-            "testStrategy": "After the product fetch is successful, verify that the product listing section on `index.html` is populated with product cards. Inspect the DOM to ensure the HTML structure of each card is correct and displays the data received from the API."
-          }
-        ]
+        "details": "1. **Buyer Dashboard:** Create a profile page for logged-in buyers. Fetch all orders from localStorage where the `userId` matches the current buyer. Display a list of orders with their ID, date, total amount, and current status. \n2. **Responsiveness:** Use CSS media queries or a framework like Bootstrap to ensure the layout is usable on mobile, tablet, and desktop screens. \n3. **Notifications:** Implement a simple JavaScript function to show temporary feedback messages (e.g., 'Item added to cart', 'Order placed successfully') in a designated element. \n4. **Validation:** Add `required` attributes and `pattern` attributes (for emails, etc.) to HTML forms for basic client-side validation.",
+        "testStrategy": "1. As a buyer, place an order. Navigate to the buyer dashboard and verify the order appears with the correct status. 2. Log in as a farmer and update the order status. Log back in as the buyer and confirm the status has updated. 3. Resize the browser window to a mobile width and verify the layout adjusts cleanly. 4. Test all forms by submitting them empty or with invalid data to ensure validation messages appear.",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-10-15T15:01:27.226Z",
-      "updated": "2025-10-15T15:37:16.797Z",
+      "updated": "2025-10-16T04:44:47.996Z",
       "description": "Tasks for master context"
     }
   }

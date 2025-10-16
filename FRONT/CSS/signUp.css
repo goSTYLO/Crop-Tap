@@ -5,11 +5,26 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary: #2d5016;
+    --primary-dark: #3a5f45;
+    --secondary: #ff9800;
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #e0e0e0;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --info: #2196f3;
+}
+
 html, body {
     height: 100%;
     width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #2d5016 0%, #1a3d0a 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     display: flex;
     justify-content: center;
     align-items: center;

@@ -1,75 +1,168 @@
-# Crop-Tap
+# Crop-Tap - Local Farm Marketplace
 
-A web-based eCommerce platform connecting local farmers with buyers. Backend built with Node.js/Express and MySQL (Sequelize). Frontend currently HTML/CSS/JS under `FRONT/`.
+A simple, self-contained eCommerce platform for local farmers and buyers, built with HTML, CSS, and JavaScript using localStorage for data persistence.
 
-## Previous Project Status
-- Backend API was working and tested in Postman
-- Implemented domains:
-  - Users: CRUD via `BACK/controllers/user_controller.js` and `BACK/routes/user_routes.js`
-  - Products: Model + CRUD with image uploads (Multer + Sharp) via `product_controller.js`, `product_routes.js`, `middleware/uploadMiddleware.js`, `services/imageService.js`
-  - Carts, Cart Items: Models + CRUD via `cart_controller.js`, `cartItem_controller.js`, and routes
-  - Orders, Order Items: Models + CRUD and cart→order logic via `order_controller.js` and `services/businessService.js`
-  - Payments: Model + CRUD (no Stripe integration yet)
-- Server setup: `BACK/server.js` with middleware (cors, body-parser), Sequelize sync, and static `productImgs/`
-- SQL schema available in `crop-tap.sql`
+## 🌱 Features
 
-## Updates Made (This Session)
-- Planning and Tasks
-  - Parsed PRD from `.taskmaster/docs/crop-tap_prd.txt`
-  - Generated 15 top-level tasks and expanded subtasks (Taskmaster)
-  - Mapped codebase progress; marked completed tasks accordingly
-- Authentication
-  - Added `POST /auth/register` (secure password hashing stored in `users.password_hash`)
-    - Files: `BACK/controllers/auth_controller.js`, `BACK/routes/auth_routes.js`
-  - Added `POST /auth/login` issuing JWT tokens
-    - Files: `BACK/controllers/auth_controller.js`, `BACK/routes/auth_routes.js`
-  - Added JWT utilities middleware
-    - `authenticate` and `authorize(roles)` in `BACK/middleware/authMiddleware.js`
-  - Mounted `/auth` routes in `BACK/server.js`
-- No breaking changes to existing routes; legacy endpoints remain intact
+- **User Authentication**: Simple registration and login for farmers and buyers
+- **Product Management**: Farmers can add, edit, and manage their product listings
+- **Shopping Cart**: Buyers can add products to cart and manage quantities
+- **Order Processing**: Complete order placement and tracking system
+- **Payment Integration**: Stripe integration for secure payments (test mode)
+- **Farmer Dashboard**: Manage products and track orders
+- **Buyer Dashboard**: View order history and track order status
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
 
-## Current API Map (Key)
-- Users: `/users` (CRUD)
-- Auth (new): `/auth/register`, `/auth/login`
-- Products: `/products`
-- Carts: `/carts`, Cart Items: `/cart-items`
-- Orders: `/orders`
-- Payments: `/payments` (Stripe not yet wired)
+## 🚀 Getting Started
 
-## Environment
-Create `BACK/.env` with at least:
+### Prerequisites
+
+- Modern web browser with localStorage support
+- No server setup required - runs entirely in the browser!
+
+### Installation
+
+1. **Download/Clone** the project files to your local machine
+2. **Open** `index.html` in your web browser
+3. **Start using** the application immediately!
+
+### Project Structure
+
 ```
-PORT=3000
-DB_HOST=localhost
-DB_USER=your_user
-DB_PASSWORD=your_pass
-DB_NAME=crop_tap
-JWT_SECRET=change_this_in_production
-```
-
-## Run
-```
-cd BACK
-npm install
-node server.js
+Crop-Tap/
+├── index.html              # Main marketplace page
+├── login.html              # User login page
+├── register.html           # User registration page
+├── cart.html               # Shopping cart page
+├── checkout.html           # Payment and checkout page
+├── order-confirmation.html # Order confirmation page
+├── farmer-dashboard.html   # Farmer management dashboard
+├── buyer-dashboard.html    # Buyer order history
+├── styles/
+│   └── main.css           # Main stylesheet
+├── js/
+│   ├── storage.js         # localStorage service
+│   ├── auth.js            # Authentication system
+│   ├── products.js        # Product management
+│   ├── cart.js            # Shopping cart functionality
+│   ├── payment.js         # Payment processing
+│   ├── farmer-dashboard.js # Farmer dashboard logic
+│   ├── buyer-dashboard.js  # Buyer dashboard logic
+│   └── app.js             # Main application file
+└── README.md              # This file
 ```
 
-## Quick Testing (Postman)
-1. Register: `POST /auth/register`
-   - Body (JSON): `{ "name":"Alice", "email":"a@ex.com", "password":"pass123", "role":"buyer" }`
-2. Login (JWT): `POST /auth/login`
-   - Body (JSON): `{ "email":"a@ex.com", "password":"pass123" }`
-   - Response includes `accessToken`
-3. Protected routes
-   - Add header `Authorization: Bearer <accessToken>`
-4. Products
-   - `GET /products`
-   - Create with image: `POST /products` (multipart form-data, field `image`)
+## 👥 User Roles
 
-## Next Suggested Work
-- Integrate Stripe Payment Intents + webhook (Tasks 11–12)
-- Apply `authenticate`/`authorize` to sensitive routes (admin/farmer areas)
-- Frontend wiring for login/registration and product fetching (Tasks 15)
+### Farmer
+- Register and login to farmer account
+- Add, edit, and delete product listings
+- Upload product images (stored as base64)
+- View and manage orders for their products
+- Update order status (paid → shipped → completed)
 
-## Taskmaster
-Tasks generated and tracked under `.taskmaster/` (tag: `master`). Major completed tasks include initialization, models & CRUD, images, cart/order flow, and new auth endpoints.
+### Buyer
+- Register and login to buyer account
+- Browse and search products from all farmers
+- Add products to shopping cart
+- Place orders and make payments
+- Track order history and status
+
+## 💾 Data Storage
+
+All data is stored in the browser's localStorage, including:
+- User accounts and authentication
+- Product listings
+- Shopping carts
+- Orders and order items
+- Payment records
+
+**Note**: Data is stored locally in your browser and will persist between sessions, but will be lost if you clear browser data.
+
+## 💳 Payment Integration
+
+The application integrates with Stripe for payment processing:
+- Uses Stripe.js for client-side payment handling
+- Test mode enabled by default
+- Simulates payment processing for demonstration
+
+**Important**: Replace the test publishable key in `js/payment.js` with your own Stripe test key for actual payment processing.
+
+## 🎨 Customization
+
+### Styling
+- Modify `styles/main.css` to customize the appearance
+- Uses Bootstrap 5 for responsive design
+- Font Awesome icons for UI elements
+
+### Functionality
+- All JavaScript modules are modular and can be easily modified
+- localStorage service can be extended for additional data types
+- Payment integration can be enhanced with webhook support
+
+## 🔧 Development
+
+### Adding New Features
+1. Create new HTML pages as needed
+2. Add corresponding JavaScript modules
+3. Update the navigation in existing pages
+4. Test functionality across different browsers
+
+### Data Backup
+To backup your data:
+1. Open browser developer tools (F12)
+2. Go to Application/Storage tab
+3. Copy localStorage data
+4. Save to a text file for backup
+
+## 🌐 Browser Compatibility
+
+- Chrome 60+
+- Firefox 55+
+- Safari 12+
+- Edge 79+
+
+## 📱 Mobile Support
+
+The application is fully responsive and works on:
+- Desktop computers
+- Tablets
+- Mobile phones
+
+## 🚨 Important Notes
+
+1. **Data Persistence**: All data is stored locally in your browser
+2. **No Server Required**: Runs entirely client-side
+3. **Portable**: Copy the entire folder to any device to use
+4. **Test Mode**: Payment integration is in test mode
+5. **Security**: For production use, implement proper server-side validation
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+1. **Data Not Saving**: Check if localStorage is enabled in your browser
+2. **Images Not Loading**: Ensure image files are properly converted to base64
+3. **Payment Errors**: Verify Stripe test keys are correctly configured
+
+### Browser Developer Tools
+Use F12 to open developer tools for:
+- Console errors and debugging
+- localStorage inspection
+- Network requests monitoring
+
+## 📄 License
+
+This project is for educational purposes. Feel free to modify and use as needed.
+
+## 🤝 Contributing
+
+This is a simple, self-contained project. Feel free to:
+- Add new features
+- Improve the UI/UX
+- Fix bugs
+- Optimize performance
+
+---
+
+**Happy Farming! 🌱**

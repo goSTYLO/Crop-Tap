@@ -5,17 +5,18 @@
 }
 
 :root {
-    --primary-green: #2d5016;
-    --secondary-green: #3d6b1f;
-    --accent-orange: #f59e0b;
-    --light-bg: #f8f9fa;
-    --white: #ffffff;
-    --text-dark: #1f2937;
-    --text-gray: #6b7280;
-    --border-color: #e5e7eb;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
+    --primary: #2d5016;
+    --primary-dark: #3a5f45;
+    --secondary: #ff9800;
+    --bg: #f5f5f5;
+    --card-bg: #ffffff;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #e0e0e0;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --info: #2196f3;
     --shadow: 0 1px 3px rgba(0,0,0,0.1);
     --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
     --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
@@ -23,14 +24,14 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: var(--light-bg);
-    color: var(--text-dark);
+    background: var(--bg);
+    color: var(--text);
     line-height: 1.6;
 }
 
 /* Header */
 .header {
-    background: var(--white);
+    background: var(--card-bg);
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
@@ -52,14 +53,14 @@ body {
     gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-green);
+    color: var(--primary);
     text-decoration: none;
 }
 
 .logo-icon {
     width: 40px;
     height: 40px;
-    background: var(--accent-orange);
+    background: var(--secondary);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -77,7 +78,7 @@ body {
 .search-bar input {
     width: 100%;
     padding: 0.75rem 3rem 0.75rem 1rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border);
     border-radius: 50px;
     font-size: 0.95rem;
     transition: all 0.3s;
@@ -85,7 +86,7 @@ body {
 
 .search-bar input:focus {
     outline: none;
-    border-color: var(--secondary-green);
+    border-color: var(--primary-dark);
 }
 
 .search-icon {
@@ -93,7 +94,7 @@ body {
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-gray);
+    color: var(--text-light);
 }
 
 .header-actions {
@@ -108,20 +109,20 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-dark);
+    color: var(--text);
     transition: color 0.3s;
 }
 
 .cart-btn:hover {
-    color: var(--secondary-green);
+    color: var(--primary-dark);
 }
 
 .cart-badge {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: var(--accent-orange);
-    color: var(--white);
+    background: var(--secondary);
+    color: var(--card-bg);
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -137,8 +138,8 @@ body {
 }
 
 .user-btn {
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--primary);
+    color: var(--card-bg);
     border: none;
     padding: 0.6rem 1.5rem;
     border-radius: 50px;
@@ -148,7 +149,7 @@ body {
 }
 
 .user-btn:hover {
-    background: var(--secondary-green);
+    background: var(--primary-dark);
 }
 
 .mobile-menu-btn {
@@ -157,13 +158,13 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 /* Navigation */
 .nav-bar {
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--primary);
+    color: var(--card-bg);
 }
 
 .nav-container {
@@ -175,7 +176,7 @@ body {
 }
 
 .nav-link {
-    color: var(--white);
+    color: var(--card-bg);
     text-decoration: none;
     padding: 1rem 0;
     white-space: nowrap;
@@ -185,7 +186,7 @@ body {
 }
 
 .nav-link:hover, .nav-link.active {
-    border-color: var(--accent-orange);
+    border-color: var(--secondary);
 }
 
 /* Main Content */
@@ -203,7 +204,7 @@ body {
 }
 
 .stat-card {
-    background: var(--white);
+    background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
@@ -220,12 +221,12 @@ body {
 
 .stat-info h3 {
     font-size: 2rem;
-    color: var(--primary-green);
+    color: var(--primary);
     margin-bottom: 0.25rem;
 }
 
 .stat-info p {
-    color: var(--text-gray);
+    color: var(--text-light);
     font-size: 0.9rem;
 }
 
@@ -244,7 +245,7 @@ body {
 
 .section-title {
     font-size: 1.75rem;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 .filter-bar {
@@ -256,8 +257,8 @@ body {
 
 .filter-btn {
     padding: 0.6rem 1.2rem;
-    border: 2px solid var(--border-color);
-    background: var(--white);
+    border: 2px solid var(--border);
+    background: var(--card-bg);
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s;
@@ -265,9 +266,9 @@ body {
 }
 
 .filter-btn:hover, .filter-btn.active {
-    background: var(--primary-green);
-    color: var(--white);
-    border-color: var(--primary-green);
+    background: var(--primary);
+    color: var(--card-bg);
+    border-color: var(--primary);
 }
 
 .products-grid {
@@ -278,7 +279,7 @@ body {
 }
 
 .product-card {
-    background: var(--white);
+    background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -307,7 +308,7 @@ body {
     top: 0.75rem;
     right: 0.75rem;
     background: var(--success);
-    color: var(--white);
+    color: var(--card-bg);
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -322,12 +323,12 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 .product-description {
     font-size: 0.875rem;
-    color: var(--text-gray);
+    color: var(--text-light);
     margin-bottom: 0.75rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -345,19 +346,19 @@ body {
 .product-price {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-green);
+    color: var(--primary);
 }
 
 .product-unit {
     font-size: 0.875rem;
-    color: var(--text-gray);
+    color: var(--text-light);
 }
 
 .add-to-cart-btn {
     width: 100%;
     padding: 0.75rem;
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--primary);
+    color: var(--card-bg);
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -366,7 +367,7 @@ body {
 }
 
 .add-to-cart-btn:hover {
-    background: var(--secondary-green);
+    background: var(--primary-dark);
 }
 
 /* Cart Sidebar */
@@ -376,7 +377,7 @@ body {
     top: 0;
     width: 400px;
     height: 100vh;
-    background: var(--white);
+    background: var(--card-bg);
     box-shadow: -4px 0 10px rgba(0,0,0,0.1);
     transition: right 0.3s;
     z-index: 2000;
@@ -390,7 +391,7 @@ body {
 
 .cart-header {
     padding: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -401,7 +402,7 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 .cart-items {
@@ -414,7 +415,7 @@ body {
     display: flex;
     gap: 1rem;
     padding: 1rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin-bottom: 1rem;
 }
@@ -440,7 +441,7 @@ body {
 }
 
 .cart-item-price {
-    color: var(--primary-green);
+    color: var(--primary);
     font-weight: 600;
 }
 
@@ -454,8 +455,8 @@ body {
 .qty-btn {
     width: 28px;
     height: 28px;
-    border: 1px solid var(--border-color);
-    background: var(--white);
+    border: 1px solid var(--border);
+    background: var(--card-bg);
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
@@ -464,14 +465,14 @@ body {
 .qty-input {
     width: 50px;
     text-align: center;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: 4px;
     padding: 0.25rem;
 }
 
 .cart-footer {
     padding: 1.5rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border);
 }
 
 .cart-total {
@@ -485,8 +486,8 @@ body {
 .checkout-btn {
     width: 100%;
     padding: 1rem;
-    background: var(--accent-orange);
-    color: var(--white);
+    background: var(--secondary);
+    color: var(--card-bg);
     border: none;
     border-radius: 8px;
     font-weight: 700;
@@ -518,7 +519,7 @@ body {
 }
 
 .modal-content {
-    background: var(--white);
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 12px;
     width: 90%;
@@ -542,7 +543,7 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: var(--text-gray);
+    color: var(--text-light);
 }
 
 .form-group {
@@ -553,13 +554,13 @@ body {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 .form-input, .form-select, .form-textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--border);
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s;
@@ -567,7 +568,7 @@ body {
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
     outline: none;
-    border-color: var(--secondary-green);
+    border-color: var(--primary-dark);
 }
 
 .form-textarea {
@@ -576,8 +577,8 @@ body {
 }
 
 .btn-primary {
-    background: var(--primary-green);
-    color: var(--white);
+    background: var(--primary);
+    color: var(--card-bg);
     padding: 0.75rem 2rem;
     border: none;
     border-radius: 8px;
@@ -587,12 +588,12 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--secondary-green);
+    background: var(--primary-dark);
 }
 
 .btn-secondary {
-    background: var(--border-color);
-    color: var(--text-dark);
+    background: var(--border);
+    color: var(--text);
     padding: 0.75rem 2rem;
     border: none;
     border-radius: 8px;
@@ -616,7 +617,7 @@ body {
 
 /* Order History */
 .order-card {
-    background: var(--white);
+    background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: var(--shadow);
@@ -629,12 +630,12 @@ body {
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border);
 }
 
 .order-id {
     font-weight: 700;
-    color: var(--text-dark);
+    color: var(--text);
 }
 
 .order-items {
@@ -652,13 +653,13 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border);
 }
 
 .order-total {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--primary-green);
+    color: var(--primary);
 }
 
 /* Responsive */

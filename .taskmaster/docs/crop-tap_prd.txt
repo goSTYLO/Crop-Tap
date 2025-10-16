@@ -7,16 +7,15 @@ Type: School Project (Web-based eCommerce Platform)
 # OVERVIEW
 
 Crop-Tap is a web-based eCommerce platform designed to connect local farmers with buyers such as households, vendors, and small businesses.
-The system enables farmers to list their products online, buyers to browse and order fresh produce, and an admin to oversee operations.
+The system enables farmers to list their products online, buyers to browse and order fresh produce, and farmers to manage their own operations.
 
 Goal:
-Provide a functional and simple marketplace for local produce that supports product listings, order management, and online payments — built using an MVC + REST API architecture with Node.js backend and MySQL database.
+Provide a functional and simple marketplace for local produce that supports product listings, order management, and online payments — built using local storage for data persistence in a dedicated project folder for easy portability.
 
 Core Users:
 
-* Farmer: manages product listings and fulfills orders.
+* Farmer: manages product listings, fulfills orders, and oversees their own operations.
 * Buyer: purchases products from the marketplace.
-* Admin: oversees all data and platform operations.
 
 Value Proposition:
 
@@ -28,35 +27,35 @@ Value Proposition:
 
 # CORE FEATURES
 
-1. USER MANAGEMENT
+1. USER AUTHENTICATION
 
-   * What it does: Allows registration, login, role assignment (farmer, buyer, admin), and profile management.
+   * What it does: Allows registration, login, and profile management for farmers and buyers.
    * Why important: Establishes user access and personalized experience.
-   * How it works: Uses bcrypt for password hashing and JWT for authentication; role determines feature access.
+   * How it works: Simple authentication system with local storage for user data and session management.
 
 2. PRODUCT MANAGEMENT
 
-   * What it does: Farmers and admins can add, edit, delete, and view products. Buyers can browse and search.
+   * What it does: Farmers can add, edit, delete, and view their products. Buyers can browse and search.
    * Why important: Core to marketplace operation.
-   * How it works: Product model linked to Farmer (User); images handled via Multer + Sharp; endpoints exposed as REST API.
+   * How it works: Product data stored in local storage with image handling; farmers manage their own product listings.
 
 3. CART & ORDER SYSTEM
 
    * What it does: Buyers can add products to their cart and place orders.
    * Why important: Enables the core transaction workflow.
-   * How it works: Buyer’s cart creates order records and order_items; manages total amount and status.
+   * How it works: Cart and order data stored in local storage; manages total amount and status.
 
 4. PAYMENT INTEGRATION (STRIPE)
 
    * What it does: Integrates Stripe for online payments (test mode).
    * Why important: Demonstrates secure digital payment flow.
-   * How it works: Backend interacts with Stripe Payment Intent API; confirmation updates payment and order tables.
+   * How it works: Frontend interacts with Stripe Payment Intent API; confirmation updates payment and order data in local storage.
 
-5. ADMIN PANEL
+5. FARMER DASHBOARD
 
-   * What it does: Central dashboard for managing users, products, orders, and payments.
-   * Why important: Provides full operational control.
-   * How it works: Role-based access; consumes backend REST API endpoints for CRUD operations.
+   * What it does: Central dashboard for farmers to manage their products, orders, and payments.
+   * Why important: Provides farmers with operational control over their listings and sales.
+   * How it works: Farmer-specific interface for managing their own products and orders stored in local storage.
 
 ---
 
@@ -64,20 +63,18 @@ Value Proposition:
 
 User Personas:
 
-* Farmer: wants easy product upload and order tracking tools.
+* Farmer: wants easy product upload, order tracking tools, and management of their own operations.
 * Buyer: wants a smooth shopping, checkout, and payment experience.
-* Admin: requires overview of all platform operations.
 
 Key User Flows:
 
 1. Buyer: Register → Browse → Add to Cart → Checkout → Pay → Track Order
-2. Farmer: Register → Create Product → View Orders → Update Status
-3. Admin: Login → Manage Users/Products → Monitor Orders/Payments
+2. Farmer: Register → Create Product → View Orders → Update Status → Manage Operations
 
 UI/UX Considerations:
 
 * Clean, mobile-responsive layout.
-* Role-based dashboards (Farmer, Buyer, Admin).
+* Role-based dashboards (Farmer, Buyer).
 * Clear success/error notifications.
 * Intuitive product and order navigation.
 * Quick access from cart to checkout.
@@ -89,40 +86,35 @@ UI/UX Considerations:
 System Components:
 
 * Frontend: HTML, CSS, JavaScript (Bootstrap or optional React)
-* Backend: Node.js + Express.js
-* Database: MySQL (via Sequelize ORM)
-* File Uploads: Multer + Sharp
-* Authentication: JWT + bcrypt
-* Payment Gateway: Stripe API
-* Environment Management: dotenv
-* Middleware: body-parser, cors
+* Data Storage: Local Storage in dedicated project folder
+* File Uploads: Client-side image handling
+* Authentication: Local storage-based session management
+* Payment Gateway: Stripe API (client-side integration)
+* Project Structure: Self-contained folder for easy portability
 
-Data Models (from ERD):
+Data Models (Local Storage Structure):
 
-* users
-* products
-* carts
-* cart_items
-* orders
-* order_items
-* payments
+* users (farmer and buyer profiles)
+* products (farmer product listings)
+* carts (buyer shopping carts)
+* cart_items (individual cart items)
+* orders (purchase orders)
+* order_items (individual order items)
+* payments (payment records)
 
-APIs and Integrations:
+Local Storage Structure:
 
-* POST /api/auth/register   — Register user
-* POST /api/auth/login      — Login user, return JWT
-* CRUD /api/users           — User management
-* CRUD /api/products        — Product management
-* CRUD /api/cart            — Cart operations
-* CRUD /api/orders          — Order management
-* POST /api/payments        — Process Stripe payments
+* All data stored in browser's localStorage
+* Dedicated project folder contains all application files
+* Data persistence across browser sessions
+* Easy project portability to other devices
 
 Infrastructure Requirements:
 
-* Localhost setup using XAMPP (MySQL) and Node.js (v18+)
-* Environment file (.env) for keys and DB config
-* npm install for dependencies
-* npm run dev to start development server
+* Modern web browser with localStorage support
+* Local file server (optional) for development
+* Stripe API keys for payment processing
+* Self-contained project folder structure
 
 ---
 
@@ -130,65 +122,66 @@ Infrastructure Requirements:
 
 Phase 1 — MVP Core
 
-* Set up MVC structure (Node.js + Express + Sequelize)
-* Create User, Product, and Order models
-* Implement RESTful CRUD endpoints
-* Add authentication (JWT + bcrypt)
+* Set up project folder structure with local storage
+* Create User, Product, and Order data models for localStorage
+* Implement client-side CRUD operations
+* Add authentication system using localStorage
 * Create basic frontend (HTML, CSS, JS)
 * Product listing and order creation
-* Stripe payment integration (test mode)
+* Stripe payment integration (client-side)
 
 Phase 2 — Extended Features
 
-* Add Cart and CartItems system
-* Admin and Farmer dashboards
+* Add Cart and CartItems system with localStorage
+* Farmer dashboard for product and order management
 * Buyer order history and tracking
-* Image uploads (Multer + Sharp)
+* Client-side image handling and storage
 * Validation and error handling
 * Frontend UI improvements
 
 Phase 3 — Final Enhancements
 
-* Admin analytics (sales, activity)
-* Stripe webhook integration
+* Farmer analytics (sales, activity)
+* Enhanced Stripe integration
 * UI responsiveness and pagination
 * Optional notifications or reports
+* Project portability testing
 
 ---
 
 # LOGICAL DEPENDENCY CHAIN
 
-1. Setup core backend (Express, Sequelize, DB schema)
-2. Implement authentication (JWT, bcrypt)
-3. Build product CRUD (foundation for marketplace)
-4. Add cart and order functionality
-5. Integrate Stripe payments
-6. Develop admin and farmer dashboards
+1. Setup project folder structure and localStorage data models
+2. Implement authentication system using localStorage
+3. Build product CRUD operations (foundation for marketplace)
+4. Add cart and order functionality with localStorage
+5. Integrate Stripe payments (client-side)
+6. Develop farmer dashboard for product and order management
 7. Refine UI/UX and add optional enhancements
 
 ---
 
 # RISKS AND MITIGATIONS
 
-1. API mismatch between frontend and backend
+1. LocalStorage data loss or corruption
 
-   * Mitigation: Maintain Postman documentation and endpoint testing.
+   * Mitigation: Implement data backup/export functionality and validation checks.
 
-2. Database relationship conflicts
+2. Browser compatibility issues
 
-   * Mitigation: Validate Sequelize associations early.
+   * Mitigation: Test across major browsers and implement fallbacks.
 
-3. Stripe test integration issues
+3. Stripe client-side integration security
 
-   * Mitigation: Use sandbox keys, test environment variables.
+   * Mitigation: Use test keys, implement proper validation, and follow Stripe security guidelines.
 
-4. JWT token misuse
+4. Data synchronization between sessions
 
-   * Mitigation: Add role-based access middleware.
+   * Mitigation: Implement proper localStorage management and session handling.
 
-5. Version control conflicts
+5. Project portability issues
 
-   * Mitigation: Use Git branching and pull requests for team workflow.
+   * Mitigation: Ensure all dependencies are included in project folder and test on different devices.
 
 ---
 
@@ -197,22 +190,17 @@ Phase 3 — Final Enhancements
 Research References:
 
 * Stripe API Docs: [https://stripe.com/docs/api](https://stripe.com/docs/api)
-* Sequelize ORM: [https://sequelize.org/](https://sequelize.org/)
-* Express.js Framework: [https://expressjs.com/](https://expressjs.com/)
+* LocalStorage API: [https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+* HTML5 File API: [https://developer.mozilla.org/en-US/docs/Web/API/File](https://developer.mozilla.org/en-US/docs/Web/API/File)
 
 Technical Specifications:
 
-* Node.js v18+
-* MySQL 8+
-* bcrypt v6.0.0
-* body-parser v2.2.0
-* cors v2.8.5
-* dotenv v17.2.3
-* express v5.1.0
-* multer v2.0.2
-* mysql2 v3.15.2
-* sequelize v6.37.7
-* sharp v0.34.4
+* Modern web browser with localStorage support
+* HTML5, CSS3, JavaScript (ES6+)
+* Stripe.js for payment processing
+* Bootstrap or similar CSS framework (optional)
+* Client-side image handling
+* Self-contained project folder structure
 
 ---
 

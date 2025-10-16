@@ -1,51 +1,28 @@
-// Sample Data Storage
-let users = [
-    {id: 1, name: 'Juan Dela Cruz', email: 'juan@email.com', phone: '09123456789', role: 'farmer', status: 'active', address: 'Pangasinan'},
-    {id: 2, name: 'Maria Santos', email: 'maria@email.com', phone: '09234567890', role: 'buyer', status: 'active', address: 'Manila'},
-    {id: 3, name: 'Pedro Reyes', email: 'pedro@email.com', phone: '09345678901', role: 'farmer', status: 'active', address: 'Pangasinan'}
-];
-
-let products = [
-    {id: 1, name: 'Organic Tomatoes', category: 'vegetables', price: 80, quantity: 50, unit: 'kg', farmer: 'Juan Dela Cruz', image: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=100', description: 'Fresh organic tomatoes'},
-    {id: 2, name: 'Fresh Lettuce', category: 'vegetables', price: 60, quantity: 30, unit: 'kg', farmer: 'Pedro Reyes', image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=100', description: 'Crisp lettuce'},
-    {id: 3, name: 'Sweet Corn', category: 'vegetables', price: 40, quantity: 100, unit: 'pcs', farmer: 'Juan Dela Cruz', image: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=100', description: 'Sweet yellow corn'}
-];
-
-let orders = [
-    {id: 1001, customer: 'Maria Santos', product: 'Organic Tomatoes', quantity: 10, total: 800, status: 'pending', date: '2025-10-16'},
-    {id: 1002, customer: 'Maria Santos', product: 'Fresh Lettuce', quantity: 5, total: 300, status: 'confirmed', date: '2025-10-15'},
-    {id: 1003, customer: 'Juan Dela Cruz', product: 'Sweet Corn', quantity: 20, total: 800, status: 'transit', date: '2025-10-14'},
-    {id: 1004, customer: 'Pedro Reyes', product: 'Organic Tomatoes', quantity: 15, total: 1200, status: 'delivered', date: '2025-10-13'}
-];
-
-let payments = [
-    {id: 'PAY-1001', orderId: 1001, customer: 'Maria Santos', amount: 800, method: 'GCash', status: 'pending', date: '2025-10-16'},
-    {id: 'PAY-1002', orderId: 1002, customer: 'Maria Santos', amount: 300, method: 'Cash on Delivery', status: 'succeeded', date: '2025-10-15'},
-    {id: 'PAY-1003', orderId: 1003, customer: 'Juan Dela Cruz', amount: 800, method: 'Bank Transfer', status: 'succeeded', date: '2025-10-14'}
-];
-
-let logs = [
-    {timestamp: '2025-10-16 14:30', user: 'Admin', action: 'CREATE', target: 'User', details: 'Added new farmer: Juan Dela Cruz'},
-    {timestamp: '2025-10-16 13:15', user: 'Juan Dela Cruz', action: 'UPDATE', target: 'Product', details: 'Updated Organic Tomatoes price'},
-    {timestamp: '2025-10-16 12:00', user: 'Admin', action: 'UPDATE', target: 'Order', details: 'Changed order #1001 status to confirmed'},
-    {timestamp: '2025-10-16 10:45', user: 'Maria Santos', action: 'CREATE', target: 'Order', details: 'Placed new order #1005'}
-];
-
-// Current user role (can be 'admin' or 'farmer')
-let currentUserRole = 'admin';
+// Current user and data
+let currentUser = null;
+let currentUserRole = 'farmer';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    if (!auth.isLoggedIn() || !auth.isFarmer()) {
+        alert('Access denied. Farmers only.');
+        window.location.href = '../HTML/landing_page.html';
+        return;
+    }
+    
+    currentUser = auth.getCurrentUser();
     initializeApp();
-    loadUsersTable();
     loadProductsTable();
     loadOrdersTable();
-    loadPaymentsTable();
-    loadLogsTable();
     updateDashboardStats();
 });
 
 function initializeApp() {
+    // Set user info
+    document.getElementById('userName').textContent = currentUser.name;
+    document.getElementById('userRole').textContent = 'Farmer';
+    
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -60,16 +37,14 @@ function initializeApp() {
     });
 
     // Form submissions
-    document.getElementById('userForm').addEventListener('submit', handleUserSubmit);
     document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
     document.getElementById('orderForm').addEventListener('submit', handleOrderSubmit);
-    document.getElementById('settingsForm').addEventListener('submit', handleSettingsSubmit);
 
-    // Hide user management for farmers
-    if (currentUserRole === 'farmer') {
-        document.querySelector('[data-page="users"]').style.display = 'none';
-        document.querySelector('[data-page="logs"]').style.display = 'none';
-    }
+    // Hide user management and logs for farmers
+    const userNavItem = document.querySelector('[data-page="users"]');
+    const logsNavItem = document.querySelector('[data-page="logs"]');
+    if (userNavItem) userNavItem.style.display = 'none';
+    if (logsNavItem) logsNavItem.style.display = 'none';
 }
 
 function navigateToPage(page) {
@@ -94,10 +69,20 @@ function navigateToPage(page) {
 }
 
 function updateDashboardStats() {
-    document.getElementById('totalUsers').textContent = users.length;
-    document.getElementById('totalProducts').textContent = products.length;
-    document.getElementById('totalOrders').textContent = orders.length;
-    document.getElementById('pendingOrders').textContent = orders.filter(o => o.status === 'pending').length;
+    // Get farmer's product stats
+    const productStats = productService.getFarmerProductStats(currentUser.user_id);
+    
+    // Get farmer's orders
+    const farmerOrders = storage.getOrdersByFarmer(currentUser.user_id);
+    
+    document.getElementById('totalProducts').textContent = productStats.totalProducts;
+    document.getElementById('totalOrders').textContent = farmerOrders.length;
+    document.getElementById('pendingOrders').textContent = farmerOrders.filter(o => o.status === 'pending_payment').length;
+    
+    // Update total users to show total buyers (for farmer context)
+    const allUsers = storage.getData('users') || [];
+    const buyers = allUsers.filter(u => u.role === 'consumer');
+    document.getElementById('totalUsers').textContent = buyers.length;
 }
 
 // User Management Functions
@@ -178,25 +163,42 @@ function deleteUser(id) {
 // Product Management Functions
 function loadProductsTable() {
     const tbody = document.getElementById('productsTableBody');
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
 
-    const filteredProducts = currentUserRole === 'farmer' 
-        ? products.filter(p => p.farmer === 'Juan Dela Cruz') 
-        : products;
+    // Get products for current farmer
+    const farmerProducts = productService.getProductsByFarmer(currentUser.user_id);
 
-    filteredProducts.forEach(product => {
+    if (farmerProducts.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 2rem; color: #666;">
+                    No products added yet. <a href="#" onclick="openModal('productModal')">Add your first product</a>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    farmerProducts.forEach(product => {
         const row = `
             <tr>
-                <td><img src="${product.image}" alt="${product.name}" class="image-preview"></td>
+                <td>
+                    ${product.image_url ? 
+                        `<img src="${product.image_url}" alt="${product.name}" class="image-preview">` :
+                        `<div class="image-preview placeholder">🌾</div>`
+                    }
+                </td>
                 <td>${product.name}</td>
-                <td><span class="status-badge status-confirmed">${product.category}</span></td>
-                <td>₱${product.price}</td>
+                <td><span class="status-badge status-confirmed">${product.unit}</span></td>
+                <td>₱${product.price.toFixed(2)}</td>
                 <td>${product.quantity}</td>
                 <td>${product.unit}</td>
-                <td>${product.farmer}</td>
+                <td>${currentUser.name}</td>
                 <td class="action-buttons">
-                    <button class="icon-btn" onclick="editProduct(${product.id})" title="Edit">✏️</button>
-                    <button class="icon-btn delete" onclick="deleteProduct(${product.id})" title="Delete">🗑️</button>
+                    <button class="icon-btn" onclick="editProduct('${product.product_id}')" title="Edit">✏️</button>
+                    <button class="icon-btn delete" onclick="deleteProduct('${product.product_id}')" title="Delete">🗑️</button>
                 </td>
             </tr>
         `;
@@ -207,44 +209,48 @@ function loadProductsTable() {
 function handleProductSubmit(e) {
     e.preventDefault();
     
+    const productId = document.getElementById('productId').value;
     const productData = {
-        id: document.getElementById('productId').value || Date.now(),
         name: document.getElementById('productName').value,
-        category: document.getElementById('productCategory').value,
         price: parseFloat(document.getElementById('productPrice').value),
         quantity: parseInt(document.getElementById('productQuantity').value),
         unit: document.getElementById('productUnit').value,
         description: document.getElementById('productDescription').value,
-        image: document.getElementById('productImage').value || 'https://via.placeholder.com/100',
-        farmer: currentUserRole === 'farmer' ? 'Juan Dela Cruz' : 'Admin'
+        image_url: document.getElementById('productImage').value || null,
+        farmer_id: currentUser.user_id
     };
 
-    const existingIndex = products.findIndex(p => p.id == productData.id);
-    if (existingIndex !== -1) {
-        products[existingIndex] = productData;
-        addLog('UPDATE', 'Product', `Updated product: ${productData.name}`);
+    let result;
+    if (productId) {
+        // Update existing product
+        result = productService.updateProduct(productId, productData);
     } else {
-        products.push(productData);
-        addLog('CREATE', 'Product', `Added new product: ${productData.name}`);
+        // Create new product
+        result = productService.createProduct(productData);
     }
 
-    loadProductsTable();
-    updateDashboardStats();
-    closeModal('productModal');
-    document.getElementById('productForm').reset();
+    if (result.success) {
+        alert(result.message);
+        loadProductsTable();
+        updateDashboardStats();
+        closeModal('productModal');
+        document.getElementById('productForm').reset();
+        document.getElementById('productId').value = '';
+    } else {
+        alert(result.message);
+    }
 }
 
 function editProduct(id) {
-    const product = products.find(p => p.id === id);
+    const product = productService.getProductById(id);
     if (product) {
-        document.getElementById('productId').value = product.id;
+        document.getElementById('productId').value = product.product_id;
         document.getElementById('productName').value = product.name;
-        document.getElementById('productCategory').value = product.category;
         document.getElementById('productPrice').value = product.price;
         document.getElementById('productQuantity').value = product.quantity;
         document.getElementById('productUnit').value = product.unit;
         document.getElementById('productDescription').value = product.description;
-        document.getElementById('productImage').value = product.image;
+        document.getElementById('productImage').value = product.image_url || '';
         document.getElementById('productModalTitle').textContent = 'Edit Product';
         openModal('productModal');
     }
@@ -252,38 +258,63 @@ function editProduct(id) {
 
 function deleteProduct(id) {
     if (confirm('Are you sure you want to delete this product?')) {
-        const product = products.find(p => p.id === id);
-        products = products.filter(p => p.id !== id);
-        addLog('DELETE', 'Product', `Deleted product: ${product.name}`);
-        loadProductsTable();
-        updateDashboardStats();
+        const result = productService.deleteProduct(id);
+        if (result.success) {
+            alert(result.message);
+            loadProductsTable();
+            updateDashboardStats();
+        } else {
+            alert(result.message);
+        }
     }
 }
 
 // Order Management Functions
 function loadOrdersTable() {
     const tbody = document.getElementById('ordersTableBody');
+    if (!tbody) return;
+    
     tbody.innerHTML = '';
 
-    const filteredOrders = currentUserRole === 'farmer'
-        ? orders.filter(o => {
-            const product = products.find(p => p.name === o.product);
-            return product && product.farmer === 'Juan Dela Cruz';
-        })
-        : orders;
+    // Get orders for current farmer
+    const farmerOrders = storage.getOrdersByFarmer(currentUser.user_id);
+    const orderItems = storage.getData('order_items') || [];
+    const allProducts = productService.getAllProducts();
+    const allUsers = storage.getData('users') || [];
 
-    filteredOrders.forEach(order => {
+    if (farmerOrders.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 2rem; color: #666;">
+                    No orders received yet.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    farmerOrders.forEach(order => {
+        // Get order items for this order
+        const items = orderItems.filter(item => item.order_id === order.order_id);
+        const buyer = allUsers.find(u => u.user_id === order.buyer_id);
+        
+        // Get product names
+        const productNames = items.map(item => {
+            const product = allProducts.find(p => p.product_id === item.product_id);
+            return product ? `${item.quantity} x ${product.name}` : 'Unknown Product';
+        }).join(', ');
+
         const row = `
             <tr>
-                <td>#${order.id}</td>
-                <td>${order.customer}</td>
-                <td>${order.product}</td>
-                <td>${order.quantity}</td>
-                <td>₱${order.total}</td>
-                <td><span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span></td>
-                <td>${order.date}</td>
+                <td>#${order.order_id}</td>
+                <td>${buyer ? buyer.name : 'Unknown Buyer'}</td>
+                <td>${productNames}</td>
+                <td>${items.reduce((sum, item) => sum + item.quantity, 0)}</td>
+                <td>₱${order.total_amount.toFixed(2)}</td>
+                <td><span class="status-badge status-${order.status}">${order.status.replace('_', ' ').toUpperCase()}</span></td>
+                <td>${new Date(order.created_at).toLocaleDateString()}</td>
                 <td class="action-buttons">
-                    <button class="icon-btn" onclick="updateOrderStatus(${order.id})" title="Update Status">🔄</button>
+                    <button class="icon-btn" onclick="updateOrderStatus('${order.order_id}')" title="Update Status">🔄</button>
                 </td>
             </tr>
         `;
@@ -292,9 +323,9 @@ function loadOrdersTable() {
 }
 
 function updateOrderStatus(id) {
-    const order = orders.find(o => o.id === id);
+    const order = storage.getOrders().find(o => o.order_id === id);
     if (order) {
-        document.getElementById('orderId').value = order.id;
+        document.getElementById('orderId').value = order.order_id;
         document.getElementById('orderStatus').value = order.status;
         openModal('orderModal');
     }
@@ -303,20 +334,19 @@ function updateOrderStatus(id) {
 function handleOrderSubmit(e) {
     e.preventDefault();
     
-    const orderId = parseInt(document.getElementById('orderId').value);
+    const orderId = document.getElementById('orderId').value;
     const newStatus = document.getElementById('orderStatus').value;
-    const notes = document.getElementById('orderNotes').value;
 
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    if (orderIndex !== -1) {
-        orders[orderIndex].status = newStatus;
-        addLog('UPDATE', 'Order', `Updated order #${orderId} status to ${newStatus}. ${notes}`);
+    const result = storage.updateOrderStatus(orderId, newStatus);
+    if (result) {
+        alert(`Order status updated to ${newStatus}`);
+        loadOrdersTable();
+        updateDashboardStats();
+        closeModal('orderModal');
+        document.getElementById('orderForm').reset();
+    } else {
+        alert('Failed to update order status');
     }
-
-    loadOrdersTable();
-    updateDashboardStats();
-    closeModal('orderModal');
-    document.getElementById('orderForm').reset();
 }
 
 // Payment Management Functions
@@ -400,11 +430,156 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
 }
 
+// Data Management Functions
+function exportData() {
+    try {
+        const result = dataManager.downloadData();
+        if (result.success) {
+            showNotification('Data exported successfully!', 'success');
+        } else {
+            showNotification('Failed to export data: ' + result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Export error:', error);
+        showNotification('Error exporting data', 'error');
+    }
+}
+
+function importData() {
+    const fileInput = document.getElementById('importFile');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showNotification('Please select a file to import', 'warning');
+        return;
+    }
+
+    dataManager.uploadData(file).then(result => {
+        if (result.success) {
+            showNotification('Data imported successfully!', 'success');
+            // Refresh all data displays
+            loadProductsTable();
+            loadOrdersTable();
+            updateDashboardStats();
+            refreshDataStats();
+            // Clear file input
+            fileInput.value = '';
+        } else {
+            showNotification('Failed to import data: ' + result.message, 'error');
+        }
+    });
+}
+
+function createSampleData() {
+    if (confirm('This will create sample data. Continue?')) {
+        try {
+            // Create sample products
+            const sampleProducts = [
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Fresh Tomatoes',
+                    description: 'Organic, vine-ripened tomatoes',
+                    price: 3.50,
+                    unit: 'lb',
+                    quantity: 50
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Green Lettuce',
+                    description: 'Crisp, fresh lettuce heads',
+                    price: 2.00,
+                    unit: 'head',
+                    quantity: 30
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Carrots',
+                    description: 'Sweet, crunchy carrots',
+                    price: 1.75,
+                    unit: 'lb',
+                    quantity: 40
+                }
+            ];
+
+            sampleProducts.forEach(productData => {
+                productService.createProduct(productData);
+            });
+
+            showNotification('Sample data created successfully!', 'success');
+            loadProductsTable();
+            updateDashboardStats();
+            refreshDataStats();
+        } catch (error) {
+            console.error('Error creating sample data:', error);
+            showNotification('Error creating sample data', 'error');
+        }
+    }
+}
+
+function clearAllData() {
+    if (confirm('⚠️ This will permanently delete ALL data. Are you absolutely sure?')) {
+        if (confirm('This action cannot be undone. Type "DELETE" to confirm.')) {
+            try {
+                // Clear all localStorage data
+                const keys = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];
+                keys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                
+                showNotification('All data cleared successfully!', 'success');
+                // Refresh displays
+                loadProductsTable();
+                loadOrdersTable();
+                updateDashboardStats();
+                refreshDataStats();
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                showNotification('Error clearing data', 'error');
+            }
+        }
+    }
+}
+
+function refreshDataStats() {
+    try {
+        const users = storage.getData('users') || [];
+        const products = storage.getData('products') || [];
+        const orders = storage.getData('orders') || [];
+        const payments = storage.getData('payments') || [];
+        
+        const statsHtml = `
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>👥 Total Users</h4>
+                    <p class="stat-number">${users.length}</p>
+                </div>
+                <div class="stat-item">
+                    <h4>🌱 Total Products</h4>
+                    <p class="stat-number">${products.length}</p>
+                </div>
+                <div class="stat-item">
+                    <h4>📦 Total Orders</h4>
+                    <p class="stat-number">${orders.length}</p>
+                </div>
+                <div class="stat-item">
+                    <h4>💳 Total Payments</h4>
+                    <p class="stat-number">${payments.length}</p>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('dataStats').innerHTML = statsHtml;
+    } catch (error) {
+        console.error('Error refreshing data stats:', error);
+        document.getElementById('dataStats').innerHTML = '<p>Error loading statistics</p>';
+    }
+}
+
 // Logout Function
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        alert('Logged out successfully!');
-        window.location.reload();
+        auth.logout();
+        window.location.href = '../HTML/landing_page.html';
     }
 }
 
