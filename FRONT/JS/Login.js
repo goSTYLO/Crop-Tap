@@ -1,19 +1,20 @@
+// Handle login
 function handleLogin(e) {
     e.preventDefault();
-    
-    const email = e.target.querySelector('input[type="email"]').value;
-    const password = e.target.querySelector('input[type="password"]').value;
-    
+
+    const email = e.target.querySelector('input[type="email"]').value.trim();
+    const password = e.target.querySelector('input[type="password"]').value.trim();
+
     if (!email || !password) {
         alert('Please fill in all fields.');
         return;
     }
-    
+
     const result = auth.login(email, password);
-    
+
     if (result.success) {
         alert(result.message);
-        
+
         // Redirect based on user role
         const user = result.user;
         if (user.role === 'farmer') {
@@ -28,14 +29,15 @@ function handleLogin(e) {
     }
 }
 
+// Password input and eye toggle
 const passwordInput = document.getElementById('passwordInput');
 const eyeBtn = document.getElementById('eyeBtn');
 
 passwordInput.addEventListener('input', () => {
-    if (passwordInput.value.length > 0) {
-        eyeBtn.style.display = 'inline-flex';
-    } else {
-        eyeBtn.style.display = 'none';
+    // Show/hide eye button based on input
+    eyeBtn.style.display = passwordInput.value.length > 0 ? 'inline-flex' : 'none';
+    
+    if (passwordInput.value.length === 0) {
         passwordInput.type = 'password';
         document.getElementById('eyeOpen').style.display = 'inline';
         document.getElementById('eyeClosed').style.display = 'none';
@@ -56,3 +58,7 @@ function togglePassword() {
         eyeClosed.style.display = 'none';
     }
 }
+
+// Make sure the login button always works
+const loginForm = document.getElementById('loginForm');
+loginForm.addEventListener('submit', handleLogin);
