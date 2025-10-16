@@ -12,11 +12,11 @@
         <div class="header-container">
             <a href="#" class="logo">
                 <span class="logo-icon">🌾</span>
-                <span>Crop-Tap</span>
+                <span data-i18n="logo_text">Crop-Tap</span>
             </a>
             
             <div class="search-bar">
-                <input type="text" placeholder="Search for fresh products..." id="searchInput">
+                <input type="text" placeholder="Search for fresh products..." id="searchInput" data-i18n-placeholder="search_placeholder">
                 <span class="search-icon">🔍</span>
             </div>
 
@@ -27,12 +27,11 @@
                 </button>
                 
                 <div class="user-menu">
-                    <button class="user-btn" onclick="showProfile()" style="border: none; background: transparent; padding: 0; display: inline-flex; align-items: center;">
-                        <img id="headerAvatar" src="" alt="Me" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: none;" />
+                    <button class="avatar-btn" onclick="showProfile()" aria-label="Profile">
+                        <img id="headerAvatar" class="avatar-img" src="" alt="Profile" />
+                        <span id="headerAvatarPlaceholder" class="avatar-placeholder">👤</span>
                     </button>
-                    <button class="user-btn" onclick="exportUserData()">📥 Export Data</button>
                 </div>
-
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰</button>
             </div>
         </div>
@@ -41,12 +40,22 @@
     <!-- Navigation -->
     <nav class="nav-bar">
         <div class="nav-container" id="navMenu">
-            <a href="#" class="nav-link active" onclick="showSection('home')">Home</a>
-            <a href="#" class="nav-link" onclick="showSection('products')">Browse Products</a>
-            <a href="#" class="nav-link" onclick="showSection('orders')">My Orders</a>
-            <a href="#" class="nav-link" onclick="showSection('profile')">Profile</a>
+            <a href="#" class="nav-link active" onclick="showSection('home')" data-i18n="nav_home">Home</a>
+            <a href="#" class="nav-link" onclick="showSection('farmers')" data-i18n="nav_farmers">Farmers</a>
+            <a href="#" class="nav-link" onclick="showSection('products')" data-i18n="nav_products">All Products</a>
+            <a href="#" class="nav-link" onclick="showSection('orders')" data-i18n="nav_orders">My Orders</a>
+            <a href="#" class="nav-link" onclick="showSection('profile')" data-i18n="nav_profile">Profile</a>
+            <a href="#" class="nav-link" onclick="showSection('settings')" data-i18n="nav_settings">Settings</a>
         </div>
     </nav>
+
+    <!-- Mobile Search (visible on small screens only) -->
+    <div class="mobile-search" id="mobileSearchContainer" style="display: none;">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for fresh products..." id="mobileSearchInput" data-i18n-placeholder="mobile_search_placeholder">
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="main-container">
@@ -81,8 +90,8 @@
             </div>
 
             <div class="section-header">
-                <h2 class="section-title">Featured Products</h2>
-                <button class="btn-primary" onclick="showSection('products')">View All</button>
+                <h2 class="section-title" data-i18n="featured_products">Featured Products</h2>
+                <button class="btn-primary" data-i18n="view_all" onclick="showSection('products')">View All</button>
             </div>
 
             <div class="products-grid" id="featuredProducts"></div>
@@ -90,59 +99,90 @@
 
         <!-- Products Section -->
         <div id="productsSection" style="display: none;">
-            <h2 class="section-title">Browse Products</h2>
+            <h2 class="section-title" data-i18n="browse_products">Browse Products</h2>
             
             <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterProducts('all')">All Products</button>
-                <button class="filter-btn" onclick="filterProducts('vegetables')">Vegetables</button>
-                <button class="filter-btn" onclick="filterProducts('fruits')">Fruits</button>
-                <button class="filter-btn" onclick="filterProducts('grains')">Grains</button>
-                <button class="filter-btn" onclick="filterProducts('herbs')">Herbs</button>
+                <button class="filter-btn active" data-i18n="filter_all" onclick="filterProducts('all')">All Products</button>
+                <button class="filter-btn" data-i18n="filter_vegetables" onclick="filterProducts('vegetables')">Vegetables</button>
+                <button class="filter-btn" data-i18n="filter_fruits" onclick="filterProducts('fruits')">Fruits</button>
+                <button class="filter-btn" data-i18n="filter_grains" onclick="filterProducts('grains')">Grains</button>
+                <button class="filter-btn" data-i18n="filter_herbs" onclick="filterProducts('herbs')">Herbs</button>
             </div>
 
             <div class="products-grid" id="allProducts"></div>
         </div>
 
+        <!-- Farmers Section -->
+        <div id="farmersSection" style="display: none;">
+            <div class="section-header">
+                <h2 class="section-title" data-i18n="farmers_nav">Our Farmers</h2>
+                <button class="btn-primary" data-i18n="view_all" onclick="showSection('products')">View All</button>
+            </div>
+            <p style="color: var(--text-light); margin-bottom: 2rem;">Browse products directly from local farmers</p>
+            <div id="farmersContainer"></div>
+        </div>
+
         <!-- Orders Section -->
         <div id="ordersSection" style="display: none;">
-            <h2 class="section-title">My Orders</h2>
+            <h2 class="section-title" data-i18n="myorders">My Orders</h2>
             <div id="ordersList"></div>
         </div>
 
         <!-- Profile Section -->
         <div id="profileSection" style="display: none;">
-            <h2 class="section-title">My Profile</h2>
+            <h2 class="section-title" data-i18n="myprofile">My Profile</h2>
             <div class="order-card">
-                <h3 style="margin-bottom: 1.5rem;">Personal Information</h3>
+                <h3 style="margin-bottom: 1.5rem;" data-i18n="personalinfo">Personal Information</h3>
                 <form id="consumerProfileForm">
                     <div class="form-group">
-                        <label class="form-label">Full Name</label>
+                        <label class="form-label" data-i18n="fullname">Full Name</label>
                         <input type="text" class="form-input" value="Juan Dela Cruz">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email</label>
+                        <label class="form-label" data-i18n="email">Email</label>
                         <input type="email" class="form-input" value="juan@example.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label" data-i18n="phone">Phone Number</label>
                         <input type="tel" class="form-input" value="+63 912 345 6789">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Delivery Address</label>
+                        <label class="form-label" data-i18n="delivery">Delivery Address</label>
                         <textarea class="form-textarea">123 Main St, Baguio City, Benguet</textarea>
                     </div>
                     <div class="form-group" style="margin-top: 1rem;">
-                        <label class="form-label">Profile Image</label>
+                        <label class="form-label" data-i18n="delivery">Profile Image</label>
                         <input type="file" id="consumerProfileImage" accept="image/*" class="form-input">
                         <div style="margin-top:.5rem;">
                             <img id="consumerProfileImagePreview" src="" alt="Avatar Preview" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; display: none;" />
                         </div>
                     </div>
                     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                        <button type="submit" class="btn-primary">Update Profile</button>
+                        <button type="submit" class="btn-primary" data-i18n="update_profile">Update Profile</button>
                         <button type="button" class="btn-secondary" onclick="logout()">Logout</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Settings Section (language selection) -->
+        <div id="settingsSection" style="display: none;">
+            <h2 class="section-title" data-i18n="settings_title">Settings</h2>
+            <div class="order-card">
+                <h3 style="margin-bottom: 1rem;" data-i18n="settings_language_label">Language</h3>
+                <p style="color: var(--text-light); margin-bottom: 1rem;" data-i18n="settings_language_desc">
+                    Choose your preferred language for the interface.
+                </p>
+                <div style="display:flex; gap:.75rem; align-items:center;">
+                    <label for="languageSelect" class="form-label" style="margin-right:.5rem;" data-i18n="settings_select_label">
+                        Select language:
+                    </label>
+                    <select id="languageSelect" class="form-select">
+                        <option value="en" data-i18n="language_english">English</option>
+                        <option value="fil" data-i18n="language_filipino">Filipino</option>
+                    </select>
+                </div>
+                <p id="languageStatus" style="margin-top:1rem; color:var(--accent-color); font-weight:500;"></p>
             </div>
         </div>
     </main>
@@ -150,7 +190,7 @@
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
-            <h2>Shopping Cart</h2>
+            <h2 data-i18n="cart_header">Shopping Cart</h2>
             <button class="close-cart-btn" onclick="toggleCart()">✕</button>
         </div>
         
@@ -163,7 +203,7 @@
                 <span>Total:</span>
                 <span id="cartTotal">₱0.00</span>
             </div>
-            <button class="checkout-btn" onclick="proceedToCheckout()">Proceed to Checkout</button>
+            <button class="checkout-btn" data-i18n="checkout_proceed" onclick="proceedToCheckout()">Proceed to Checkout</button>
         </div>
     </div>
 
@@ -216,6 +256,7 @@
     <script src="../JS/products.js"></script>
     <script src="../JS/cart.js"></script>
     <script src="../JS/dataManager.js"></script>
+    <script src="../JS/language.js"></script>
     <script src="../JS/user_dashboard.js"></script>
 </body>
 </html>

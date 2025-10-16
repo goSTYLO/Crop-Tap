@@ -75,6 +75,18 @@ body {
     position: relative;
 }
 
+/* Mobile search container */
+.mobile-search {
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+}
+
+.mobile-search .search-bar {
+    max-width: none;
+    margin: 0;
+    padding: 0.75rem 1rem;
+}
+
 .search-bar input {
     width: 100%;
     padding: 0.75rem 3rem 0.75rem 1rem;
@@ -102,6 +114,71 @@ body {
     align-items: center;
     gap: 1.5rem;
 }
+
+.farmer-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.farmer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.farmer-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.farmer-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.farmer-name {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.farmer-meta {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.farmer-filter-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+#farmersContainer {
+    margin-top: 1.5rem;
+}
+
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
 
 .cart-btn {
     position: relative;
@@ -135,6 +212,46 @@ body {
 
 .user-menu {
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Header avatar/placeholder */
+.avatar-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: none; /* toggled via JS */
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex; /* default visible; JS may hide */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.9rem;
+    user-select: none;
 }
 
 .user-btn {
@@ -500,6 +617,85 @@ body {
     opacity: 0.9;
 }
 
+/* ===== SETTINGS SECTION STYLES ===== */
+#settingsSection {
+    display: flex; /* will be shown via JS */
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    background-color: #f7f8f6; /* page background */
+    padding: 2rem;
+}
+
+#settingsSection h2.section-title {
+    margin-bottom: 1rem;
+}
+
+#settingsSection .order-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border-left: 5px solid #3e6c1b; /* green accent */
+    transition: all 0.2s ease;
+}
+
+#settingsSection .order-card:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+#settingsSection .section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2e4600;
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2e4600;
+}
+
+.form-select {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1px solid #d0d0d0;
+    outline: none;
+    background-color: #fff;
+    color: #333;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-select:focus {
+    border-color: #3e6c1b;
+    box-shadow: 0 0 0 2px rgba(62,108,27,0.25);
+}
+
+#languageStatus {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: #ff9d00;
+    transition: opacity 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #settingsSection {
+        padding: 1.5rem;
+        align-items: flex-start;
+    }
+    #settingsSection .section-title {
+        font-size: 1.5rem;
+    }
+    #settingsSection .order-card {
+        padding: 1.5rem;
+    }
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -670,6 +866,10 @@ body {
         flex-wrap: wrap;
     }
 
+    /* Hide header search on mobile; show separate mobile search below nav */
+    .header .search-bar { display: none; }
+    .mobile-search { display: block !important; }
+
     .search-bar {
         order: 3;
         width: 100%;
@@ -690,6 +890,14 @@ body {
         display: flex;
     }
 
+    .header-actions { gap: 0.75rem; }
+    .cart-btn { font-size: 1.25rem; }
+    .cart-badge { top: -6px; right: -6px; width: 18px; height: 18px; font-size: 0.7rem; }
+
+    /* Header avatar/icon sizing */
+    .avatar-btn { width: 36px; height: 36px; }
+    .avatar-placeholder { font-size: 0.8rem; }
+
     .cart-sidebar {
         width: 100%;
         right: -100%;
@@ -699,8 +907,41 @@ body {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
+    .product-image { height: 160px; }
+    .stock-badge { font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 14px; }
+    .stat-icon { font-size: 2.2rem; }
+
+    /* Farmer card avatar */
+    .farmer-avatar { width: 48px; height: 48px; font-size: 1.5rem; }
+
+    /* Cart item visuals */
+    .cart-item-image { width: 64px; height: 64px; font-size: 1.5rem; }
+    .qty-btn { width: 26px; height: 26px; }
+    .qty-input { width: 46px; }
+
     .modal-content {
         width: 95%;
         padding: 1.5rem;
     }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+    /* Ensure header search remains hidden, mobile search visible */
+    .header .search-bar { display: none; }
+    .mobile-search { display: block !important; }
+    .header-actions { gap: 0.5rem; }
+    .cart-btn { font-size: 1.1rem; }
+    .cart-badge { top: -5px; right: -5px; width: 16px; height: 16px; font-size: 0.65rem; }
+
+    .avatar-btn { width: 32px; height: 32px; }
+    .avatar-placeholder { font-size: 0.75rem; }
+
+    .product-image { height: 140px; }
+    .stock-badge { font-size: 0.65rem; padding: 0.18rem 0.5rem; }
+    .stat-icon { font-size: 2rem; }
+
+    .cart-item-image { width: 56px; height: 56px; font-size: 1.25rem; }
+    .qty-btn { width: 24px; height: 24px; }
+    .qty-input { width: 44px; }
 }

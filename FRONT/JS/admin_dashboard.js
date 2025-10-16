@@ -43,10 +43,65 @@ function initializeApp() {
         });
     });
 
-    // Mobile menu toggle
-    document.getElementById('menuToggle').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('active');
-    });
+    // Mobile/Desktop menu toggle
+    const menuBtn = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+
+    // Control menu button visibility based on sidebar state and viewport
+    function updateMenuVisibility() {
+        if (!menuBtn || !sidebar) return;
+        if (window.innerWidth <= 768) {
+            const open = sidebar.classList.contains('active');
+            menuBtn.style.display = open ? 'none' : 'inline-block';
+        } else {
+            const visible = !sidebar.classList.contains('hidden');
+            menuBtn.style.display = visible ? 'none' : 'inline-block';
+        }
+    }
+
+    window.addEventListener('resize', updateMenuVisibility);
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', function() {
+            // On small screens use .active to slide in, on larger screens hide completely with .hidden
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('active');
+            } else {
+                const hidden = sidebar.classList.toggle('hidden');
+                // Adjust main content margin when sidebar hidden on desktop
+                if (hidden) {
+                    mainContent.classList.add('expanded');
+                } else {
+                    mainContent.classList.remove('expanded');
+                }
+            }
+            updateMenuVisibility();
+        });
+    }
+
+    // Sidebar close button
+    const sidebarClose = document.getElementById('sidebarClose');
+    if (sidebarClose) {
+        sidebarClose.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            } else {
+                sidebar.classList.add('hidden');
+                mainContent.classList.add('expanded');
+            }
+            updateMenuVisibility();
+        });
+    }
+
+    // Default: close sidebar on load
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+    } else {
+        sidebar.classList.add('hidden');
+        mainContent.classList.add('expanded');
+    }
+    updateMenuVisibility();
 
     // Form submissions
     document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
@@ -93,6 +148,8 @@ function navigateToPage(page) {
     // Close mobile menu
     if (window.innerWidth <= 768) {
         document.getElementById('sidebar').classList.remove('active');
+        const btn = document.getElementById('menuToggle');
+        if (btn) btn.style.display = 'inline-block';
     }
 }
 

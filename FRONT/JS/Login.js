@@ -27,3 +27,32 @@ function handleLogin(e) {
         alert(result.message);
     }
 }
+
+const passwordInput = document.getElementById('passwordInput');
+const eyeBtn = document.getElementById('eyeBtn');
+
+passwordInput.addEventListener('input', () => {
+    if (passwordInput.value.length > 0) {
+        eyeBtn.style.display = 'inline-flex';
+    } else {
+        eyeBtn.style.display = 'none';
+        passwordInput.type = 'password';
+        document.getElementById('eyeOpen').style.display = 'inline';
+        document.getElementById('eyeClosed').style.display = 'none';
+    }
+});
+
+function togglePassword() {
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'inline';
+    } else {
+        passwordInput.type = 'password';
+        eyeOpen.style.display = 'inline';
+        eyeClosed.style.display = 'none';
+    }
+}

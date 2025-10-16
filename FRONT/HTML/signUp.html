@@ -31,7 +31,7 @@
 
         <div class="form-panel">
             
-            <!-- Sign Up Form -->
+            <!-- Sign Up Form (hidden on mobile) -->
             <div class="form-container" id="signupForm">
                 <h2>Create Account</h2>
                 <p class="subtitle">Join thousands of farmers already on Crop-Tap</p>
@@ -52,19 +52,47 @@
                         <input type="email" placeholder="Enter your email" required>
                     </div>
                     
-                    <div class="input-group">
+                    <div class="input-group password-group">
                         <label>Password</label>
-                        <input type="password" id="password" placeholder="Create a strong password" required>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Create a strong password" required>
+                            <button type="button" class="eye-btn" id="togglePassword" style="display:none;">
+                                <!-- Eye Open SVG -->
+                                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <!-- Eye Closed SVG -->
+                                <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.32 18.32 0 0 1 5.82-6.94M1 1l22 22"/>
+                                    <path d="M10.58 10.58a3 3 0 0 0 4.24 4.24"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div id="passwordRules" class="password-rules" style="display: none;">
                             <p id="length" class="invalid">• At least 6 characters</p>
                             <p id="case" class="invalid">• Contains uppercase & lowercase letters</p>
                             <p id="number" class="invalid">• Contains at least 1 number</p>
                         </div>
                     </div>
-
-                    <div class="input-group">
+                    
+                    <div class="input-group password-group">
                         <label>Confirm Password</label>
-                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+                            <button type="button" class="eye-btn" id="toggleConfirmPassword" style="display:none;">
+                                <!-- Eye Open SVG -->
+                                <svg id="eyeOpenConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <!-- Eye Closed SVG -->
+                                <svg id="eyeClosedConfirm" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                    <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.32 18.32 0 0 1 5.82-6.94M1 1l22 22"/>
+                                    <path d="M10.58 10.58a3 3 0 0 0 4.24 4.24"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn">Sign Up</button>

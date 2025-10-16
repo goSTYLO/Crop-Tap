@@ -38,17 +38,13 @@ function loadProducts() {
 function renderProducts(containerId, productList) {
     const container = document.getElementById(containerId);
     if (!container) return;
-    
+
     if (productList.length === 0) {
-        container.innerHTML = `
-            <div class="no-products">
-                <h3>No products available</h3>
-                <p>Check back later for fresh products from our farmers!</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="no-products" data-i18n-dynamic="no_products"></div>`;
+        translateDynamicText(); // Translate immediately
         return;
     }
-    
+
     container.innerHTML = productList.map(product => `
         <div class="product-card" onclick="showProductDetail('${product.product_id}')">
             <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
@@ -56,7 +52,7 @@ function renderProducts(containerId, productList) {
                     `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
                     `<span>🌾</span>`
                 }
-                <span class="stock-badge">${product.quantity} in stock</span>
+                <span class="stock-badge" data-i18n-dynamic="stock_in" data-count="${product.quantity}"></span>
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
@@ -64,15 +60,16 @@ function renderProducts(containerId, productList) {
                 <div class="product-meta">
                     <div>
                         <div class="product-price">₱${product.price.toFixed(2)}</div>
-                        <div class="product-unit">per ${product.unit}</div>
+                        <div class="product-unit" data-i18n-dynamic="unit_per" data-unit="${product.unit}"></div>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.product_id}')">
-                    Add to Cart
-                </button>
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.product_id}')"
+                    data-i18n-dynamic="add_to_cart"></button>
             </div>
         </div>
     `).join('');
+
+    translateDynamicText(); // Translate dynamic content
 }
 
 // Filter Products
@@ -177,7 +174,12 @@ function toggleCart() {
 
 // Show Product Detail
 function showProductDetail(productId) {
-    const product = products.find(p => p.id === productId);
+    const product = productService.getProductById(productId);
+    if (!product) {
+        alert('Product not found');
+        return;
+    }
+    
     const modal = document.getElementById('productModal');
     const modalProductName = document.getElementById('modalProductName');
     const modalProductContent = document.getElementById('modalProductContent');
@@ -185,13 +187,16 @@ function showProductDetail(productId) {
     modalProductName.textContent = product.name;
     modalProductContent.innerHTML = `
         <div style="text-align: center; font-size: 5rem; margin: 2rem 0;">
-            ${product.emoji}
+            ${product.image_url ? 
+                `<img src="${product.image_url}" alt="${product.name}" style="max-width: 100%; height: auto;">` :
+                '🌾'
+            }
         </div>
-        <p style="margin-bottom: 1rem;"><strong>Price:</strong> ₱${product.price} per ${product.unit}</p>
-        <p style="margin-bottom: 1rem;"><strong>Available Stock:</strong> ${product.stock} ${product.unit}</p>
+        <p style="margin-bottom: 1rem;"><strong>Price:</strong> ₱${product.price.toFixed(2)} per ${product.unit}</p>
+        <p style="margin-bottom: 1rem;"><strong>Available Stock:</strong> ${product.quantity} ${product.unit}</p>
         <p style="margin-bottom: 1rem;"><strong>Category:</strong> ${product.category}</p>
         <p style="margin-bottom: 1.5rem;">${product.description}</p>
-        <button class="btn-primary" onclick="addToCart(${product.id}); closeModal('productModal')">Add to Cart</button>
+        <button class="btn-primary" onclick="addToCart('${product.product_id}'); closeModal('productModal')">Add to Cart</button>
     `;
     
     modal.classList.add('open');
@@ -204,7 +209,9 @@ function closeModal(modalId) {
 
 // Proceed to Checkout
 function proceedToCheckout() {
-    if (cart.length === 0) {
+    const cartSummary = cartService.getCartSummary(currentUser.user_id);
+    
+    if (cartSummary.isEmpty) {
         alert('Your cart is empty!');
         return;
     }
@@ -213,21 +220,21 @@ function proceedToCheckout() {
 }
 
 // Handle Checkout Form
-document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+document.getElementById('checkoutForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Simulate order placement
-    alert('Order placed successfully! You will receive a confirmation email shortly.');
+    // Create order
+    const result = cartService.createOrderFromCart(currentUser.user_id);
     
-    // Clear cart
-    cart = [];
-    updateCartUI();
-    
-    // Close modal
-    closeModal('checkoutModal');
-    
-    // Show orders section
-    showSection('orders');
+    if (result.success) {
+        alert('Order placed successfully! You will receive a confirmation email shortly.');
+        updateCartUI();
+        renderOrders();
+        closeModal('checkoutModal');
+        showSection('orders');
+    } else {
+        alert(result.message);
+    }
 });
 
 // Render Orders
@@ -278,16 +285,135 @@ function renderOrders() {
     }).join('');
 }
 
+// ========== FARMERS SECTION ==========
+
+// Render Farmers Section
+function renderFarmers() {
+    const farmersContainer = document.getElementById('farmersContainer');
+    if (!farmersContainer) return;
+    
+    // Get all farmers (users with role 'farmer')
+    const allUsers = storage.getData('users') || [];
+    const farmers = allUsers.filter(user => user.role === 'farmer');
+    
+    if (farmers.length === 0) {
+        farmersContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">No farmers available</p>';
+        return;
+    }
+    
+    // Get all products
+    const allProducts = productService.getAllProducts();
+    
+    // Render each farmer with their products
+    farmersContainer.innerHTML = farmers.map(farmer => {
+        // Get products for this farmer
+        const farmerProducts = allProducts.filter(p => p.farmer_id === farmer.user_id && p.quantity > 0);
+        
+        return `
+            <div class="farmer-section">
+                <div class="farmer-header">
+                    <div class="farmer-info">
+                        <div class="farmer-avatar">👨‍🌾</div>
+                        <div>
+                            <h3 class="farmer-name">${farmer.name}'s Farm</h3>
+                            <p class="farmer-meta">${farmerProducts.length} products available</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="farmer-filter-bar">
+                    <button class="filter-btn active" onclick="filterFarmerProducts('${farmer.user_id}', 'all')">All Products</button>
+                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'vegetables')">Vegetables</button>
+                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'fruits')">Fruits</button>
+                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'grains')">Grains</button>
+                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'herbs')">Herbs</button>
+                </div>
+                
+                <div class="products-grid" id="farmer-products-${farmer.user_id}">
+                    ${renderFarmerProducts(farmerProducts)}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+
+// Render farmer products
+function renderFarmerProducts(products) {
+    if (products.length === 0) {
+        return '<p style="text-align: center; color: #6b7280; padding: 2rem; grid-column: 1/-1;">No products in this category</p>';
+    }
+    
+    return products.map(product => `
+        <div class="product-card" onclick="showProductDetail('${product.product_id}')">
+            <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
+                ${product.image_url ? 
+                    `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<span>🌾</span>`
+                }
+                <span class="stock-badge">${product.quantity} in stock</span>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-meta">
+                    <div>
+                        <div class="product-price">₱${product.price.toFixed(2)}</div>
+                        <div class="product-unit">per ${product.unit}</div>
+                    </div>
+                </div>
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.product_id}')">
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Filter farmer products by category
+function filterFarmerProducts(farmerId, category) {
+    const allProducts = productService.getAllProducts();
+    const farmerProducts = allProducts.filter(p => p.farmer_id === farmerId && p.quantity > 0);
+    const filtered = category === 'all' ? farmerProducts : farmerProducts.filter(p => p.category === category);
+    
+    const container = document.getElementById(`farmer-products-${farmerId}`);
+    if (container) {
+        container.innerHTML = renderFarmerProducts(filtered);
+    }
+    
+    // Update filter buttons for this farmer section
+    const farmerSection = container.closest('.farmer-section');
+    if (farmerSection) {
+        farmerSection.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+    }
+}
+
+// ========== END FARMERS SECTION ==========
+
 // Update User Info
 function updateUserInfo() {
     const headerAvatar = document.getElementById('headerAvatar');
-    if (headerAvatar) {
-        if (currentUser && currentUser.avatar_url) {
-            headerAvatar.src = currentUser.avatar_url;
-            headerAvatar.style.display = 'inline-block';
-        } else {
-            headerAvatar.style.display = 'none';
+    const headerPlaceholder = document.getElementById('headerAvatarPlaceholder');
+
+    if (!headerAvatar || !headerPlaceholder) return;
+
+    if (currentUser && currentUser.avatar_url) {
+        headerAvatar.src = currentUser.avatar_url;
+        headerAvatar.style.display = 'inline-block';
+        headerPlaceholder.style.display = 'none';
+    } else {
+        // Show initials or default icon in placeholder
+        let initials = '';
+        if (currentUser && currentUser.name) {
+            const parts = currentUser.name.trim().split(/\s+/);
+            initials = parts.slice(0, 2).map(p => p[0]?.toUpperCase() || '').join('');
         }
+        headerPlaceholder.textContent = initials || '👤';
+        headerPlaceholder.style.display = 'flex';
+        headerAvatar.style.display = 'none';
     }
 }
 
@@ -344,6 +470,7 @@ function saveConsumerProfile(updateData) {
     const result = auth.updateProfile(currentUser.user_id, updateData);
     if (result.success) {
         currentUser = result.user;
+        updateUserInfo(); // reflect changes in header immediately
         showNotification('Profile updated successfully!', 'success');
     } else {
         showNotification(result.message, 'error');
@@ -355,54 +482,30 @@ function trackOrder(orderId) {
     alert(`Tracking order ${orderId}. This will integrate with your delivery tracking system.`);
 }
 
-// Checkout
-function checkout() {
-    if (!currentUser) return;
-    
-    const cartSummary = cartService.getCartSummary(currentUser.user_id);
-    
-    if (cartSummary.isEmpty) {
-        alert('Your cart is empty!');
-        return;
-    }
-    
-    // Validate cart before checkout
-    const validation = cartService.validateCart(currentUser.user_id);
-    if (!validation.isValid) {
-        alert(validation.message);
-        return;
-    }
-    
-    // Create order
-    const result = cartService.createOrderFromCart(currentUser.user_id);
-    
-    if (result.success) {
-        alert('Order placed successfully!');
-        updateCartUI();
-        renderOrders();
-        closeModal('checkoutModal');
-    } else {
-        alert(result.message);
-    }
-}
-
 // Show Section
 function showSection(section) {
     // Hide all sections
     document.getElementById('homeSection').style.display = 'none';
     document.getElementById('productsSection').style.display = 'none';
+    document.getElementById('farmersSection').style.display = 'none';
     document.getElementById('ordersSection').style.display = 'none';
     document.getElementById('profileSection').style.display = 'none';
+    document.getElementById('settingsSection').style.display = 'none';
     
     // Show selected section
     if (section === 'home') {
         document.getElementById('homeSection').style.display = 'block';
     } else if (section === 'products') {
         document.getElementById('productsSection').style.display = 'block';
+    } else if (section === 'farmers') {
+        document.getElementById('farmersSection').style.display = 'block';
+        renderFarmers(); // Load farmers when section is shown
     } else if (section === 'orders') {
         document.getElementById('ordersSection').style.display = 'block';
     } else if (section === 'profile') {
         document.getElementById('profileSection').style.display = 'block';
+    }else if (section === 'settings') {
+        document.getElementById('settingsSection').style.display = 'block';
     }
     
     // Update nav links
@@ -423,13 +526,34 @@ function toggleMobileNav() {
 }
 
 // Search Functionality
-document.getElementById('searchInput').addEventListener('input', function(e) {
+// Desktop search input
+document.getElementById('searchInput')?.addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = products.filter(p => 
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
+    const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm) || 
         p.description.toLowerCase().includes(searchTerm)
     );
     
+    if (document.getElementById('productsSection').style.display !== 'none') {
+        renderProducts('allProducts', filtered);
+    }
+});
+
+// Mobile search input
+document.getElementById('mobileSearchInput')?.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+
+    // keep desktop search in sync if present
+    const desktopInput = document.getElementById('searchInput');
+    if (desktopInput) desktopInput.value = e.target.value;
+
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
+    const filtered = allProducts.filter(p => 
+        p.name.toLowerCase().includes(searchTerm) || 
+        p.description.toLowerCase().includes(searchTerm)
+    );
+
     if (document.getElementById('productsSection').style.display !== 'none') {
         renderProducts('allProducts', filtered);
     }
@@ -454,19 +578,10 @@ document.querySelectorAll('.modal').forEach(modal => {
     });
 });
 
-// Export user data function
-function exportUserData() {
-    try {
-        const result = dataManager.downloadData();
-        if (result.success) {
-            showNotification('Your data has been exported successfully!', 'success');
-        } else {
-            showNotification('Failed to export data: ' + result.message, 'error');
-        }
-    } catch (error) {
-        console.error('Export error:', error);
-        showNotification('Error exporting data', 'error');
-    }
+
+// Show notification helper
+function showNotification(message, type = 'info') {
+    alert(message);
 }
 
 // Initialize app
