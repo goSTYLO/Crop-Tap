@@ -230,3 +230,10 @@ class AuthService {
 
 // Create global instance
 const auth = new AuthService();
+
+// Expose a global logout function for UI buttons
+function logout() {
+    const result = auth.logout();
+    // Redirect to landing page regardless of result to ensure session cleared UX
+    window.location.href = '../HTML/landing_page.html';
+}

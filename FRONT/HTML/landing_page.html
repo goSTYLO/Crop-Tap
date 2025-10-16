@@ -35,7 +35,7 @@
     <section id="home" class="hero">
         <h1>CONNECTING FARMERS TO FAIR MARKETS</h1>
         <p>Welcome to Crop-Tap Agriculture, your go-to source for high-quality crops and produce from<br>Pangasinan. We specialize in providing fresh and nutritious vegetables to our<br>customers, supporting local farmers and promoting sustainable agriculture practices  </p>
-        <a href="#signup" class="btn hero-btn">Get Started Today</a>
+        <a href="Login.html" class="btn hero-btn">Get Started Today</a>
     </section>
 
     <!-- About Section -->
@@ -158,5 +158,13 @@
     <script src="../JS/products.js"></script>
     <script src="../JS/cart.js"></script>
     <script src="../JS/landing_page.js"></script>
+    <script>
+        // Auto-logout when landing page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof auth !== 'undefined' && auth && auth.isLoggedIn()) {
+                auth.logout();
+            }
+        });
+    </script>
 </body>
 </html>

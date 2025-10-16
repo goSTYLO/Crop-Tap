@@ -27,7 +27,9 @@
                 </button>
                 
                 <div class="user-menu">
-                    <button class="user-btn" onclick="showProfile()">👤 My Account</button>
+                    <button class="user-btn" onclick="showProfile()" style="border: none; background: transparent; padding: 0; display: inline-flex; align-items: center;">
+                        <img id="headerAvatar" src="" alt="Me" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: none;" />
+                    </button>
                     <button class="user-btn" onclick="exportUserData()">📥 Export Data</button>
                 </div>
 
@@ -112,7 +114,7 @@
             <h2 class="section-title">My Profile</h2>
             <div class="order-card">
                 <h3 style="margin-bottom: 1.5rem;">Personal Information</h3>
-                <form>
+                <form id="consumerProfileForm">
                     <div class="form-group">
                         <label class="form-label">Full Name</label>
                         <input type="text" class="form-input" value="Juan Dela Cruz">
@@ -129,7 +131,17 @@
                         <label class="form-label">Delivery Address</label>
                         <textarea class="form-textarea">123 Main St, Baguio City, Benguet</textarea>
                     </div>
-                    <button type="submit" class="btn-primary">Update Profile</button>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label class="form-label">Profile Image</label>
+                        <input type="file" id="consumerProfileImage" accept="image/*" class="form-input">
+                        <div style="margin-top:.5rem;">
+                            <img id="consumerProfileImagePreview" src="" alt="Avatar Preview" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; display: none;" />
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <button type="submit" class="btn-primary">Update Profile</button>
+                        <button type="button" class="btn-secondary" onclick="logout()">Logout</button>
+                    </div>
                 </form>
             </div>
         </div>

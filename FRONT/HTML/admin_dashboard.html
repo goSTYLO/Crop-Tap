@@ -17,6 +17,7 @@
                     <span>Crop-Tap</span>
                 </div>
                 <div class="user-info">
+                    <img id="userAvatar" src="" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-bottom: .5rem; display: none;" />
                     <div id="userName">Farmer User</div>
                     <span class="user-role" id="userRole">Farmer</span>
                 </div>
@@ -71,6 +72,7 @@
                         🔔
                         <span class="notification-badge">5</span>
                     </button>
+                    <img id="topbarAvatar" src="" alt="Me" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin: 0 8px; display: none;" />
                     <button class="btn btn-primary" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -398,6 +400,49 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- Profile Page -->
+                <div id="profilePage" class="page hidden">
+                    <div class="page-header">
+                        <h1 class="page-title">My Profile</h1>
+                        <p class="breadcrumb">Home / Profile</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Personal Information</h2>
+                        </div>
+                    <form id="farmerProfileForm" class="form-grid" style="padding: 1rem;">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" id="profileName" value="" placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="profileEmail" value="" placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="profilePhone" value="" placeholder="+63 ...">
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Address</label>
+                                <textarea id="profileAddress" rows="3" placeholder="Your address"></textarea>
+                            </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Profile Image</label>
+                            <input type="file" id="profileImage" accept="image/*">
+                            <div style="margin-top:.5rem;">
+                                <img id="profileImagePreview" src="" alt="Avatar Preview" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; display: none;" />
+                            </div>
+                        </div>
+                            <div class="action-buttons" style="grid-column: 1 / -1; display: flex; gap: .75rem; flex-wrap: wrap;">
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                                <button type="button" class="btn btn-outline" onclick="logout()">Logout</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -487,8 +532,11 @@
                     <textarea id="productDescription" rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" id="productImage" placeholder="Enter image URL">
+                    <label>Product Image</label>
+                    <input type="file" id="productImageFile" accept="image/*">
+                    <div style="margin-top:.5rem;">
+                        <img id="productImagePreview" src="" alt="Preview" style="max-width: 160px; border-radius: 6px; display: none;" />
+                    </div>
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">Save Product</button>

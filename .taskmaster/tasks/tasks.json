@@ -5,7 +5,7 @@
         "id": 1,
         "title": "Initial Project Structure and LocalStorage Data Model Setup",
         "description": "Create the basic project folder structure including HTML, CSS, and JavaScript files. Initialize the localStorage with the required data models (users, products, carts, etc.) to ensure the application has a persistent data foundation from the start.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "details": "Create a project folder containing `index.html`, `styles.css`, and `app.js`. In `app.js`, write an initialization function that runs on page load. This function will check for the existence of the following keys in localStorage: 'users', 'products', 'carts', 'cart_items', 'orders', 'order_items', and 'payments'. If a key is not found, it should be created and initialized with an empty array. \n\nPseudo-code:\n```javascript\nconst dataModels = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];\n\ndocument.addEventListener('DOMContentLoaded', () => {\n  dataModels.forEach(model => {\n    if (!localStorage.getItem(model)) {\n      localStorage.setItem(model, JSON.stringify([]));\n    }\n  });\n});\n```",
@@ -17,7 +17,7 @@
             "description": "Establish the root project folder and create the three essential empty files (`index.html`, `styles.css`, `app.js`) that will form the basis of the application.",
             "dependencies": [],
             "details": "Create a new directory for the project. Inside this directory, create three empty files: `index.html`, `styles.css`, and `app.js`. This sets up the fundamental file structure.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify that the project folder and the three specified files exist in the file system using a file explorer or command line."
           },
           {
@@ -28,7 +28,7 @@
               1
             ],
             "details": "Edit `index.html` to add the `<!DOCTYPE html>`, `<html>`, `<head>`, and `<body>` tags. In the `<head>`, include a `<title>`, a `<link rel=\"stylesheet\" href=\"styles.css\">`. At the end of the `<body>`, add `<script defer src=\"app.js\"></script>`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Open `index.html` in a browser. Use the developer tools' 'View Page Source' and 'Network' tab to confirm that the HTML structure is correct and that both `styles.css` and `app.js` are being requested and loaded."
           },
           {
@@ -39,7 +39,7 @@
               1
             ],
             "details": "In `app.js`, define a constant array `const dataModels = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];`. Then, create a function `function initializeLocalStorage() { dataModels.forEach(model => { if (!localStorage.getItem(model)) { localStorage.setItem(model, JSON.stringify([])); } }); }`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "After creating the function, manually paste and run `initializeLocalStorage()` in the browser console. Then, inspect the 'Application' > 'LocalStorage' tab in the developer tools to confirm the keys were created with `[]` as their value."
           },
           {
@@ -51,7 +51,7 @@
               3
             ],
             "details": "In `app.js`, add an event listener at the top level of the script: `document.addEventListener('DOMContentLoaded', initializeLocalStorage);`. This will execute the previously created function upon page load.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "In the browser developer tools, clear all data from localStorage. Refresh the `index.html` page. Inspect the 'Application' > 'LocalStorage' tab again to verify that all specified keys have been automatically recreated."
           },
           {
@@ -62,7 +62,7 @@
               2
             ],
             "details": "In `styles.css`, add a simple rule like `body { background-color: #f4f4f4; font-family: sans-serif; }`. In `index.html`'s body, add an `<h1>Welcome to Crop-Tap</h1>` to have visible content on the page.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Load `index.html` in the browser. Verify that the 'Welcome to Crop-Tap' heading is visible and that the background color and font specified in the CSS have been applied to the page."
           }
         ]
@@ -71,7 +71,7 @@
         "id": 2,
         "title": "Implement User Authentication with LocalStorage",
         "description": "Develop registration and login functionality for both Farmers and Buyers. User profiles, including their role, will be stored in the 'users' array in localStorage. A simple session management system will use localStorage to track the currently logged-in user.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -85,7 +85,7 @@
             "description": "Add HTML forms to `index.html` for user registration and login. The registration form should include fields for email, password, and a dropdown for selecting the user role (Farmer or Buyer). The login form needs email and password fields.",
             "dependencies": [],
             "details": "In `index.html`, create two `<form>` elements. The registration form should have an id like `registration-form` and include inputs for email, password, and a `<select>` element for 'role'. The login form should have an id like `login-form` and include inputs for email and password. Both forms need a submit button.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Open `index.html` in a web browser and visually confirm that both the registration and login forms are rendered correctly with all specified input fields and buttons."
           },
           {
@@ -96,7 +96,7 @@
               1
             ],
             "details": "In `app.js`, create a `handleRegistration` function. Add an event listener to the `registration-form`. Inside the function, prevent default form submission, get values from the form, and check if the email already exists in the 'users' array from localStorage. If not, create a new user object with a unique ID, email, password, and role. Save the updated users array back to `localStorage`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Submit the registration form with valid data. 2. Use browser developer tools to inspect localStorage and verify the 'users' array contains the new user object. 3. Attempt to register again with the same email and confirm that the registration is rejected and no duplicate user is added."
           },
           {
@@ -107,7 +107,7 @@
               2
             ],
             "details": "In `app.js`, create a `handleLogin` function and attach it to the `login-form`'s submit event. This function will retrieve the email and password from the form inputs. It will then load the 'users' array from `localStorage`, find a user with a matching email, and verify the password. If credentials are correct, store the complete user object in `localStorage` under the key 'session' as a JSON string.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. After registering a user, attempt to log in with the correct credentials. 2. Verify in localStorage that a 'session' key has been created and its value is the JSON string of the logged-in user. 3. Attempt to log in with incorrect credentials and ensure the 'session' key is not created or is empty."
           },
           {
@@ -118,7 +118,7 @@
               3
             ],
             "details": "Add a 'Logout' button to `index.html`, which will be shown conditionally. In `app.js`, create a `handleLogout` function. This function will remove the 'session' item from `localStorage` using `localStorage.removeItem('session')`. Attach an event listener to the logout button to call this function. After logout, the UI should be updated to reflect the logged-out state.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Log in as a user, confirming the 'session' key exists in localStorage. 2. Click the 'Logout' button. 3. Verify that the 'session' key has been completely removed from localStorage."
           },
           {
@@ -129,7 +129,7 @@
               4
             ],
             "details": "Create a function in `app.js`, e.g., `updateUI()`, that checks for the 'session' key in `localStorage`. If a session exists, hide the login and registration forms and show the logout button and a welcome message. If no session exists, show the forms and hide the user-specific elements. This function must be called on page load and after any login or logout action to ensure the UI is always in sync.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. On initial page load, verify only login/registration forms are visible. 2. After logging in, verify the forms are hidden and user-specific elements (like logout button) appear. 3. Refresh the page and confirm the logged-in UI state persists. 4. After logging out, verify the UI reverts to its initial logged-out state."
           }
         ]
@@ -138,7 +138,7 @@
         "id": 3,
         "title": "Develop Product Listing and Browsing UI",
         "description": "Create the main marketplace page where all users can browse available products. This page will dynamically render product data fetched from the 'products' array in localStorage.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           1
         ],
@@ -152,7 +152,7 @@
             "description": "Create a function within `app.js` that takes a product object and returns the corresponding HTML string or DOM element for a product card. This will serve as the template for rendering each product.",
             "dependencies": [],
             "details": "In `app.js`, create a helper function, e.g., `createProductCard(product)`. This function will receive a product object and generate a `div` element with the class 'product-card'. The card must contain elements to display the product's image (imageUrl), name, price, and description.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Manually call this function with a mock product object in the browser console and verify that it returns the expected HTML structure."
           },
           {
@@ -163,7 +163,7 @@
               1
             ],
             "details": "The `renderProducts(products)` function should first get the `#product-listing-container` element. It must clear any existing content within this container (e.g., using `innerHTML = ''`). Then, it will iterate through the `products` array passed as an argument. For each product, it will call `createProductCard(product)` and append the returned element to the container.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create a mock array of product objects and pass it to `renderProducts()` from the console. Verify that the correct number of product cards appear on the page."
           },
           {
@@ -174,7 +174,7 @@
               2
             ],
             "details": "Within the existing `DOMContentLoaded` event listener in `app.js`, add logic to get the 'products' item from `localStorage`. Parse the JSON string into an array. If the array is not null or empty, call the `renderProducts()` function, passing the full product array to it.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Use the `initializeMockData()` function (or manually add products to localStorage) and then refresh the page. Verify that all products from localStorage are displayed correctly on initial load."
           },
           {
@@ -183,7 +183,7 @@
             "description": "Attach a 'keyup' event listener to the search bar element to capture user input for filtering products.",
             "dependencies": [],
             "details": "In `app.js`, likely within the `DOMContentLoaded` listener, get the element with `id='search-bar'`. Add a 'keyup' event listener to this element. The callback function for this listener will contain the filtering logic.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Type into the search bar and add a `console.log` inside the event listener to confirm that it fires on each key press and captures the input value correctly."
           },
           {
@@ -195,7 +195,7 @@
               4
             ],
             "details": "Inside the 'keyup' event listener, get the current search term from the search bar and convert it to lowercase. Fetch the complete list of products from `localStorage`. Use `Array.prototype.filter()` to create a new array of products where the product's name (also converted to lowercase) includes the search term. Finally, call `renderProducts()` with this new filtered array to update the display.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "With products displayed, type a partial name of a product (e.g., 'app' for 'Apples') into the search bar. Verify that the product list updates in real-time to show only matching products. Deleting text from the search bar should show more products again."
           }
         ]
@@ -204,7 +204,7 @@
         "id": 4,
         "title": "Implement Product CRUD Operations for Farmers",
         "description": "Build the interface and logic for authenticated farmers to perform Create, Read, Update, and Delete (CRUD) operations on their own product listings. Product data is managed within the 'products' array in localStorage.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           2,
           3
@@ -228,7 +228,7 @@
             "description": "Add a hidden modal to `index.html` that will serve as the form for creating and editing products. The modal should include a form with input fields for product name, description, price, and image URL, along with 'Save' and 'Cancel' buttons.",
             "dependencies": [],
             "details": "In `index.html`, create a `div` with an ID like `product-modal` and a class for styling (e.g., 'hidden'). Inside, build a form with `<label>` and `<input>` elements for 'name' (text), 'description' (textarea), 'price' (number), and 'imageUrl' (text). Add a hidden input to store the `productId` for editing. Add 'Save' and 'Cancel' buttons. Use CSS in `style.css` to style the modal, overlay, and position it, ensuring it is hidden by default.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify the modal is not visible on page load. Manually remove the 'hidden' class using browser dev tools to check its layout and styling."
           },
           {
@@ -240,7 +240,7 @@
               2
             ],
             "details": "In `app.js`, add a click listener to the 'Add Product' button that shows the modal. Add a submit listener to the modal's form. In the handler, prevent default submission, read form values, get the logged-in farmer's ID from `getCurrentUser()`, and create a new product object `{ id: Date.now(), farmerId: ..., ... }`. Fetch the current products array using `getProducts()`, push the new product, save it using `saveProducts()`, then re-render the list and hide the modal.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "As a farmer, click 'Add New Product'. Fill out and submit the form. Verify the new product appears on the page and is persisted in localStorage with the correct `farmerId` after a page refresh."
           },
           {
@@ -251,7 +251,7 @@
               1
             ],
             "details": "In `app.js`, use event delegation to add a click listener to the `#product-list` container. Check if the clicked element is a 'Delete' button. If so, get the `productId` from its `data-product-id` attribute. Get the current user and products array. Use `Array.filter()` to create a new array excluding the product where `id` matches `productId` AND `farmerId` matches the current user's ID. Save the new array to localStorage and re-render the product list.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "As a farmer, click 'Delete' on a product you own. Verify it is removed from the UI and localStorage. Try to delete another farmer's product (by manipulating the DOM if necessary) and confirm the action fails."
           },
           {
@@ -264,7 +264,7 @@
               3
             ],
             "details": "Extend the event delegation on `#product-list`. On 'Edit' button click, get the `productId`. Find the product in the `products` array. Populate the modal form fields with the product's data. Store the `productId` in the modal's hidden input. Show the modal. Modify the form's submit handler: if the hidden `productId` input has a value, it's an update. Find the product by ID, update its properties, save the full array back to localStorage, and re-render. Clear the hidden input after submission.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "As a farmer, click 'Edit' on a product. Verify the modal appears with the correct data pre-filled. Change the data and save. Confirm the product is updated on the page and in localStorage."
           }
         ]
@@ -273,7 +273,7 @@
         "id": 5,
         "title": "Implement Client-Side Image Handling for Products",
         "description": "Enhance the product creation/editing form to allow farmers to upload an image from their device. The image will be converted to a Base64 data URL and stored directly within the product object in localStorage.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           4
         ],
@@ -287,7 +287,7 @@
             "description": "Modify the product creation/editing form in `farmer-dashboard.html` to replace the image URL text input with a file input, and add an `<img>` tag for previewing the selected image.",
             "dependencies": [],
             "details": "In `farmer-dashboard.html`, locate the product form (e.g., `#product-form`). Replace the `<input type=\"text\" id=\"product-image\">` with `<input type=\"file\" id=\"product-image-upload\" accept=\"image/*\">`. Immediately after, add an `<img>` element with an ID like `image-preview` to display the selected image.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Open `farmer-dashboard.html` in the browser. Verify the product form now shows a 'Choose File' button instead of a text input for the image. Confirm an empty image preview element is present."
           },
           {
@@ -298,7 +298,7 @@
               1
             ],
             "details": "Add a `change` event listener to the `#product-image-upload` element. Inside the handler, check if a file has been selected. If so, create a `new FileReader()`. Use `reader.readAsDataURL(file)` to start the conversion process. This sets up the foundation for previewing and saving the image.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Select an image file using the new input. Use browser developer tools to place a breakpoint inside the event listener and confirm that a file object is received and `readAsDataURL` is called."
           },
           {
@@ -309,7 +309,7 @@
               2
             ],
             "details": "Inside the `FileReader`'s `onload` event handler, get the Base64 string from `reader.result`. Set the `src` attribute of the `#image-preview` element to this result. This provides immediate visual feedback to the user.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "As a user, select a valid image file from your device. Verify that a preview of the selected image appears within the product form immediately after selection."
           },
           {
@@ -320,7 +320,7 @@
               3
             ],
             "details": "In the `submit` handler for the product form in `js/product.js`, retrieve the Base64 string from the `#image-preview` element's `src` attribute. When creating the `product` object, set its `image` property to this Base64 string before saving it to localStorage. Ensure that if no new image is selected during an edit, the existing image data is preserved.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Create a new product and upload an image. Use browser developer tools to inspect localStorage. Verify the new product object in the 'products' array has an `image` property that starts with 'data:image/...'. Edit a product without changing the image and confirm the original image data is not lost."
           },
           {
@@ -331,7 +331,7 @@
               4
             ],
             "details": "The existing product rendering functions (e.g., in `js/app.js` or `js/product.js`) likely use `<img src=\"${product.image}\">`. This should work with Base64 strings. Manually test by creating a product with an image and navigating to the product list page (`index.html`) and the farmer's dashboard to confirm the image is displayed correctly.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Log in as a farmer, create a product with an uploaded image. Log out. Log in as a buyer and view the main product page. Confirm the new product's image is visible. Go back to the farmer dashboard and confirm the image is also visible there."
           }
         ]
@@ -340,7 +340,7 @@
         "id": 6,
         "title": "Implement Shopping Cart Functionality",
         "description": "Enable buyers to add products to a shopping cart, view the cart's contents, update item quantities, and remove items. The cart state will be persisted across sessions using localStorage.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           2,
           3
@@ -355,7 +355,7 @@
             "description": "Modify the product rendering logic to include an 'Add to Cart' button for each product. Implement the corresponding click handler to add items to the user's cart in localStorage.",
             "dependencies": [],
             "details": "Locate the function responsible for rendering product listings. For each product card, append a button with the text 'Add to Cart'. Create a click event handler for this button that identifies the current logged-in user, finds or creates a corresponding cart in the 'carts' localStorage array, and then adds or updates the item in the 'cart_items' array. If the item already exists for that cart, increment its quantity; otherwise, create a new entry with `cartId`, `productId`, and `quantity: 1`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Log in as a buyer. Click 'Add to Cart' on a product. Inspect localStorage to verify 'carts' and 'cart_items' arrays are correctly populated. Click the same button again and confirm the quantity is incremented in 'cart_items'."
           },
           {
@@ -364,7 +364,7 @@
             "description": "Create a new `cart.html` file that will serve as the shopping cart view. This file will contain the basic layout for displaying cart items, the total price, and navigation.",
             "dependencies": [],
             "details": "Create a new file named `cart.html`. This file should include the shared site header and footer. In the main content area, add a container element (e.g., `<div id=\"cart-items-container\">`) for the list of items and a separate element to display the grand total (e.g., `<h2>Total: <span id=\"cart-total\">$0.00</span></h2>`). Also, add a link to `cart.html` in the main site navigation bar so users can access it.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Open `cart.html` in a browser. Verify that the basic page structure, including header, footer, and placeholder sections for items and total, is rendered correctly. Confirm the navigation link to the cart page works."
           },
           {
@@ -375,7 +375,7 @@
               2
             ],
             "details": "Create a script for `cart.html` that runs on page load. This script will: 1. Get the logged-in user. 2. Find their cart and associated items from localStorage. 3. For each item in 'cart_items', retrieve the full product details (name, image, price) from the 'products' array. 4. Dynamically generate and insert HTML into `#cart-items-container` to display each item's details, quantity, and subtotal. Include `+`, `-`, and 'Remove' buttons for each item.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "After adding several items to the cart, navigate to `cart.html`. Verify that all items are displayed with the correct image, name, price, quantity, and a calculated subtotal for each."
           },
           {
@@ -386,7 +386,7 @@
               3
             ],
             "details": "Using event delegation on the `#cart-items-container`, add listeners for clicks on the `+`, `-`, and 'Remove' buttons. The '+' handler increments the item's quantity in localStorage. The '-' handler decrements quantity (and removes the item if quantity reaches 0). The 'Remove' handler deletes the item from the 'cart_items' array. After any change to localStorage, re-render the cart display to show the updated state.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "On the cart page, click '+' on an item and verify its quantity and subtotal update. Click '-' and verify the change. Click 'Remove' on an item and verify it is removed from the view. Confirm localStorage reflects all changes immediately."
           },
           {
@@ -398,7 +398,7 @@
               4
             ],
             "details": "Create a `updateGrandTotal` function. This function will read the current user's `cart_items` from localStorage, retrieve the price for each product, calculate the subtotal for each item (`price * quantity`), and sum them up to get the grand total. This function must be called on the initial load of `cart.html` and after any action performed in subtask 4 (quantity change or item removal). The result should be displayed in the `#cart-total` element.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Add multiple items to cart. Go to `cart.html` and verify the total is correct. Increase an item's quantity and see the total increase. Remove an item and see the total decrease. Empty the cart and verify the total is $0.00."
           }
         ]
@@ -407,7 +407,7 @@
         "id": 7,
         "title": "Develop Order Creation and Checkout Flow",
         "description": "Implement the process for a buyer to convert their shopping cart into a formal order. This action will create new records in the 'orders' and 'order_items' collections in localStorage and clear the user's cart.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           6
         ],
@@ -421,7 +421,7 @@
             "description": "Add a 'Proceed to Checkout' button to the cart page. This button should be prominently displayed, likely near the cart total. When clicked, it should navigate the user to a new checkout summary page.",
             "dependencies": [],
             "details": "In `cart.html`, add a button element with an ID like `checkout-btn`. In `js/cart.js`, add an event listener for this button that triggers `window.location.href = 'checkout.html';`. Ensure this button is only enabled when the cart is not empty.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Add items to the cart and go to `cart.html`. Verify the 'Proceed to Checkout' button is visible. 2. Click the button and confirm it redirects to a (currently blank) `checkout.html` page. 3. Empty the cart and verify the button is disabled or hidden."
           },
           {
@@ -432,7 +432,7 @@
               1
             ],
             "details": "Create `checkout.html`. It should include a container (e.g., `<div id=\"order-summary-container\"></div>`) to dynamically display items, a placeholder for the total amount (e.g., `<span id=\"total-amount\"></span>`), and a '<button id=\"confirm-order-btn\">Confirm Order</button>'. Link to the relevant JS files.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Navigate to `checkout.html` directly in the browser. Verify that the basic page structure, including the title, summary container, and 'Confirm Order' button, renders correctly without any data."
           },
           {
@@ -443,7 +443,7 @@
               2
             ],
             "details": "Create a new `js/checkout.js` file or add to `app.js`. On page load for `checkout.html`, call a function like `renderOrderSummary()`. This function will retrieve items from 'cart_items' and 'products' in localStorage, calculate the total, and populate the `order-summary-container` and `total-amount` elements created in the previous task.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Add items to the cart and proceed to the checkout page. 2. Verify that all items, their quantities, prices, and the correct total amount are displayed on the checkout summary page, matching the contents of the cart."
           },
           {
@@ -454,7 +454,7 @@
               3
             ],
             "details": "In the checkout JS file, add an event listener to the `confirm-order-btn`. The handler should: 1. Get current `userId` and cart total. 2. Create a new order object (with unique ID, userId, totalAmount, status 'pending_payment', timestamp) and add it to the 'orders' array in localStorage. 3. Iterate through 'cart_items', create corresponding 'order_items' (linking to the new orderId), and add them to the 'order_items' array in localStorage.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Click 'Confirm Order'. Use browser dev tools to inspect localStorage. Verify that a new object has been added to the 'orders' array and that corresponding objects for each cart item have been added to the 'order_items' array with the correct `orderId`."
           },
           {
@@ -465,7 +465,7 @@
               4
             ],
             "details": "Extend the 'Confirm Order' button's event handler. After the new order records are saved to localStorage, find and remove the user's cart from the 'carts' array and all their items from the 'cart_items' array. Finally, redirect the user using `window.location.href = 'payment.html?orderId=<new_order_id>';`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "After confirming an order, inspect localStorage to verify that the user's 'cart' and 'cart_items' records have been deleted. Check that the browser is redirected to the payment page with the correct new order ID in the URL query string."
           }
         ]
@@ -474,7 +474,7 @@
         "id": 8,
         "title": "Integrate Stripe for Payment Processing",
         "description": "Integrate the Stripe.js client-side library to handle payments. After an order is confirmed, the user will complete payment via a Stripe-hosted checkout. A successful payment will update the order's status in localStorage.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           7
         ],
@@ -521,7 +521,7 @@
               1
             ],
             "details": "Create a script in `success.html` that runs on `DOMContentLoaded`. It will get the `currentOrderId` from `sessionStorage`. Then, it will retrieve the 'orders' array from `localStorage`, find the order with the matching `orderId`, change its `status` property from 'pending_payment' to 'paid', and write the modified array back to `localStorage`. Display a user-friendly success message and clear the `currentOrderId` from sessionStorage.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "After a successful test payment, land on `success.html`. Open developer tools and inspect localStorage. Verify that the `status` of the relevant order inside the 'orders' array has been updated to 'paid'."
           },
           {
@@ -541,7 +541,7 @@
         "id": 9,
         "title": "Create Farmer Dashboard for Order and Product Management",
         "description": "Build a dedicated dashboard for farmers to view their incoming orders and manage their product listings. This provides farmers with central control over their sales and inventory.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           4,
           8
@@ -556,7 +556,7 @@
             "description": "Create the basic `dashboard.html` file and its corresponding JavaScript file (`dashboard.js`). Implement route protection to ensure only users with the 'farmer' role can access this page.",
             "dependencies": [],
             "details": "Create a new `dashboard.html` file within the project root. This file should have a basic structure with a main container for orders and a link for product management. Link a new `js/dashboard.js` script. In this script, add a function that runs on page load to check `localStorage` for a session object and verify the user's role is 'farmer'. If the check fails, redirect the user to `login.html`.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Attempt to navigate directly to `dashboard.html` while not logged in; verify redirection to the login page. 2. Log in as a 'Buyer' and attempt to access `dashboard.html`; verify redirection. 3. Log in as a 'Farmer' and verify `dashboard.html` loads successfully."
           },
           {
@@ -567,7 +567,7 @@
               1
             ],
             "details": "Within `dashboard.js`, create a function to be called after the role check. This function will: 1. Get the logged-in farmer's ID from the session. 2. Load 'products', 'orders', and 'order_items' from localStorage. 3. Create a list of product IDs owned by the farmer. 4. Filter 'order_items' to find only those matching the farmer's product IDs. 5. Group the filtered items by `orderId`. 6. For each unique order, dynamically generate and inject HTML into the dashboard to display the order details, including the specific products, quantities, and prices for that farmer.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. As a buyer, place an order with products from two different farmers. 2. Log in as Farmer A. Verify their dashboard shows an order containing only their products. 3. Log in as Farmer B and verify their dashboard shows the same order but only with their products listed."
           },
           {
@@ -578,7 +578,7 @@
               2
             ],
             "details": "For each order rendered on the dashboard, append a `<select>` element populated with status options (e.g., 'Paid', 'Processing', 'Shipped'). Set the dropdown's initial value to the order's current status. Attach an 'change' event listener that, when triggered, gets the `orderId` (from a data-attribute) and the new status. The listener will then load the 'orders' array from localStorage, find the corresponding order object by ID, update its 'status' field, and save the entire 'orders' array back to localStorage.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "1. Log in as a farmer and view an order with 'Paid' status. 2. Change the status to 'Processing' using the dropdown. 3. Refresh the page and verify the status remains 'Processing'. 4. Use browser developer tools to inspect localStorage and confirm the 'status' field for that specific order object has been updated."
           },
           {
@@ -610,7 +610,7 @@
         "id": 10,
         "title": "Implement Buyer Order History and UI/UX Refinements",
         "description": "Create a dashboard for buyers to view their order history and track statuses. Implement global UI/UX improvements such as notifications, form validation, and mobile-responsive design.",
-        "status": "pending",
+        "status": "in-progress",
         "dependencies": [
           8,
           9
@@ -623,7 +623,7 @@
     ],
     "metadata": {
       "created": "2025-10-15T15:01:27.226Z",
-      "updated": "2025-10-16T04:44:47.996Z",
+      "updated": "2025-10-16T13:47:27.903Z",
       "description": "Tasks for master context"
     }
   }

@@ -20,6 +20,7 @@ function init() {
     renderOrders();
     updateCartUI();
     updateUserInfo();
+    setupConsumerProfileImage();
 }
 
 // Load products from localStorage
@@ -279,9 +280,73 @@ function renderOrders() {
 
 // Update User Info
 function updateUserInfo() {
-    const userNameElement = document.querySelector('.user-btn');
-    if (userNameElement && currentUser) {
-        userNameElement.textContent = `👤 ${currentUser.name}`;
+    const headerAvatar = document.getElementById('headerAvatar');
+    if (headerAvatar) {
+        if (currentUser && currentUser.avatar_url) {
+            headerAvatar.src = currentUser.avatar_url;
+            headerAvatar.style.display = 'inline-block';
+        } else {
+            headerAvatar.style.display = 'none';
+        }
+    }
+}
+
+// Profile image upload + preview for consumer
+function setupConsumerProfileImage() {
+    const fileInput = document.getElementById('consumerProfileImage');
+    const preview = document.getElementById('consumerProfileImagePreview');
+    if (!fileInput || !preview) return;
+
+    // Load existing avatar if present
+    if (currentUser && currentUser.avatar_url) {
+        preview.src = currentUser.avatar_url;
+        preview.style.display = 'inline-block';
+    }
+
+    fileInput.addEventListener('change', function() {
+        const file = this.files && this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src = e.target.result;
+            preview.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    const form = document.getElementById('consumerProfileForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const updated = {
+                name: document.querySelector('#profileSection input[type="text"]').value,
+                email: document.querySelector('#profileSection input[type="email"]').value,
+                phone: document.querySelector('#profileSection input[type="tel"]').value,
+                address: document.querySelector('#profileSection textarea').value
+            };
+
+            const file = fileInput.files && fileInput.files[0];
+            if (file) {
+                const r = new FileReader();
+                r.onload = () => {
+                    updated.avatar_url = r.result; // base64 data URL
+                    saveConsumerProfile(updated);
+                };
+                r.readAsDataURL(file);
+            } else {
+                saveConsumerProfile(updated);
+            }
+        });
+    }
+}
+
+function saveConsumerProfile(updateData) {
+    const result = auth.updateProfile(currentUser.user_id, updateData);
+    if (result.success) {
+        currentUser = result.user;
+        showNotification('Profile updated successfully!', 'success');
+    } else {
+        showNotification(result.message, 'error');
     }
 }
 

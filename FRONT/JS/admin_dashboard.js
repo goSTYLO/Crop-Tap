@@ -22,6 +22,18 @@ function initializeApp() {
     // Set user info
     document.getElementById('userName').textContent = currentUser.name;
     document.getElementById('userRole').textContent = 'Farmer';
+    const avatar = document.getElementById('userAvatar');
+    const topbarAvatar = document.getElementById('topbarAvatar');
+    if (currentUser.avatar_url) {
+        if (avatar) {
+            avatar.src = currentUser.avatar_url;
+            avatar.style.display = 'block';
+        }
+        if (topbarAvatar) {
+            topbarAvatar.src = currentUser.avatar_url;
+            topbarAvatar.style.display = 'inline-block';
+        }
+    }
     
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -39,6 +51,22 @@ function initializeApp() {
     // Form submissions
     document.getElementById('productForm').addEventListener('submit', handleProductSubmit);
     document.getElementById('orderForm').addEventListener('submit', handleOrderSubmit);
+
+    // Product image preview
+    const productImageFile = document.getElementById('productImageFile');
+    const productImagePreview = document.getElementById('productImagePreview');
+    if (productImageFile) {
+        productImageFile.addEventListener('change', function() {
+            const file = this.files && this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                productImagePreview.src = e.target.result;
+                productImagePreview.style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     // Hide user management and logs for farmers
     const userNavItem = document.querySelector('[data-page="users"]');
@@ -83,6 +111,49 @@ function updateDashboardStats() {
     const allUsers = storage.getData('users') || [];
     const buyers = allUsers.filter(u => u.role === 'consumer');
     document.getElementById('totalUsers').textContent = buyers.length;
+}
+
+// Handle farmer profile form submit + avatar
+document.addEventListener('DOMContentLoaded', function() {
+    const profileForm = document.getElementById('farmerProfileForm');
+    if (!profileForm) return;
+    profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const updateData = {
+            name: document.getElementById('profileName').value,
+            email: document.getElementById('profileEmail').value,
+            phone: document.getElementById('profilePhone').value,
+            address: document.getElementById('profileAddress').value
+        };
+
+        const fileInput = document.getElementById('profileImage');
+        const file = fileInput && fileInput.files && fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                updateData.avatar_url = reader.result; // base64 data URL
+                saveFarmerProfile(updateData);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            saveFarmerProfile(updateData);
+        }
+    });
+});
+
+function saveFarmerProfile(updateData) {
+    const res = auth.updateProfile(currentUser.user_id, updateData);
+    if (res.success) {
+        currentUser = res.user;
+        const avatar = document.getElementById('userAvatar');
+        if (avatar && currentUser.avatar_url) {
+            avatar.src = currentUser.avatar_url;
+            avatar.style.display = 'block';
+        }
+        showNotification('Profile updated successfully!', 'success');
+    } else {
+        showNotification(res.message, 'error');
+    }
 }
 
 // User Management Functions
@@ -216,16 +287,32 @@ function handleProductSubmit(e) {
         quantity: parseInt(document.getElementById('productQuantity').value),
         unit: document.getElementById('productUnit').value,
         description: document.getElementById('productDescription').value,
-        image_url: document.getElementById('productImage').value || null,
+        image_url: null,
         farmer_id: currentUser.user_id
     };
 
+    // If image file selected, convert to Base64 then submit
+    const fileInput = document.getElementById('productImageFile');
+    const file = fileInput && fileInput.files && fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            productData.image_url = reader.result; // base64 Data URL
+            submitProduct(productId, productData);
+        };
+        reader.readAsDataURL(file);
+        return;
+    }
+
+    submitProduct(productId, productData);
+}
+
+function submitProduct(productId, productData) {
     let result;
     if (productId) {
-        // Update existing product
         result = productService.updateProduct(productId, productData);
     } else {
-        // Create new product
         result = productService.createProduct(productData);
     }
 
@@ -235,6 +322,11 @@ function handleProductSubmit(e) {
         updateDashboardStats();
         closeModal('productModal');
         document.getElementById('productForm').reset();
+        const preview = document.getElementById('productImagePreview');
+        if (preview) {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
         document.getElementById('productId').value = '';
     } else {
         alert(result.message);
@@ -250,7 +342,14 @@ function editProduct(id) {
         document.getElementById('productQuantity').value = product.quantity;
         document.getElementById('productUnit').value = product.unit;
         document.getElementById('productDescription').value = product.description;
-        document.getElementById('productImage').value = product.image_url || '';
+        const preview = document.getElementById('productImagePreview');
+        if (product.image_url) {
+            preview.src = product.image_url;
+            preview.style.display = 'inline-block';
+        } else {
+            preview.src = '';
+            preview.style.display = 'none';
+        }
         document.getElementById('productModalTitle').textContent = 'Edit Product';
         openModal('productModal');
     }
