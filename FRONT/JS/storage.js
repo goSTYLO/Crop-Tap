@@ -9,7 +9,28 @@ class StorageService {
     // Initialize localStorage with empty arrays if they don't exist
     initializeStorage() {
         const defaultData = {
-            users: [],
+            users: [
+                {
+                    id: 1,
+                    name: "Juan Dela Cruz",
+                    email: "juan@example.com",
+                    password: "password123",
+                    role: "consumer",
+                    phone: "09123456789",
+                    address: "123 Main St, Manila",
+                    avatar_url: null
+                },
+                {
+                    id: 2,
+                    name: "Maria Santos",
+                    email: "maria@example.com",
+                    password: "password123",
+                    role: "farmer",
+                    phone: "09876543210",
+                    address: "456 Farm Road, Laguna",
+                    avatar_url: null
+                }
+            ],
             products: [],
             carts: [],
             cart_items: [],
@@ -29,6 +50,49 @@ class StorageService {
         if (localStorage.getItem('session')) {
             localStorage.removeItem('session');
         }
+    }
+
+    // Reset storage with default test users (useful for testing)
+    resetToDefaults() {
+        const defaultData = {
+            users: [
+                {
+                    id: 1,
+                    name: "Juan Dela Cruz",
+                    email: "juan@example.com",
+                    password: "password123",
+                    role: "consumer",
+                    phone: "09123456789",
+                    address: "123 Main St, Manila",
+                    avatar_url: null
+                },
+                {
+                    id: 2,
+                    name: "Maria Santos",
+                    email: "maria@example.com",
+                    password: "password123",
+                    role: "farmer",
+                    phone: "09876543210",
+                    address: "456 Farm Road, Laguna",
+                    avatar_url: null
+                }
+            ],
+            products: [],
+            carts: [],
+            cart_items: [],
+            orders: [],
+            order_items: [],
+            payments: []
+        };
+
+        Object.keys(defaultData).forEach(key => {
+            localStorage.setItem(key, JSON.stringify(defaultData[key]));
+        });
+        
+        // Clear session
+        sessionStorage.clear();
+        
+        console.log('Storage reset to defaults with test users');
     }
 
     // Generic get data method

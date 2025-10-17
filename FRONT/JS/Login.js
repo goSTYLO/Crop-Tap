@@ -5,12 +5,22 @@ function handleLogin(e) {
     const email = e.target.querySelector('input[type="email"]').value.trim();
     const password = e.target.querySelector('input[type="password"]').value.trim();
 
+    console.log('Login attempt:', { email, password: '***' });
+
     if (!email || !password) {
         alert('Please fill in all fields.');
         return;
     }
 
+    // Check if auth object exists
+    if (typeof auth === 'undefined') {
+        console.error('Auth object not found');
+        alert('Authentication service not available. Please refresh the page.');
+        return;
+    }
+
     const result = auth.login(email, password);
+    console.log('Login result:', result);
 
     if (result.success) {
         alert(result.message);
@@ -60,5 +70,19 @@ function togglePassword() {
 }
 
 // Make sure the login button always works
-const loginForm = document.getElementById('loginForm');
-loginForm.addEventListener('submit', handleLogin);
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginFormElement');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+    
+    // Add reset function to window for easy access in console
+    window.resetStorage = function() {
+        if (confirm('This will reset all data and create test users. Continue?')) {
+            storage.resetToDefaults();
+            alert('Storage reset! Test users created:\n\nConsumer: juan@example.com / password123\nFarmer: maria@example.com / password123');
+        }
+    };
+    
+    console.log('Login page loaded. Use resetStorage() in console to reset data with test users.');
+});
