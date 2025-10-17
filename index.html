@@ -3,168 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crop-Tap - Connecting Farmers to Fair Markets</title>
-    <link rel="stylesheet" href="FRONT/CSS/landing_page.css">
+    <title>File Test - Crop-Tap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d5016;
+        }
+        .test-link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+        .test-link:hover {
+            background-color: #e0e0e0;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">🌾 Crop-Tap</div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#gallery">Photo Gallery</a></li>
-                <li><a href="#pricelist">Pricelist</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <div class="auth-buttons" id="authButtons">
-                    <a href="FRONT/HTML/login.html" class="btn btn-login">Login</a>
-                    <a href="FRONT/HTML/signup.html" class="btn btn-signup">Sign Up</a>
-                </div>
-            </ul>
-            <div class="mobile-menu" id="mobileMenu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <h1>CONNECTING FARMERS TO FAIR MARKETS</h1>
-        <p>Welcome to Crop-Tap Agriculture, your go-to source for high-quality crops and produce from<br>Mangaldan Pangasinan. We specialize in providing fresh and nutritious vegetables to our<br>customers, supporting local farmers and promoting sustainable agriculture practices  </p>
-        <a href="FRONT/HTML/signup.html" class="btn hero-btn">Get Started Today</a>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <h2>About Us</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Crop-Tap is revolutionizing agricultural commerce by creating a direct bridge between farmers and markets. We believe that farmers deserve fair compensation for their hard work and dedication.</p>
-                <p>Our platform eliminates middlemen, reduces costs, and ensures that farmers receive the best possible prices for their crops while providing buyers with fresh, quality produce directly from the source.</p>
-                <p>With cutting-edge technology and a commitment to sustainability, we're building a future where agriculture thrives and communities prosper together.</p>
-            </div>
-            <div class="about-image">
-                <img src="FRONT/ASSETS/Farmer 1.jpg" alt="Local farmer in the field" style="max-width: 100%; border-radius: 8px; display:block; margin-bottom:12px;">
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">🤝</div>
-                <h3>Direct Market Access</h3>
-                <p>Connect directly with buyers and negotiate fair prices without intermediaries taking a cut from your profits.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">📊</div>
-                <h3>Price Analytics</h3>
-                <p>Real-time market pricing data and trends to help you make informed decisions about when and where to sell.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">🚚</div>
-                <h3>Logistics Support</h3>
-                <p>Integrated transportation and delivery solutions to get your produce from farm to market efficiently.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">💰</div>
-                <h3>Secure Payments</h3>
-                <p>Fast, secure payment processing that ensures you receive payment promptly for your crops.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">📱</div>
-                <h3>Mobile Platform</h3>
-                <p>Easy-to-use mobile app that lets you manage your sales and track orders from anywhere.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">🎓</div>
-                <h3>Farmer Education</h3>
-                <p>Access to resources, training, and best practices to improve your farming techniques and yields.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery">
-        <h2>Photo Gallery</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="FRONT/ASSETS/tomatoe.avif" alt="Fresh Tomatoes" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-            <div class="gallery-item"><img src="FRONT/ASSETS/lettuce.jpg" alt="Fresh Lettuce" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-            <div class="gallery-item"><img src="FRONT/ASSETS/Banana.jpg" alt="Bananas" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-            <div class="gallery-item"><img src="FRONT/ASSETS/carrot.jpg" alt="Carrots" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-            <div class="gallery-item"><img src="FRONT/ASSETS/rice.jpg" alt="Rice Grains" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-            <div class="gallery-item"><img src="FRONT/ASSETS/oregano.jpg" alt="Oregano" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div>
-        </div>
-    </section>
-
-    <!-- Marketplace Section -->
-    <section id="pricelist">
-        <h2>Fresh Products Available</h2>
-        <div class="search-container">
-            <input type="text" id="productSearch" placeholder="Search for products..." class="search-input">
-        </div>
-        <div class="pricing-grid" id="productGrid">
-            <!-- Products will be dynamically loaded here -->
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <div class="contact-container">
-            <div class="contact-form">
-                <form id="contactForm">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" required placeholder="Enter your fullname">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" required placeholder="Enter your email address">
-                    </div>
-                    <div class="form-group">
-                        <label>Message</label>
-                        <textarea required placeholder="How can we help you?"></textarea>
-                    </div>
-                    <button type="submit" class="btn submit-btn">Send Message</button>
-                </form>
-            </div>
-            <div class="contact-info">
-                <h3>Get In Touch</h3>
-                <p>📍 Address: 123 Agriculture Lane, Farm City, FC 12345</p>
-                <p>📞 Phone: +1 (555) 123-4567</p>
-                <p>📧 Email: info@crop-tap.com</p>
-                <p>🕒 Hours: Monday - Friday, 9:00 AM - 6:00 PM</p>
-                <br>
-                <h3>Follow Us</h3>
-                <p>Stay connected on social media for updates, tips, and success stories from our farming community.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Crop-Tap. All rights reserved. Connecting Farmers to Fair Markets.</p>
-    </footer>
-
-    <script src="FRONT/JS/storage.js"></script>
-    <script src="FRONT/JS/auth.js"></script>
-    <script src="FRONT/JS/products.js"></script>
-    <script src="FRONT/JS/cart.js"></script>
-    <script src="FRONT/JS/landing_page.js"></script>
-    <script>
-        // Auto-logout when landing page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof auth !== 'undefined' && auth && auth.isLoggedIn()) {
-                auth.logout();
-            }
-        });
-    </script>
+    <div class="container">
+        <h1>🌾 Crop-Tap File Test</h1>
+        <p>This page tests if all the main files are accessible:</p>
+        
+        <h2>Main Pages:</h2>
+        <a href="index.html" class="test-link">🏠 index.html (Landing Page)</a>
+        <a href="FRONT/HTML/login.html" class="test-link">🔐 login.html</a>
+        <a href="FRONT/HTML/signup.html" class="test-link">📝 signup.html</a>
+        <a href="FRONT/HTML/admin_dashboard.html" class="test-link">👨‍🌾 admin_dashboard.html</a>
+        <a href="FRONT/HTML/user_dashboard.html" class="test-link">🛒 user_dashboard.html</a>
+        
+        <h2>Assets:</h2>
+        <a href="FRONT/CSS/landing_page.css" class="test-link">🎨 landing_page.css</a>
+        <a href="FRONT/JS/storage.js" class="test-link">💾 storage.js</a>
+        <a href="FRONT/JS/auth.js" class="test-link">🔑 auth.js</a>
+        
+        <h2>Images:</h2>
+        <a href="FRONT/ASSETS/Farmer 1.jpg" class="test-link">🖼️ Farmer 1.jpg</a>
+        <a href="FRONT/ASSETS/tomatoe.avif" class="test-link">🖼️ tomatoe.avif</a>
+        
+        <h2>Test Results:</h2>
+        <p>Click each link above to test if the files are accessible. If you get a 404 error, the file path is incorrect.</p>
+        
+        <p><strong>Note:</strong> Delete this test.html file after testing is complete.</p>
+    </div>
 </body>
 </html>
