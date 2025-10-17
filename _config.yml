@@ -1,0 +1,10 @@
+# GitHub Pages configuration
+include:
+  - .nojekyll
+
+# Disable Jekyll processing
+plugins: []
+
+# Set the base URL (replace with your actual GitHub Pages URL)
+# baseurl: "/your-repo-name"
+# url: "https://yourusername.github.io"

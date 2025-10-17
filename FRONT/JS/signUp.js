@@ -87,7 +87,7 @@ function handleSignup(e) {
                 window.location.href = '../../index.html';
             }
         } else {
-            window.location.href = 'Login.html';
+            window.location.href = 'login.html';
         }
     } else {
         alert(result.message);
