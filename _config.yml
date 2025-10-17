@@ -1,0 +1,18 @@
+# GitHub Pages configuration
+title: Crop-Tap
+description: Connecting Farmers to Fair Markets
+baseurl: ""
+url: ""
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Exclude files from processing
+exclude:
+  - node_modules
+  - .taskmaster
+  - README.md
+  - package.json
+  - package-lock.json

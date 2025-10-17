@@ -235,5 +235,5 @@ const auth = new AuthService();
 function logout() {
     const result = auth.logout();
     // Redirect to landing page regardless of result to ensure session cleared UX
-    window.location.href = '../HTML/landing_page.html';
+    window.location.href = '../../index.html';
 }

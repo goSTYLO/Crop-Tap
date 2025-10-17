@@ -14,7 +14,7 @@ function handleMobileLogin(e) {
         } else if (user?.role === 'consumer') {
             window.location.href = 'user_dashboard.html';
         } else {
-            window.location.href = '../HTML/landing_page.html';
+            window.location.href = '../../index.html';
         }
     } else {
         alert(loginResult.message || 'Invalid credentials');
@@ -84,10 +84,10 @@ function handleSignup(e) {
             } else if (role === 'consumer') {
                 window.location.href = 'user_dashboard.html';
             } else {
-                window.location.href = '../HTML/landing_page.html';
+                window.location.href = '../../index.html';
             }
         } else {
-            window.location.href = 'Login.html';
+            window.location.href = 'login.html';
         }
     } else {
         alert(result.message);

@@ -32,7 +32,7 @@ function handleLogin(e) {
         } else if (user.role === 'consumer') {
             window.location.href = 'user_dashboard.html';
         } else {
-            window.location.href = '../HTML/landing_page.html';
+            window.location.href = '../../index.html';
         }
     } else {
         alert(result.message);

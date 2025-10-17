@@ -69,8 +69,8 @@ function initializeAuth() {
     } else {
         // User is not logged in
         authButtons.innerHTML = `
-            <a href="Login.html" class="btn btn-login">Login</a>
-            <a href="signUp.html" class="btn btn-signup">Sign Up</a>
+            <a href="login.html" class="btn btn-login">Login</a>
+            <a href="signup.html" class="btn btn-signup">Sign Up</a>
         `;
     }
 }
@@ -168,7 +168,7 @@ function addToCart(productId) {
     
     if (!currentUser) {
         alert('Please log in to add items to your cart.');
-        window.location.href = 'Login.html';
+        window.location.href = 'login.html';
         return;
     }
 
