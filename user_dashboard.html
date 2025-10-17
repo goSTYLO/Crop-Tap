@@ -243,7 +243,13 @@
                     </div>
                     <div class="form-group" style="margin-top: 1rem;">
                         <label class="form-label" data-i18n="delivery">Profile Image</label>
-                        <input type="file" id="consumerProfileImage" accept="image/*" class="form-input">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="consumerProfileImage" accept="image/*" class="form-input">
+                            <button type="button" class="file-input-button" onclick="document.getElementById('consumerProfileImage').click()">
+                                <span class="file-input-icon">👤</span>
+                                Choose Profile Image
+                            </button>
+                        </div>
                         <div style="margin-top:.5rem;">
                             <img id="consumerProfileImagePreview" src="" alt="Avatar Preview" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; display: none;" />
                         </div>

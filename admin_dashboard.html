@@ -523,7 +523,13 @@
                             </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label>Profile Image</label>
-                            <input type="file" id="profileImage" accept="image/*">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="profileImage" accept="image/*">
+                                <button type="button" class="file-input-button" onclick="document.getElementById('profileImage').click()">
+                                    <span class="file-input-icon">👤</span>
+                                    Choose Profile Image
+                                </button>
+                            </div>
                             <div style="margin-top:.5rem;">
                                 <img id="profileImagePreview" src="" alt="Avatar Preview" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; display: none;" />
                             </div>
@@ -625,7 +631,13 @@
                 </div>
                 <div class="form-group">
                     <label>Product Image</label>
-                    <input type="file" id="productImageFile" accept="image/*">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="productImageFile" accept="image/*">
+                        <button type="button" class="file-input-button" onclick="document.getElementById('productImageFile').click()">
+                            <span class="file-input-icon">📷</span>
+                            Choose Product Image
+                        </button>
+                    </div>
                     <div style="margin-top:.5rem;">
                         <img id="productImagePreview" src="" alt="Preview" style="max-width: 160px; border-radius: 6px; display: none;" />
                     </div>
