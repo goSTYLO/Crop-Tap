@@ -30,26 +30,39 @@ A simple, self-contained eCommerce platform for local farmers and buyers, built 
 
 ```
 Crop-Tap/
-├── index.html              # Main marketplace page
-├── login.html              # User login page
-├── register.html           # User registration page
-├── cart.html               # Shopping cart page
-├── checkout.html           # Payment and checkout page
-├── order-confirmation.html # Order confirmation page
-├── farmer-dashboard.html   # Farmer management dashboard
-├── buyer-dashboard.html    # Buyer order history
-├── styles/
-│   └── main.css           # Main stylesheet
-├── js/
-│   ├── storage.js         # localStorage service
-│   ├── auth.js            # Authentication system
-│   ├── products.js        # Product management
-│   ├── cart.js            # Shopping cart functionality
-│   ├── payment.js         # Payment processing
-│   ├── farmer-dashboard.js # Farmer dashboard logic
-│   ├── buyer-dashboard.js  # Buyer dashboard logic
-│   └── app.js             # Main application file
-└── README.md              # This file
+├── index.html                    # Main landing page (GitHub Pages ready)
+├── FRONT/
+│   ├── HTML/
+│   │   ├── Login.html           # User login page
+│   │   ├── signUp.html          # User registration page
+│   │   ├── admin_dashboard.html # Farmer management dashboard
+│   │   └── user_dashboard.html  # Buyer dashboard
+│   ├── CSS/
+│   │   ├── landing_page.css     # Landing page styles
+│   │   ├── Login.css            # Login page styles
+│   │   ├── signUp.css           # Registration page styles
+│   │   ├── admin_dashboard.css  # Farmer dashboard styles
+│   │   └── user_dashboard.css   # Buyer dashboard styles
+│   ├── JS/
+│   │   ├── storage.js           # localStorage service
+│   │   ├── auth.js              # Authentication system
+│   │   ├── products.js          # Product management
+│   │   ├── cart.js              # Shopping cart functionality
+│   │   ├── admin_dashboard.js   # Farmer dashboard logic
+│   │   ├── user_dashboard.js    # Buyer dashboard logic
+│   │   ├── Login.js             # Login page logic
+│   │   ├── signUp.js            # Registration logic
+│   │   └── landing_page.js      # Landing page functionality
+│   └── ASSETS/
+│       ├── Farmer 1.jpg         # Farmer images
+│       ├── farmer 2.jpg
+│       ├── tomatoe.avif         # Product images
+│       ├── lettuce.jpg
+│       ├── Banana.jpg
+│       ├── carrot.jpg
+│       ├── rice.jpg
+│       └── oregano.jpg
+└── README.md                    # This file
 ```
 
 ## 👥 User Roles

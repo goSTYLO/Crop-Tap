@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     if (!auth.isLoggedIn() || !auth.isBuyer()) {
         alert('Access denied. Buyers only.');
-        window.location.href = '../HTML/landing_page.html';
+        window.location.href = '../../index.html';
         return;
     }
     

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check authentication
     if (!auth.isLoggedIn() || !auth.isFarmer()) {
         alert('Access denied. Farmers only.');
-        window.location.href = '../HTML/landing_page.html';
+        window.location.href = '../../index.html';
         return;
     }
     
@@ -765,7 +765,7 @@ function refreshDataStats() {
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
         auth.logout();
-        window.location.href = '../HTML/landing_page.html';
+        window.location.href = '../../index.html';
     }
 }
 

@@ -18,7 +18,7 @@ A simple, portable marketplace application for farmers and buyers built with HTM
 
 ## Getting Started
 
-1. **Open the Application**: Simply open `landing_page.html` in your web browser
+1. **Open the Application**: Simply open `index.html` in your web browser
 2. **Create Account**: Click "Sign Up" to create a farmer or buyer account
 3. **Login**: Use your credentials to access the appropriate dashboard
 
@@ -34,7 +34,7 @@ All data is stored in your browser's localStorage, making the application:
 ```
 FRONT/
 ├── HTML/
-│   ├── landing_page.html      # Main landing page
+│   ├── index.html             # Main landing page (moved to root for GitHub hosting)
 │   ├── Login.html             # Login page
 │   ├── signUp.html            # Registration page
 │   ├── admin_dashboard.html   # Farmer dashboard
