@@ -15,8 +15,8 @@ class StorageService {
             cart_items: [],
             orders: [],
             order_items: [],
-            payments: [],
-            session: null
+            payments: []
+            // Note: session is now handled by sessionStorage, not localStorage
         };
 
         Object.keys(defaultData).forEach(key => {
@@ -24,6 +24,11 @@ class StorageService {
                 localStorage.setItem(key, JSON.stringify(defaultData[key]));
             }
         });
+        
+        // Clean up any old session data from localStorage
+        if (localStorage.getItem('session')) {
+            localStorage.removeItem('session');
+        }
     }
 
     // Generic get data method
@@ -314,25 +319,43 @@ class StorageService {
         return payment;
     }
 
-    // Session management
+    // Session management (using sessionStorage for auto-logout on browser close)
     setSession(user) {
         const session = {
             user_id: user.user_id,
             name: user.name,
             email: user.email,
             role: user.role,
+            phone: user.phone,
+            address: user.address,
+            avatar_url: user.avatar_url,
             login_time: new Date().toISOString()
         };
-        this.saveData('session', session);
+        // Use sessionStorage instead of localStorage for session data
+        try {
+            sessionStorage.setItem('session', JSON.stringify(session));
+        } catch (error) {
+            console.error('Error saving session:', error);
+        }
         return session;
     }
 
     getSession() {
-        return this.getData('session');
+        try {
+            const data = sessionStorage.getItem('session');
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error('Error getting session:', error);
+            return null;
+        }
     }
 
     clearSession() {
-        this.saveData('session', null);
+        try {
+            sessionStorage.removeItem('session');
+        } catch (error) {
+            console.error('Error clearing session:', error);
+        }
     }
 
     isLoggedIn() {
@@ -342,7 +365,9 @@ class StorageService {
     getCurrentUser() {
         const session = this.getSession();
         if (session) {
-            return this.getUserById(session.user_id);
+            // Return the full user data from users array, not just session data
+            const fullUser = this.getUserById(session.user_id);
+            return fullUser || session; // Fallback to session if user not found
         }
         return null;
     }

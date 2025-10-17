@@ -21,6 +21,8 @@ function init() {
     updateCartUI();
     updateUserInfo();
     setupConsumerProfileImage();
+    loadConsumerProfileData();
+    updateWelcomeMessage();
 }
 
 // Load products from localStorage
@@ -102,8 +104,10 @@ function addToCart(productId) {
             btn.textContent = originalText;
             btn.style.background = '';
         }, 1000);
+        
+        showToast('Added to Cart', 'Product added to your cart successfully!', 'success', 2000);
     } else {
-        alert(result.message);
+        showToast('Error', result.message, 'error');
     }
 }
 
@@ -227,13 +231,13 @@ document.getElementById('checkoutForm')?.addEventListener('submit', function(e) 
     const result = cartService.createOrderFromCart(currentUser.user_id);
     
     if (result.success) {
-        alert('Order placed successfully! You will receive a confirmation email shortly.');
+        showToast('Order Placed', 'Order placed successfully! You will receive a confirmation email shortly.', 'success');
         updateCartUI();
         renderOrders();
         closeModal('checkoutModal');
         showSection('orders');
     } else {
-        alert(result.message);
+        showToast('Error', result.message, 'error');
     }
 });
 
@@ -417,6 +421,15 @@ function updateUserInfo() {
     }
 }
 
+function updateWelcomeMessage() {
+    const welcomeTitle = document.getElementById('welcomeTitle');
+    if (welcomeTitle && currentUser && currentUser.name) {
+        // Get first name from full name
+        const firstName = currentUser.name.trim().split(/\s+/)[0];
+        welcomeTitle.textContent = `Welcome back, ${firstName}!`;
+    }
+}
+
 // Profile image upload + preview for consumer
 function setupConsumerProfileImage() {
     const fileInput = document.getElementById('consumerProfileImage');
@@ -466,14 +479,30 @@ function setupConsumerProfileImage() {
     }
 }
 
+function loadConsumerProfileData() {
+    if (!currentUser) return;
+    
+    // Load existing profile data into form fields
+    const nameInput = document.querySelector('#profileSection input[type="text"]');
+    const emailInput = document.querySelector('#profileSection input[type="email"]');
+    const phoneInput = document.querySelector('#profileSection input[type="tel"]');
+    const addressInput = document.querySelector('#profileSection textarea');
+    
+    if (nameInput) nameInput.value = currentUser.name || '';
+    if (emailInput) emailInput.value = currentUser.email || '';
+    if (phoneInput) phoneInput.value = currentUser.phone || '';
+    if (addressInput) addressInput.value = currentUser.address || '';
+}
+
 function saveConsumerProfile(updateData) {
     const result = auth.updateProfile(currentUser.user_id, updateData);
     if (result.success) {
         currentUser = result.user;
         updateUserInfo(); // reflect changes in header immediately
-        showNotification('Profile updated successfully!', 'success');
+        updateWelcomeMessage(); // update welcome message with new name
+        showToast('Profile Updated', 'Your profile has been updated successfully!', 'success');
     } else {
-        showNotification(result.message, 'error');
+        showToast('Error', result.message, 'error');
     }
 }
 
@@ -504,6 +533,7 @@ function showSection(section) {
         document.getElementById('ordersSection').style.display = 'block';
     } else if (section === 'profile') {
         document.getElementById('profileSection').style.display = 'block';
+        loadConsumerProfileData(); // Refresh profile data when section is shown
     }else if (section === 'settings') {
         document.getElementById('settingsSection').style.display = 'block';
     }
@@ -579,10 +609,58 @@ document.querySelectorAll('.modal').forEach(modal => {
 });
 
 
-// Show notification helper
-function showNotification(message, type = 'info') {
-    alert(message);
+// Toast Notification System
+function showToast(title, message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || icons.info}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="removeToast(this.parentElement)">×</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Auto remove
+    setTimeout(() => {
+        removeToast(toast);
+    }, duration);
 }
+
+function removeToast(toast) {
+    if (!toast) return;
+    
+    toast.classList.remove('show');
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.parentElement.removeChild(toast);
+        }
+    }, 300);
+}
+
+// Show notification helper (legacy - now uses toast)
+function showNotification(message, type = 'info') {
+    showToast(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Info', message, type);
+}
+
 
 // Initialize app
 init();

@@ -35,6 +35,9 @@ function initializeApp() {
         }
     }
     
+    // Load farmer profile data
+    loadFarmerProfileData();
+    
     // Navigation
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -144,6 +147,11 @@ function navigateToPage(page) {
 
     // Show selected page
     document.getElementById(`${page}Page`).classList.remove('hidden');
+    
+    // Load profile data when profile page is shown
+    if (page === 'profile') {
+        loadFarmerProfileData();
+    }
 
     // Close mobile menu
     if (window.innerWidth <= 768) {
@@ -198,18 +206,40 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function loadFarmerProfileData() {
+    if (!currentUser) return;
+    
+    // Load existing profile data into form fields
+    const nameInput = document.getElementById('profileName');
+    const emailInput = document.getElementById('profileEmail');
+    const phoneInput = document.getElementById('profilePhone');
+    const addressInput = document.getElementById('profileAddress');
+    
+    if (nameInput) nameInput.value = currentUser.name || '';
+    if (emailInput) emailInput.value = currentUser.email || '';
+    if (phoneInput) phoneInput.value = currentUser.phone || '';
+    if (addressInput) addressInput.value = currentUser.address || '';
+}
+
 function saveFarmerProfile(updateData) {
     const res = auth.updateProfile(currentUser.user_id, updateData);
     if (res.success) {
         currentUser = res.user;
         const avatar = document.getElementById('userAvatar');
-        if (avatar && currentUser.avatar_url) {
-            avatar.src = currentUser.avatar_url;
-            avatar.style.display = 'block';
+        const topbarAvatar = document.getElementById('topbarAvatar');
+        if (currentUser.avatar_url) {
+            if (avatar) {
+                avatar.src = currentUser.avatar_url;
+                avatar.style.display = 'block';
+            }
+            if (topbarAvatar) {
+                topbarAvatar.src = currentUser.avatar_url;
+                topbarAvatar.style.display = 'inline-block';
+            }
         }
-        showNotification('Profile updated successfully!', 'success');
+        showToast('Profile Updated', 'Your profile has been updated successfully!', 'success');
     } else {
-        showNotification(res.message, 'error');
+        showToast('Error', res.message, 'error');
     }
 }
 
@@ -374,7 +404,7 @@ function submitProduct(productId, productData) {
     }
 
     if (result.success) {
-        alert(result.message);
+        showToast('Product Saved', result.message, 'success');
         loadProductsTable();
         updateDashboardStats();
         closeModal('productModal');
@@ -386,7 +416,7 @@ function submitProduct(productId, productData) {
         }
         document.getElementById('productId').value = '';
     } else {
-        alert(result.message);
+        showToast('Error', result.message, 'error');
     }
 }
 
@@ -416,11 +446,11 @@ function deleteProduct(id) {
     if (confirm('Are you sure you want to delete this product?')) {
         const result = productService.deleteProduct(id);
         if (result.success) {
-            alert(result.message);
+            showToast('Product Deleted', result.message, 'success');
             loadProductsTable();
             updateDashboardStats();
         } else {
-            alert(result.message);
+            showToast('Error', result.message, 'error');
         }
     }
 }
@@ -737,6 +767,58 @@ function logout() {
         auth.logout();
         window.location.href = '../HTML/landing_page.html';
     }
+}
+
+// Toast Notification System
+function showToast(title, message, type = 'info', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || icons.info}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="removeToast(this.parentElement)">×</button>
+    `;
+
+    container.appendChild(toast);
+
+    // Trigger animation
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+
+    // Auto remove
+    setTimeout(() => {
+        removeToast(toast);
+    }, duration);
+}
+
+function removeToast(toast) {
+    if (!toast) return;
+    
+    toast.classList.remove('show');
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.parentElement.removeChild(toast);
+        }
+    }, 300);
+}
+
+// Show notification helper (legacy - now uses toast)
+function showNotification(message, type = 'info') {
+    showToast(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Info', message, type);
 }
 
 // Close modal when clicking outside
