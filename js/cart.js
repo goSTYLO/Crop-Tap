@@ -301,3 +301,6 @@ class CartService {
 
 // Create global instance
 const cartService = new CartService();
+
+// Export for ES6 modules
+export default cartService;

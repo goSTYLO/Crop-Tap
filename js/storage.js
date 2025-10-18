@@ -439,3 +439,9 @@ class StorageService {
 
 // Create global instance
 const storage = new StorageService();
+console.log('Storage service initialized successfully');
+// Make storage globally available
+window.storage = storage;
+
+// Export for ES6 modules
+export default storage;

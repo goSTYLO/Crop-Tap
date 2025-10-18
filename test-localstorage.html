@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test LocalStorage</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { margin: 5px; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test LocalStorage & Services</h1>
+    
+    <div class="test-section">
+        <h3>LocalStorage Test</h3>
+        <button onclick="testLocalStorage()">Test LocalStorage</button>
+        <div id="localStorageResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Service Status</h3>
+        <div id="serviceStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Data</h3>
+        <button onclick="createTestData()">Create Test Data</button>
+        <button onclick="viewTestData()">View Test Data</button>
+        <div id="testDataResult"></div>
+    </div>
+
+    <!-- Load scripts in correct order -->
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        function testLocalStorage() {
+            const result = document.getElementById('localStorageResult');
+            try {
+                // Test localStorage
+                localStorage.setItem('test', 'Hello World');
+                const value = localStorage.getItem('test');
+                localStorage.removeItem('test');
+                
+                if (value === 'Hello World') {
+                    result.innerHTML = '<div class="success">✅ LocalStorage is working correctly</div>';
+                } else {
+                    result.innerHTML = '<div class="error">❌ LocalStorage test failed</div>';
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ LocalStorage error: ${error.message}</div>`;
+            }
+        }
+
+        function createTestData() {
+            const result = document.getElementById('testDataResult');
+            try {
+                if (typeof storage !== 'undefined') {
+                    // Create a test user
+                    const testUser = {
+                        id: 999,
+                        name: "Test User",
+                        email: "test@example.com",
+                        password: "test123",
+                        role: "consumer",
+                        phone: "09123456789",
+                        address: "Test Address"
+                    };
+                    
+                    const users = storage.getData('users') || [];
+                    users.push(testUser);
+                    storage.saveData('users', users);
+                    
+                    result.innerHTML = '<div class="success">✅ Test user created successfully</div>';
+                } else {
+                    result.innerHTML = '<div class="error">❌ Storage service not available</div>';
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function viewTestData() {
+            const result = document.getElementById('testDataResult');
+            try {
+                if (typeof storage !== 'undefined') {
+                    const users = storage.getData('users') || [];
+                    result.innerHTML = `<div class="info">📊 Found ${users.length} users in localStorage</div>`;
+                } else {
+                    result.innerHTML = '<div class="error">❌ Storage service not available</div>';
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function checkServiceStatus() {
+            const status = document.getElementById('serviceStatus');
+            let html = '';
+            
+            if (typeof storage !== 'undefined') {
+                html += '<div class="success">✅ Storage service is available</div>';
+            } else {
+                html += '<div class="error">❌ Storage service is not available</div>';
+            }
+            
+            if (typeof auth !== 'undefined') {
+                html += '<div class="success">✅ Auth service is available</div>';
+            } else {
+                html += '<div class="error">❌ Auth service is not available</div>';
+            }
+            
+            if (typeof window.storage !== 'undefined') {
+                html += '<div class="success">✅ Window.storage is available</div>';
+            } else {
+                html += '<div class="error">❌ Window.storage is not available</div>';
+            }
+            
+            if (typeof window.auth !== 'undefined') {
+                html += '<div class="success">✅ Window.auth is available</div>';
+            } else {
+                html += '<div class="error">❌ Window.auth is not available</div>';
+            }
+            
+            status.innerHTML = html;
+        }
+
+        // Check status when page loads and periodically
+        setTimeout(checkServiceStatus, 100);
+        setInterval(checkServiceStatus, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Scripts</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Script Loading</h1>
+    
+    <div class="debug-section">
+        <h3>Script Loading Status</h3>
+        <div id="scriptStatus"></div>
+    </div>
+
+    <div class="debug-section">
+        <h3>Console Output</h3>
+        <div id="consoleOutput"></div>
+    </div>
+
+    <script>
+        // Capture console output
+        const originalLog = console.log;
+        const originalError = console.error;
+        const consoleOutput = document.getElementById('consoleOutput');
+        
+        function addToConsole(message, type = 'log') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleOutput.appendChild(div);
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'success');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        // Check script loading
+        function checkScriptStatus() {
+            const status = document.getElementById('scriptStatus');
+            let html = '';
+            
+            // Check if scripts are loaded
+            html += '<div class="info">📋 Checking script availability...</div>';
+            
+            if (typeof StorageService !== 'undefined') {
+                html += '<div class="success">✅ StorageService class is available</div>';
+            } else {
+                html += '<div class="error">❌ StorageService class is not available</div>';
+            }
+            
+            if (typeof AuthService !== 'undefined') {
+                html += '<div class="success">✅ AuthService class is available</div>';
+            } else {
+                html += '<div class="error">❌ AuthService class is not available</div>';
+            }
+            
+            if (typeof storage !== 'undefined') {
+                html += '<div class="success">✅ storage instance is available</div>';
+            } else {
+                html += '<div class="error">❌ storage instance is not available</div>';
+            }
+            
+            if (typeof auth !== 'undefined') {
+                html += '<div class="success">✅ auth instance is available</div>';
+            } else {
+                html += '<div class="error">❌ auth instance is not available</div>';
+            }
+            
+            status.innerHTML = html;
+        }
+
+        // Check status when page loads
+        setTimeout(checkScriptStatus, 100);
+    </script>
+
+    <!-- Load scripts with error handling -->
+    <script src="js/storage.js" onerror="console.error('Failed to load storage.js')"></script>
+    <script src="js/auth.js" onerror="console.error('Failed to load auth.js')"></script>
+</body>
+</html>

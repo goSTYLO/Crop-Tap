@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Auth Service</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        input, button { margin: 5px; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Auth Service</h1>
+    
+    <div class="test-section">
+        <h3>Service Status</h3>
+        <div id="serviceStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>Test Login</h3>
+        <form id="testLoginForm">
+            <input type="email" placeholder="Email" value="juan@example.com">
+            <input type="password" placeholder="Password" value="password123">
+            <button type="submit">Test Login</button>
+        </form>
+        <div id="loginResult"></div>
+    </div>
+
+    <!-- Load scripts in correct order -->
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+        // Check service status
+        function checkServiceStatus() {
+            const status = document.getElementById('serviceStatus');
+            let html = '';
+            
+            if (typeof storage !== 'undefined') {
+                html += '<div class="success">✅ Storage service is available</div>';
+            } else {
+                html += '<div class="error">❌ Storage service is not available</div>';
+            }
+            
+            if (typeof auth !== 'undefined') {
+                html += '<div class="success">✅ Auth service is available</div>';
+            } else {
+                html += '<div class="error">❌ Auth service is not available</div>';
+            }
+            
+            status.innerHTML = html;
+        }
+
+        // Test login form
+        document.getElementById('testLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const result = document.getElementById('loginResult');
+            
+            if (typeof auth === 'undefined') {
+                result.innerHTML = '<div class="error">❌ Auth service not available</div>';
+                return;
+            }
+            
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+            
+            try {
+                const loginResult = auth.login(email, password);
+                if (loginResult.success) {
+                    result.innerHTML = '<div class="success">✅ Login successful!</div>';
+                } else {
+                    result.innerHTML = `<div class="error">❌ Login failed: ${loginResult.message}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        });
+
+        // Check status when page loads
+        setTimeout(checkServiceStatus, 100);
+        
+        // Check status periodically
+        setInterval(checkServiceStatus, 1000);
+    </script>
+</body>
+</html>

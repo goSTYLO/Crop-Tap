@@ -3,14 +3,21 @@
 
 class AuthService {
     constructor() {
-        this.storage = storage; // Use the global storage instance
+        // Storage will be checked in each method
+    }
+
+    getStorage() {
+        if (typeof storage === 'undefined') {
+            throw new Error('Storage service not available');
+        }
+        return storage;
     }
 
     // Register a new user
     register(userData) {
         try {
             // Check if email already exists
-            const existingUser = this.storage.getUserByEmail(userData.email);
+            const existingUser = this.getStorage().getUserByEmail(userData.email);
             if (existingUser) {
                 return {
                     success: false,
@@ -44,7 +51,7 @@ class AuthService {
             }
 
             // Create user
-            const newUser = this.storage.createUser(userData);
+            const newUser = this.getStorage().createUser(userData);
             
             return {
                 success: true,
@@ -63,7 +70,7 @@ class AuthService {
     // Login user
     login(email, password) {
         try {
-            const user = this.storage.getUserByEmail(email);
+            const user = this.getStorage().getUserByEmail(email);
             
             if (!user) {
                 return {
@@ -80,7 +87,7 @@ class AuthService {
             }
 
             // Set session
-            this.storage.setSession(user);
+            this.getStorage().setSession(user);
             
             return {
                 success: true,
@@ -99,7 +106,7 @@ class AuthService {
     // Logout user
     logout() {
         try {
-            this.storage.clearSession();
+            this.getStorage().clearSession();
             return {
                 success: true,
                 message: 'Logged out successfully.'
@@ -115,17 +122,17 @@ class AuthService {
 
     // Check if user is logged in
     isLoggedIn() {
-        return this.storage.isLoggedIn();
+        return this.getStorage().isLoggedIn();
     }
 
     // Get current user
     getCurrentUser() {
-        return this.storage.getCurrentUser();
+        return this.getStorage().getCurrentUser();
     }
 
     // Get current session
     getCurrentSession() {
-        return this.storage.getSession();
+        return this.getStorage().getSession();
     }
 
     // Check if current user is a farmer
@@ -143,7 +150,7 @@ class AuthService {
     // Update user profile
     updateProfile(userId, updateData) {
         try {
-            const users = this.storage.getData('users') || [];
+            const users = this.getStorage().getData('users') || [];
             const userIndex = users.findIndex(u => u.user_id === userId);
             
             if (userIndex === -1) {
@@ -160,12 +167,12 @@ class AuthService {
                 updated_at: new Date().toISOString()
             };
 
-            this.storage.saveData('users', users);
+            this.getStorage().saveData('users', users);
 
             // Update session if it's the current user
             const session = this.getCurrentSession();
             if (session && session.user_id === userId) {
-                this.storage.setSession(users[userIndex]);
+                this.getStorage().setSession(users[userIndex]);
             }
 
             return {
@@ -185,7 +192,7 @@ class AuthService {
     // Change password
     changePassword(userId, currentPassword, newPassword) {
         try {
-            const user = this.storage.getUserById(userId);
+            const user = this.getStorage().getUserById(userId);
             
             if (!user) {
                 return {
@@ -228,8 +235,23 @@ class AuthService {
     }
 }
 
-// Create global instance
-const auth = new AuthService();
+// Create global instance - wait for storage to be available
+let auth;
+function initializeAuth() {
+    if (typeof storage !== 'undefined') {
+        auth = new AuthService();
+        console.log('Auth service initialized successfully');
+        // Make auth globally available
+        window.auth = auth;
+    } else {
+        console.log('Storage not ready, retrying...');
+        // Retry after a short delay
+        setTimeout(initializeAuth, 100);
+    }
+}
+
+// Start initialization
+initializeAuth();
 
 // Expose a global logout function for UI buttons
 function logout() {

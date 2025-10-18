@@ -12,14 +12,15 @@ function handleLogin(e) {
         return;
     }
 
-    // Check if auth object exists
-    if (typeof auth === 'undefined') {
+    // Check if auth object exists (check both global and local scope)
+    const authService = window.auth || auth;
+    if (typeof authService === 'undefined') {
         console.error('Auth object not found');
         alert('Authentication service not available. Please refresh the page.');
         return;
     }
 
-    const result = auth.login(email, password);
+    const result = authService.login(email, password);
     console.log('Login result:', result);
 
     if (result.success) {
@@ -71,18 +72,37 @@ function togglePassword() {
 
 // Make sure the login button always works
 document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginFormElement');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    
-    // Add reset function to window for easy access in console
-    window.resetStorage = function() {
-        if (confirm('This will reset all data and create test users. Continue?')) {
-            storage.resetToDefaults();
-            alert('Storage reset! Test users created:\n\nConsumer: juan@example.com / password123\nFarmer: maria@example.com / password123');
+    // Wait a bit to ensure all scripts are loaded
+    setTimeout(() => {
+        const loginForm = document.getElementById('loginFormElement');
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
         }
-    };
-    
-    console.log('Login page loaded. Use resetStorage() in console to reset data with test users.');
+        
+        // Add reset function to window for easy access in console
+        window.resetStorage = function() {
+            if (confirm('This will reset all data and create test users. Continue?')) {
+                storage.resetToDefaults();
+                alert('Storage reset! Test users created:\n\nConsumer: juan@example.com / password123\nFarmer: maria@example.com / password123');
+            }
+        };
+        
+        console.log('Login page loaded. Use resetStorage() in console to reset data with test users.');
+        
+        // Verify services are available
+        const authService = window.auth || auth;
+        if (typeof authService !== 'undefined') {
+            console.log('Auth service is ready');
+        } else {
+            console.error('Auth service is not available, waiting...');
+            // Wait for auth service to be available
+            const checkAuth = setInterval(() => {
+                const currentAuth = window.auth || auth;
+                if (typeof currentAuth !== 'undefined') {
+                    console.log('Auth service is now ready');
+                    clearInterval(checkAuth);
+                }
+            }, 100);
+        }
+    }, 100);
 });

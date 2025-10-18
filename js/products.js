@@ -261,3 +261,6 @@ class ProductService {
 
 // Create global instance
 const productService = new ProductService();
+
+// Export for ES6 modules
+export default productService;
