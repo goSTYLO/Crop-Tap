@@ -1,6 +1,7 @@
 // Current user and data
 let currentUser = null;
 let currentFilter = 'all';
+let currentProductForCart = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
@@ -48,7 +49,7 @@ function renderProducts(containerId, productList) {
     }
 
     container.innerHTML = productList.map(product => `
-        <div class="product-card" onclick="showProductDetail('${product.product_id}')">
+        <div class="product-card">
             <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
                 ${product.image_url ? 
                     `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
@@ -65,7 +66,7 @@ function renderProducts(containerId, productList) {
                         <div class="product-unit" data-i18n-dynamic="unit_per" data-unit="${product.unit}"></div>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.product_id}')"
+                <button class="add-to-cart-btn" onclick="addToCart('${product.product_id}')"
                     data-i18n-dynamic="add_to_cart"></button>
             </div>
         </div>
@@ -88,27 +89,120 @@ function filterProducts(category) {
     event.target.classList.add('active');
 }
 
-// Add to Cart
-function addToCart(productId) {
-    const result = cartService.addToCart(currentUser.user_id, productId, 1);
+// Show Quantity Modal
+function showQuantityModal(productId) {
+    const product = productService.getProductById(productId);
+    if (!product) {
+        showToast('Error', 'Product not found', 'error');
+        return;
+    }
+    
+    currentProductForCart = product;
+    
+    const modalContent = document.getElementById('quantityModalContent');
+    modalContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                ${product.image_url ? 
+                    `<img src="${product.image_url}" alt="${product.name}" style="max-width: 100px; height: auto; border-radius: 8px;">` :
+                    '🌾'
+                }
+            </div>
+            <h3 style="margin-bottom: 0.5rem;">${product.name}</h3>
+            <p style="color: #6b7280; margin-bottom: 1rem;">${product.description}</p>
+            <p style="font-size: 1.25rem; font-weight: 600; color: #059669;">₱${product.price.toFixed(2)} per ${product.unit}</p>
+            <p style="color: #6b7280; font-size: 0.875rem;">Available: ${product.quantity} ${product.unit}</p>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Quantity</label>
+            <div style="display: flex; align-items: center; gap: 1rem; justify-content: center;">
+                <button id="decreaseBtn" class="qty-btn" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #d1d5db; background: white; font-size: 1.25rem; cursor: pointer;">-</button>
+                <input type="number" id="quantityInput" class="form-input" value="1" min="1" max="${product.quantity}" style="width: 80px; text-align: center;">
+                <button id="increaseBtn" class="qty-btn" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid #d1d5db; background: white; font-size: 1.25rem; cursor: pointer;">+</button>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+            <button id="addToCartBtn" class="btn-primary" style="flex: 1;">Add to Cart</button>
+            <button id="cancelBtn" class="btn-secondary" style="flex: 1; border: 2px solid #d1d5db; background: white; color: #374151;">Cancel</button>
+        </div>
+    `;
+    
+    // Add event listeners after the HTML is inserted
+    setTimeout(() => {
+        document.getElementById('decreaseBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            adjustQuantity(-1);
+        });
+        
+        document.getElementById('increaseBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            adjustQuantity(1);
+        });
+        
+        document.getElementById('addToCartBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            addToCartWithQuantity();
+        });
+        
+        document.getElementById('cancelBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModal('quantityModal');
+        });
+        
+        // Enable typing in quantity input
+        document.getElementById('quantityInput').addEventListener('input', (e) => {
+            e.stopPropagation();
+            const value = parseInt(e.target.value) || 1;
+            const maxValue = currentProductForCart.quantity;
+            if (value > maxValue) {
+                e.target.value = maxValue;
+            } else if (value < 1) {
+                e.target.value = 1;
+            }
+        });
+    }, 10);
+    
+    document.getElementById('quantityModal').classList.add('open');
+}
+
+// Adjust quantity in modal
+function adjustQuantity(change) {
+    const input = document.getElementById('quantityInput');
+    const currentValue = parseInt(input.value) || 1;
+    const newValue = Math.max(1, Math.min(currentProductForCart.quantity, currentValue + change));
+    input.value = newValue;
+}
+
+// Add to cart with specified quantity
+function addToCartWithQuantity() {
+    const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+    
+    if (quantity < 1) {
+        showToast('Error', 'Please enter a valid quantity', 'error');
+        return;
+    }
+    
+    if (quantity > currentProductForCart.quantity) {
+        showToast('Error', `Only ${currentProductForCart.quantity} ${currentProductForCart.unit} available`, 'error');
+        return;
+    }
+    
+    const result = cartService.addToCart(currentUser.user_id, currentProductForCart.product_id, quantity);
     
     if (result.success) {
         updateCartUI();
-        
-        // Show brief notification
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = 'Added!';
-        btn.style.background = '#10b981';
-        setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = '';
-        }, 1000);
-        
-        showToast('Added to Cart', 'Product added to your cart successfully!', 'success', 2000);
+        closeModal('quantityModal');
+        showToast('Added to Cart', `${quantity} ${currentProductForCart.unit} of ${currentProductForCart.name} added to your cart!`, 'success', 3000);
     } else {
         showToast('Error', result.message, 'error');
     }
+}
+
+// Add to Cart (legacy function - now opens quantity modal)
+function addToCart(productId) {
+    showQuantityModal(productId);
 }
 
 // Update Cart UI
@@ -127,8 +221,8 @@ function updateCartUI() {
     if (cartSummary.isEmpty) {
         cartItemsList.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">Your cart is empty</p>';
     } else {
-        cartItemsList.innerHTML = cartSummary.items.map(item => `
-            <div class="cart-item">
+        cartItemsList.innerHTML = cartSummary.items.map((item, index) => `
+            <div class="cart-item" data-product-id="${item.product_id}">
                 <div class="cart-item-image">
                     ${item.product.image_url ? 
                         `<img src="${item.product.image_url}" alt="${item.product.name}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">` :
@@ -139,14 +233,46 @@ function updateCartUI() {
                     <div class="cart-item-name">${item.product.name}</div>
                     <div class="cart-item-price">₱${item.product.price.toFixed(2)} / ${item.product.unit}</div>
                     <div class="quantity-control">
-                        <button class="qty-btn" onclick="updateQuantity('${item.product_id}', ${item.quantity - 1})">-</button>
+                        <button class="qty-btn cart-decrease-btn" data-product-id="${item.product_id}" data-current-qty="${item.quantity}">-</button>
                         <input type="number" class="qty-input" value="${item.quantity}" readonly>
-                        <button class="qty-btn" onclick="updateQuantity('${item.product_id}', ${item.quantity + 1})">+</button>
-                        <button class="qty-btn" onclick="removeFromCart('${item.product_id}')" style="margin-left: auto; color: #ef4444;">✕</button>
+                        <button class="qty-btn cart-increase-btn" data-product-id="${item.product_id}" data-current-qty="${item.quantity}">+</button>
+                        <button class="qty-btn cart-remove-btn" data-product-id="${item.product_id}" style="margin-left: auto; color: #ef4444;">✕</button>
                     </div>
                 </div>
             </div>
         `).join('');
+        
+        // Add event listeners for cart quantity controls
+        setTimeout(() => {
+            // Decrease quantity buttons
+            document.querySelectorAll('.cart-decrease-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = btn.getAttribute('data-product-id');
+                    const currentQty = parseInt(btn.getAttribute('data-current-qty'));
+                    updateQuantity(productId, currentQty - 1);
+                });
+            });
+            
+            // Increase quantity buttons
+            document.querySelectorAll('.cart-increase-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = btn.getAttribute('data-product-id');
+                    const currentQty = parseInt(btn.getAttribute('data-current-qty'));
+                    updateQuantity(productId, currentQty + 1);
+                });
+            });
+            
+            // Remove item buttons
+            document.querySelectorAll('.cart-remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const productId = btn.getAttribute('data-product-id');
+                    removeFromCart(productId);
+                });
+            });
+        }, 10);
     }
 }
 
@@ -349,7 +475,7 @@ function renderFarmerProducts(products) {
     }
     
     return products.map(product => `
-        <div class="product-card" onclick="showProductDetail('${product.product_id}')">
+        <div class="product-card">
             <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
                 ${product.image_url ? 
                     `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
@@ -366,7 +492,7 @@ function renderFarmerProducts(products) {
                         <div class="product-unit">per ${product.unit}</div>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.product_id}')">
+                <button class="add-to-cart-btn" onclick="addToCart('${product.product_id}')">
                     Add to Cart
                 </button>
             </div>

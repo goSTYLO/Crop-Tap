@@ -349,7 +349,7 @@ function loadProductsTable() {
                     }
                 </td>
                 <td>${product.name}</td>
-                <td><span class="status-badge status-confirmed">${product.unit}</span></td>
+                <td><span class="status-badge status-confirmed">${product.category || 'vegetables'}</span></td>
                 <td>₱${product.price.toFixed(2)}</td>
                 <td>${product.quantity}</td>
                 <td>${product.unit}</td>
@@ -374,6 +374,7 @@ function handleProductSubmit(e) {
         quantity: parseInt(document.getElementById('productQuantity').value),
         unit: document.getElementById('productUnit').value,
         description: document.getElementById('productDescription').value,
+        category: document.getElementById('productCategory').value,
         image_url: null,
         farmer_id: currentUser.user_id
     };
@@ -429,6 +430,7 @@ function editProduct(id) {
         document.getElementById('productQuantity').value = product.quantity;
         document.getElementById('productUnit').value = product.unit;
         document.getElementById('productDescription').value = product.description;
+        document.getElementById('productCategory').value = product.category || 'vegetables';
         const preview = document.getElementById('productImagePreview');
         if (product.image_url) {
             preview.src = product.image_url;
@@ -659,31 +661,133 @@ function importData() {
 function createSampleData() {
     if (confirm('This will create sample data. Continue?')) {
         try {
-            // Create sample products
+            // Create sample products with Filipino vegetables and prices
             const sampleProducts = [
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Fresh Tomatoes',
-                    description: 'Organic, vine-ripened tomatoes',
-                    price: 3.50,
-                    unit: 'lb',
-                    quantity: 50
+                    name: 'Mushroom',
+                    description: 'Fresh, organic mushrooms',
+                    price: 325.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables'
                 },
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Green Lettuce',
-                    description: 'Crisp, fresh lettuce heads',
-                    price: 2.00,
-                    unit: 'head',
-                    quantity: 30
+                    name: 'Eggplant',
+                    description: 'Fresh purple eggplants',
+                    price: 90.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables'
                 },
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Carrots',
-                    description: 'Sweet, crunchy carrots',
-                    price: 1.75,
-                    unit: 'lb',
-                    quantity: 40
+                    name: 'Okra',
+                    description: 'Tender green okra',
+                    price: 40.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Sitaw',
+                    description: 'Fresh string beans',
+                    price: 15.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Kalabasa',
+                    description: 'Sweet squash',
+                    price: 40.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Kalamansi',
+                    description: 'Fresh calamansi citrus',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Sili',
+                    description: 'Hot chili peppers',
+                    price: 400.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Ampalaya',
+                    description: 'Bitter gourd',
+                    price: 60.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Kamatis',
+                    description: 'Fresh red tomatoes',
+                    price: 70.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Pechay',
+                    description: 'Chinese cabbage',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Saba',
+                    description: 'Cooking bananas',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Lakatan',
+                    description: 'Sweet bananas',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'fruits'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Kangkong',
+                    description: 'Water spinach',
+                    price: 16.50,
+                    unit: 'kg',
+                    quantity: 45,
+                    category: 'vegetables'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Kamote',
+                    description: 'Sweet potato',
+                    price: 20.00,
+                    unit: 'kg',
+                    quantity: 50,
+                    category: 'vegetables'
                 }
             ];
 
