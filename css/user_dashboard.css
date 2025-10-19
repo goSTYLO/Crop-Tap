@@ -457,6 +457,17 @@ body {
     opacity: 0.8;
 }
 
+/* Interactive stat cards */
+#homeSection .stat-card:nth-child(1),
+#homeSection .stat-card:nth-child(3) {
+    cursor: pointer;
+}
+
+#homeSection .stat-card:nth-child(1):hover,
+#homeSection .stat-card:nth-child(3):hover {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
 /* Products Grid */
 .section-header {
     display: flex;

@@ -26,6 +26,8 @@ function init() {
     setupConsumerProfileImage();
     loadConsumerProfileData();
     updateWelcomeMessage();
+    updateDashboardStats();
+    setupDashboardInteractions();
 }
 
 // Load products from localStorage
@@ -377,6 +379,7 @@ function renderOrders() {
     const buyerOrders = storage.getOrdersByBuyer(currentUser.user_id);
     const orderItems = storage.getData('order_items') || [];
     const allProducts = productService.getAllProducts();
+    const allUsers = storage.getData('users') || [];
     
     if (buyerOrders.length === 0) {
         ordersList.innerHTML = '<p style="text-align: center; color: #6b7280;">No orders yet</p>';
@@ -385,10 +388,44 @@ function renderOrders() {
     
     ordersList.innerHTML = buyerOrders.map(order => {
         const items = orderItems.filter(item => item.order_id === order.order_id);
-        const productNames = items.map(item => {
+        
+        // Group items by farmer
+        const itemsByFarmer = {};
+        items.forEach(item => {
             const product = allProducts.find(p => p.product_id === item.product_id);
-            return product ? `${item.quantity} x ${product.name}` : 'Unknown Product';
+            if (product) {
+                const farmerId = product.farmer_id;
+                if (!itemsByFarmer[farmerId]) {
+                    itemsByFarmer[farmerId] = [];
+                }
+                itemsByFarmer[farmerId].push({
+                    product: product,
+                    quantity: item.quantity
+                });
+            }
         });
+        
+        // Create farmer sections
+        const farmerSections = Object.keys(itemsByFarmer).map(farmerId => {
+            const farmer = allUsers.find(u => u.user_id == farmerId);
+            const farmerName = farmer ? farmer.name : 'Unknown Farmer';
+            const farmerItems = itemsByFarmer[farmerId];
+            
+            const productList = farmerItems.map(item => 
+                `${item.quantity} x ${item.product.name}`
+            ).join(', ');
+            
+            return `
+                <div class="farmer-section" style="margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 0.5rem; border-left: 3px solid #10b981;">
+                    <div style="font-weight: 600; color: #059669; margin-bottom: 0.5rem;">
+                        👨‍🌾 ${farmerName}
+                    </div>
+                    <div style="color: #6b7280; font-size: 0.875rem;">
+                        ${productList}
+                    </div>
+                </div>
+            `;
+        }).join('');
         
         return `
             <div class="order-card">
@@ -402,11 +439,7 @@ function renderOrders() {
                     </span>
                 </div>
                 <div class="order-items">
-                    ${productNames.map(item => `
-                        <div class="order-item">
-                            <span>${item}</span>
-                        </div>
-                    `).join('')}
+                    ${farmerSections}
                 </div>
                 <div class="order-footer">
                     <span class="order-total">₱${order.total_amount.toFixed(2)}</span>
@@ -415,6 +448,49 @@ function renderOrders() {
             </div>
         `;
     }).join('');
+}
+
+// Update Dashboard Stats
+function updateDashboardStats() {
+    // Get user's order stats
+    const userOrders = storage.getOrdersByBuyer(currentUser.user_id);
+    const activeOrders = userOrders.filter(o => ['pending_payment', 'confirmed', 'transit'].includes(o.status));
+    
+    // Calculate total spent
+    const totalSpent = userOrders.reduce((sum, order) => sum + order.total_amount, 0);
+    
+    // Get current cart items count
+    const cartItems = cartService.getCartItems();
+    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // Update the stat cards
+    const statCards = document.querySelectorAll('#homeSection .stat-card');
+    if (statCards.length >= 3) {
+        statCards[0].querySelector('h3').textContent = activeOrders.length;
+        statCards[1].querySelector('h3').textContent = `₱${totalSpent.toFixed(2)}`;
+        statCards[2].querySelector('h3').textContent = cartCount;
+    }
+}
+
+// Setup Dashboard Interactions
+function setupDashboardInteractions() {
+    const statCards = document.querySelectorAll('#homeSection .stat-card');
+    
+    // Make "Active Orders" card clickable to go to orders
+    if (statCards[0]) {
+        statCards[0].addEventListener('click', () => {
+            showSection('orders');
+        });
+        statCards[0].style.cursor = 'pointer';
+    }
+    
+    // Make "Items in Cart" card clickable to open cart
+    if (statCards[2]) {
+        statCards[2].addEventListener('click', () => {
+            toggleCart();
+        });
+        statCards[2].style.cursor = 'pointer';
+    }
 }
 
 // ========== FARMERS SECTION ==========
@@ -758,6 +834,11 @@ function setupConsumerProfileImage() {
             }
         });
     }
+    
+    // Also update dashboard stats if home section is visible
+    if (document.getElementById('homeSection').style.display !== 'none') {
+        updateDashboardStats();
+    }
 }
 
 function loadConsumerProfileData() {
@@ -805,6 +886,8 @@ function showSection(section) {
     // Show selected section
     if (section === 'home') {
         document.getElementById('homeSection').style.display = 'block';
+        updateDashboardStats(); // Refresh stats when home section is shown
+        loadProducts(); // Refresh featured products
     } else if (section === 'products') {
         document.getElementById('productsSection').style.display = 'block';
     } else if (section === 'farmers') {
@@ -812,10 +895,11 @@ function showSection(section) {
         renderFarmers(); // Load farmers when section is shown
     } else if (section === 'orders') {
         document.getElementById('ordersSection').style.display = 'block';
+        renderOrders(); // Refresh orders when section is shown
     } else if (section === 'profile') {
         document.getElementById('profileSection').style.display = 'block';
         loadConsumerProfileData(); // Refresh profile data when section is shown
-    }else if (section === 'settings') {
+    } else if (section === 'settings') {
         document.getElementById('settingsSection').style.display = 'block';
     }
     
