@@ -46,6 +46,13 @@ function handleSignup(e) {
     const selectedRoleBtn = document.querySelector('.role-btn.active');
     const role = selectedRoleBtn ? selectedRoleBtn.dataset.role : 'farmer';
     
+    // Get subscription plan for consumers
+    let subscriptionPlan = null;
+    if (role === 'consumer') {
+        const selectedSubscription = document.querySelector('input[name="subscription"]:checked');
+        subscriptionPlan = selectedSubscription ? selectedSubscription.value : 'monthly';
+    }
+    
     // Validation
     if (!name || !email || !password || !confirmPassword) {
         alert('Please fill in all fields.');
@@ -67,7 +74,8 @@ function handleSignup(e) {
         name: name,
         email: email,
         password: password,
-        role: role
+        role: role,
+        subscription_plan: subscriptionPlan
     };
     
     const result = auth.register(userData);
@@ -104,6 +112,14 @@ roleButtons.forEach(btn => {
         btn.classList.add('active');
         selectedRole = btn.dataset.role;
         console.log('Selected Role:', selectedRole);
+        
+        // Show/hide subscription selection based on role
+        const subscriptionSelection = document.getElementById('subscriptionSelection');
+        if (selectedRole === 'consumer') {
+            subscriptionSelection.style.display = 'block';
+        } else {
+            subscriptionSelection.style.display = 'none';
+        }
     });
 });
 

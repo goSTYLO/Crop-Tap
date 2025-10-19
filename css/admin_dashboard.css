@@ -330,6 +330,26 @@ body {
     color: var(--primary);
 }
 
+/* Logout Button Styling */
+.btn.logout-btn,
+button[onclick="logout()"] {
+    background: var(--success) !important;
+    border: 2px solid var(--success) !important;
+    color: white !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn.logout-btn:hover,
+button[onclick="logout()"]:hover {
+    background: transparent !important;
+    color: var(--success) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
 /* Table */
 .table-container {
     overflow-x: auto;
@@ -942,4 +962,18 @@ tbody tr:hover {
     font-weight: bold;
     color: var(--text);
     margin: 0;
+}
+
+/* Language Status */
+.language-status {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border: 1px solid #a7f3d0;
 }

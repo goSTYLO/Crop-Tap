@@ -42,6 +42,27 @@
                         <button type="button" class="role-btn" data-role="consumer">Consumer</button>
                     </div>
 
+                    <div class="subscription-selection" id="subscriptionSelection" style="display: none;">
+                        <label>Choose Subscription Plan</label>
+                        <div class="subscription-options">
+                            <div class="subscription-option">
+                                <input type="radio" id="monthly" name="subscription" value="monthly" checked>
+                                <label for="monthly" class="subscription-label">
+                                    <span class="plan-name">Monthly</span>
+                                    <span class="plan-price">₱100/month</span>
+                                </label>
+                            </div>
+                            <div class="subscription-option">
+                                <input type="radio" id="yearly" name="subscription" value="yearly">
+                                <label for="yearly" class="subscription-label">
+                                    <span class="plan-name">Yearly</span>
+                                    <span class="plan-price">₱1,000/year</span>
+                                    <span class="plan-savings">Save 17%</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="input-group">
                         <label>Full Name</label>
                         <input type="text" placeholder="Enter your fullname" required>

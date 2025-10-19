@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     loadProductsTable();
     loadOrdersTable();
     updateDashboardStats();
+    
+    // Initialize language system
+    if (typeof initLanguageControls === 'function') {
+        initLanguageControls();
+    }
 });
 
 function initializeApp() {
@@ -152,6 +157,11 @@ function navigateToPage(page) {
     if (page === 'profile') {
         loadFarmerProfileData();
     }
+    
+    // Initialize language controls when settings page is shown
+    if (page === 'settings' && typeof initLanguageControls === 'function') {
+        initLanguageControls();
+    }
 
     // Close mobile menu
     if (window.innerWidth <= 768) {
@@ -257,8 +267,8 @@ function loadUsersTable() {
                 <td><span class="status-badge status-${user.role}">${user.role.toUpperCase()}</span></td>
                 <td><span class="status-badge status-delivered">${user.status.toUpperCase()}</span></td>
                 <td class="action-buttons">
-                    <button class="icon-btn" onclick="editUser(${user.id})" title="Edit">✏️</button>
-                    <button class="icon-btn delete" onclick="deleteUser(${user.id})" title="Delete">🗑️</button>
+                    <button class="icon-btn" onclick="editUser(${user.user_id})" title="Edit">✏️</button>
+                    <button class="icon-btn delete" onclick="deleteUser(${user.user_id})" title="Delete">🗑️</button>
                 </td>
             </tr>
         `;
@@ -279,7 +289,7 @@ function handleUserSubmit(e) {
         status: 'active'
     };
 
-    const existingIndex = users.findIndex(u => u.id == userData.id);
+    const existingIndex = users.findIndex(u => u.user_id == userData.user_id);
     if (existingIndex !== -1) {
         users[existingIndex] = userData;
         addLog('UPDATE', 'User', `Updated user: ${userData.name}`);
@@ -295,9 +305,9 @@ function handleUserSubmit(e) {
 }
 
 function editUser(id) {
-    const user = users.find(u => u.id === id);
+    const user = users.find(u => u.user_id === id);
     if (user) {
-        document.getElementById('userId').value = user.id;
+        document.getElementById('userId').value = user.user_id;
         document.getElementById('userName').value = user.name;
         document.getElementById('userEmail').value = user.email;
         document.getElementById('userPhone').value = user.phone;
@@ -310,8 +320,8 @@ function editUser(id) {
 
 function deleteUser(id) {
     if (confirm('Are you sure you want to delete this user?')) {
-        const user = users.find(u => u.id === id);
-        users = users.filter(u => u.id !== id);
+        const user = users.find(u => u.user_id === id);
+        users = users.filter(u => u.user_id !== id);
         addLog('DELETE', 'User', `Deleted user: ${user.name}`);
         loadUsersTable();
         updateDashboardStats();
@@ -661,33 +671,16 @@ function importData() {
 function createSampleData() {
     if (confirm('This will create sample data. Continue?')) {
         try {
-            // Create sample products with Filipino vegetables and prices
+            // Create diverse sample products across all categories
             const sampleProducts = [
+                // VEGETABLES (5 products)
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Mushroom',
-                    description: 'Fresh, organic mushrooms',
-                    price: 325.00,
-                    unit: 'kg',
-                    quantity: 20,
-                    category: 'vegetables'
-                },
-                {
-                    farmer_id: currentUser.user_id,
-                    name: 'Eggplant',
-                    description: 'Fresh purple eggplants',
-                    price: 90.00,
+                    name: 'Kamatis',
+                    description: 'Fresh red tomatoes',
+                    price: 70.00,
                     unit: 'kg',
                     quantity: 30,
-                    category: 'vegetables'
-                },
-                {
-                    farmer_id: currentUser.user_id,
-                    name: 'Okra',
-                    description: 'Tender green okra',
-                    price: 40.00,
-                    unit: 'kg',
-                    quantity: 25,
                     category: 'vegetables'
                 },
                 {
@@ -710,38 +703,11 @@ function createSampleData() {
                 },
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Kalamansi',
-                    description: 'Fresh calamansi citrus',
-                    price: 30.00,
-                    unit: 'kg',
-                    quantity: 40,
-                    category: 'fruits'
-                },
-                {
-                    farmer_id: currentUser.user_id,
-                    name: 'Sili',
-                    description: 'Hot chili peppers',
-                    price: 400.00,
-                    unit: 'kg',
-                    quantity: 15,
-                    category: 'vegetables'
-                },
-                {
-                    farmer_id: currentUser.user_id,
                     name: 'Ampalaya',
                     description: 'Bitter gourd',
                     price: 60.00,
                     unit: 'kg',
                     quantity: 25,
-                    category: 'vegetables'
-                },
-                {
-                    farmer_id: currentUser.user_id,
-                    name: 'Kamatis',
-                    description: 'Fresh red tomatoes',
-                    price: 70.00,
-                    unit: 'kg',
-                    quantity: 30,
                     category: 'vegetables'
                 },
                 {
@@ -753,13 +719,15 @@ function createSampleData() {
                     quantity: 35,
                     category: 'vegetables'
                 },
+                
+                // FRUITS (5 products)
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Saba',
-                    description: 'Cooking bananas',
-                    price: 30.00,
+                    name: 'Mangga',
+                    description: 'Sweet ripe mangoes',
+                    price: 120.00,
                     unit: 'kg',
-                    quantity: 40,
+                    quantity: 25,
                     category: 'fruits'
                 },
                 {
@@ -773,21 +741,79 @@ function createSampleData() {
                 },
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Kangkong',
-                    description: 'Water spinach',
-                    price: 16.50,
+                    name: 'Kalamansi',
+                    description: 'Fresh calamansi citrus',
+                    price: 30.00,
                     unit: 'kg',
-                    quantity: 45,
-                    category: 'vegetables'
+                    quantity: 40,
+                    category: 'fruits'
                 },
                 {
                     farmer_id: currentUser.user_id,
-                    name: 'Kamote',
-                    description: 'Sweet potato',
-                    price: 20.00,
+                    name: 'Pinya',
+                    description: 'Sweet pineapples',
+                    price: 80.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'fruits'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Saging',
+                    description: 'Cooking bananas',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits'
+                },
+                
+                // GRAINS (3 products)
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Bigas',
+                    description: 'Premium white rice',
+                    price: 45.00,
+                    unit: 'kg',
+                    quantity: 100,
+                    category: 'grains'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Mais',
+                    description: 'Fresh corn kernels',
+                    price: 25.00,
                     unit: 'kg',
                     quantity: 50,
-                    category: 'vegetables'
+                    category: 'grains'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Oats',
+                    description: 'Organic rolled oats',
+                    price: 150.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'grains'
+                },
+                
+                // HERBS (2 products)
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Oregano',
+                    description: 'Fresh oregano leaves',
+                    price: 200.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'herbs'
+                },
+                {
+                    farmer_id: currentUser.user_id,
+                    name: 'Basil',
+                    description: 'Sweet basil leaves',
+                    price: 180.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'herbs'
                 }
             ];
 
@@ -811,7 +837,7 @@ function clearAllData() {
         if (confirm('This action cannot be undone. Type "DELETE" to confirm.')) {
             try {
                 // Clear all localStorage data
-                const keys = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments'];
+                const keys = ['users', 'products', 'carts', 'cart_items', 'orders', 'order_items', 'payments', 'subscriptions'];
                 keys.forEach(key => {
                     localStorage.removeItem(key);
                 });

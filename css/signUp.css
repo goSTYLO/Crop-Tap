@@ -271,6 +271,83 @@ h2 {
     color: white;
 }
 
+/* ===== Subscription Selection ===== */
+.subscription-selection {
+    margin-bottom: 20px;
+}
+
+.subscription-selection label {
+    display: block;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.subscription-options {
+    display: flex;
+    gap: 15px;
+}
+
+.subscription-option {
+    flex: 1;
+}
+
+.subscription-option input[type="radio"] {
+    display: none;
+}
+
+.subscription-label {
+    display: block;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--card-bg);
+    text-align: center;
+}
+
+.subscription-label:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(45, 80, 22, 0.1);
+}
+
+.subscription-option input[type="radio"]:checked + .subscription-label {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.plan-name {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.plan-price {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.plan-savings {
+    display: block;
+    font-size: 12px;
+    background: var(--secondary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.subscription-option input[type="radio"]:checked + .subscription-label .plan-savings {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 /* ===== Input Fields ===== */
 .input-group {
     margin-bottom: 20px;

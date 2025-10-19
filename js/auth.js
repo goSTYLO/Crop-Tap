@@ -46,6 +46,19 @@ class AuthService {
             // Create user
             const newUser = this.storage.createUser(userData);
             
+            // Create subscription for consumers
+            if (userData.role === 'consumer' && userData.subscription_plan) {
+                const startDate = new Date().toISOString();
+                const dueDate = this.storage.calculateDueDate(startDate, userData.subscription_plan);
+                
+                this.storage.createSubscription({
+                    user_id: newUser.user_id,
+                    plan: userData.subscription_plan,
+                    start_date: startDate,
+                    due_date: dueDate
+                });
+            }
+            
             return {
                 success: true,
                 message: 'Registration successful! You can now log in.',
@@ -231,8 +244,8 @@ class AuthService {
 // Create global instance
 const auth = new AuthService();
 
-// Expose a global logout function for UI buttons
-function logout() {
+// Global logout function for UI buttons (without confirmation)
+function globalLogout() {
     const result = auth.logout();
     // Redirect to landing page regardless of result to ensure session cleared UX
     window.location.href = 'index.html';

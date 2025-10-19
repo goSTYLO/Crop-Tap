@@ -117,10 +117,18 @@
                     <span class="cart-badge" id="cartCount">0</span>
                 </button>
                 
+                <!-- Subscription Status -->
+                <div class="subscription-status" id="subscriptionStatus">
+                    <span class="subscription-badge" id="subscriptionBadge">Free Trial</span>
+                </div>
+                
                 <div class="user-menu">
                     <button class="avatar-btn" onclick="showProfile()" aria-label="Profile">
                         <img id="headerAvatar" class="avatar-img" src="" alt="Profile" />
                         <span id="headerAvatarPlaceholder" class="avatar-placeholder">👤</span>
+                    </button>
+                    <button class="logout-btn" onclick="logout()" aria-label="Logout" title="Logout">
+                        Logout
                     </button>
                 </div>
                 <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰</button>
@@ -152,7 +160,7 @@
     <main class="main-container">
         <!-- Dashboard Section -->
         <div id="homeSection">
-            <h2 class="section-title" id="welcomeTitle">Welcome back!</h2>
+            <h2 class="section-title" id="welcomeTitle" data-i18n="welcome_back">Welcome back!</h2>
             
             <div class="dashboard-grid">
                 <div class="stat-card">
@@ -259,6 +267,39 @@
                         <button type="button" class="btn-secondary" onclick="logout()">Logout</button>
                     </div>
                 </form>
+            </div>
+            
+            <!-- Subscription Details -->
+            <div class="order-card" style="margin-top: 1.5rem;">
+                <h3 style="margin-bottom: 1.5rem;" data-i18n="subscription_details">Subscription Details</h3>
+                <div id="subscriptionDetails">
+                    <div class="subscription-info">
+                        <div class="subscription-item">
+                            <span class="subscription-label" data-i18n="subscription_plan">Plan:</span>
+                            <span class="subscription-value" id="subscriptionPlan">Free Trial</span>
+                        </div>
+                        <div class="subscription-item">
+                            <span class="subscription-label" data-i18n="subscription_status">Status:</span>
+                            <span class="subscription-value" id="subscriptionStatus">Active</span>
+                        </div>
+                        <div class="subscription-item">
+                            <span class="subscription-label" data-i18n="subscription_start_date">Start Date:</span>
+                            <span class="subscription-value" id="subscriptionStartDate">-</span>
+                        </div>
+                        <div class="subscription-item">
+                            <span class="subscription-label" data-i18n="subscription_due_date">Due Date:</span>
+                            <span class="subscription-value" id="subscriptionDueDate">-</span>
+                        </div>
+                    </div>
+                    <div class="subscription-actions" style="margin-top: 1rem;">
+                        <button class="btn-primary" onclick="upgradeSubscription()" style="display: none;" id="upgradeBtn" data-i18n="subscribe_now">
+                            Subscribe Now
+                        </button>
+                        <button class="btn-secondary" onclick="renewSubscription()" style="display: none;" id="renewBtn" data-i18n="renew_subscription">
+                            Renew Subscription
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 

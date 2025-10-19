@@ -11,7 +11,7 @@ class StorageService {
         const defaultData = {
             users: [
                 {
-                    id: 1,
+                    user_id: 1,
                     name: "Juan Dela Cruz",
                     email: "juan@example.com",
                     password: "password123",
@@ -21,7 +21,7 @@ class StorageService {
                     avatar_url: null
                 },
                 {
-                    id: 2,
+                    user_id: 2,
                     name: "Maria Santos",
                     email: "maria@example.com",
                     password: "password123",
@@ -36,7 +36,8 @@ class StorageService {
             cart_items: [],
             orders: [],
             order_items: [],
-            payments: []
+            payments: [],
+            subscriptions: []
             // Note: session is now handled by sessionStorage, not localStorage
         };
 
@@ -57,7 +58,7 @@ class StorageService {
         const defaultData = {
             users: [
                 {
-                    id: 1,
+                    user_id: 1,
                     name: "Juan Dela Cruz",
                     email: "juan@example.com",
                     password: "password123",
@@ -67,7 +68,7 @@ class StorageService {
                     avatar_url: null
                 },
                 {
-                    id: 2,
+                    user_id: 2,
                     name: "Maria Santos",
                     email: "maria@example.com",
                     password: "password123",
@@ -82,7 +83,8 @@ class StorageService {
             cart_items: [],
             orders: [],
             order_items: [],
-            payments: []
+            payments: [],
+            subscriptions: []
         };
 
         Object.keys(defaultData).forEach(key => {
@@ -162,6 +164,7 @@ class StorageService {
             price: parseFloat(productData.price),
             unit: productData.unit || 'piece',
             quantity: parseInt(productData.quantity),
+            category: productData.category || 'vegetables',
             image_url: productData.image_url || null,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
@@ -434,6 +437,55 @@ class StorageService {
             return fullUser || session; // Fallback to session if user not found
         }
         return null;
+    }
+
+    // Subscription management methods
+    createSubscription(subscriptionData) {
+        const subscriptions = this.getData('subscriptions');
+        const subscription = {
+            id: this.generateId(),
+            user_id: subscriptionData.user_id,
+            plan: subscriptionData.plan, // 'monthly' or 'yearly'
+            start_date: subscriptionData.start_date,
+            due_date: subscriptionData.due_date,
+            status: 'active', // 'active', 'expired', 'cancelled'
+            created_at: new Date().toISOString()
+        };
+        
+        subscriptions.push(subscription);
+        this.saveData('subscriptions', subscriptions);
+        return subscription;
+    }
+
+    getSubscriptionByUserId(userId) {
+        const subscriptions = this.getData('subscriptions');
+        return subscriptions.find(sub => sub.user_id === userId);
+    }
+
+    updateSubscription(subscriptionId, updateData) {
+        const subscriptions = this.getData('subscriptions');
+        const index = subscriptions.findIndex(sub => sub.id === subscriptionId);
+        if (index !== -1) {
+            subscriptions[index] = { ...subscriptions[index], ...updateData };
+            this.saveData('subscriptions', subscriptions);
+            return subscriptions[index];
+        }
+        return null;
+    }
+
+    calculateDueDate(startDate, plan) {
+        const start = new Date(startDate);
+        const dueDate = new Date(start);
+        
+        if (plan === 'yearly') {
+            // Add 1 year for yearly subscription
+            dueDate.setFullYear(dueDate.getFullYear() + 1);
+        } else {
+            // Add 30 days for monthly subscription
+            dueDate.setDate(dueDate.getDate() + 30);
+        }
+        
+        return dueDate.toISOString();
     }
 }
 

@@ -204,7 +204,7 @@
         "id": 4,
         "title": "Implement Product CRUD Operations for Farmers",
         "description": "Build the interface and logic for authenticated farmers to perform Create, Read, Update, and Delete (CRUD) operations on their own product listings. Product data is managed within the 'products' array in localStorage.",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [
           2,
           3
@@ -219,7 +219,7 @@
             "description": "Modify the `renderProducts` function in `app.js` to conditionally display 'Edit' and 'Delete' buttons on product cards. These buttons should only appear if the logged-in user is a 'farmer' and their ID matches the product's `farmerId`. Also, add an 'Add New Product' button, visible only to logged-in farmers, likely above the product list.",
             "dependencies": [],
             "details": "In app.js, locate the `renderProducts` function. Inside the loop that generates product card HTML, get the current user via `getCurrentUser()`. Add a conditional block: `if (currentUser && currentUser.role === 'farmer' && currentUser.id === product.farmerId)`. If true, append the HTML for edit and delete buttons with `data-product-id` attributes. Similarly, in `updateUI`, show/hide a dedicated 'Add Product' button (`#add-product-btn`).",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Log in as a farmer. Verify 'Add Product' button is visible. Verify 'Edit' and 'Delete' buttons appear only on products they own. Log in as a buyer or log out and confirm no CRUD buttons are visible."
           },
           {
@@ -610,7 +610,7 @@
         "id": 10,
         "title": "Implement Buyer Order History and UI/UX Refinements",
         "description": "Create a dashboard for buyers to view their order history and track statuses. Implement global UI/UX improvements such as notifications, form validation, and mobile-responsive design.",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [
           8,
           9
@@ -623,7 +623,7 @@
     ],
     "metadata": {
       "created": "2025-10-15T15:01:27.226Z",
-      "updated": "2025-10-16T13:47:27.903Z",
+      "updated": "2025-10-19T06:41:09.511Z",
       "description": "Tasks for master context"
     }
   }
