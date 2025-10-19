@@ -33,7 +33,7 @@ function init() {
 // Load products from localStorage
 function loadProducts() {
     const products = productService.getAllProducts();
-    const availableProducts = products.filter(p => p.quantity > 0);
+    const availableProducts = products.filter(p => p.quantity > 0 && p.is_available !== false);
     
     // Render featured products (first 4)
     renderProducts('featuredProducts', availableProducts.slice(0, 4));
@@ -82,7 +82,7 @@ function renderProducts(containerId, productList) {
 // Filter Products
 function filterProducts(category) {
     currentFilter = category;
-    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
     const filtered = category === 'all' ? allProducts : allProducts.filter(p => p.category === category);
     renderProducts('allProducts', filtered);
     
@@ -924,7 +924,7 @@ function toggleMobileNav() {
 // Desktop search input
 document.getElementById('searchInput')?.addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
-    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm) || 
         p.description.toLowerCase().includes(searchTerm)
@@ -943,7 +943,7 @@ document.getElementById('mobileSearchInput')?.addEventListener('input', function
     const desktopInput = document.getElementById('searchInput');
     if (desktopInput) desktopInput.value = e.target.value;
 
-    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm) || 
         p.description.toLowerCase().includes(searchTerm)

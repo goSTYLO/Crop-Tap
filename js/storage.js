@@ -166,6 +166,7 @@ class StorageService {
             quantity: parseInt(productData.quantity),
             category: productData.category || 'vegetables',
             image_url: productData.image_url || null,
+            is_available: productData.is_available !== undefined ? productData.is_available : true,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
         };
@@ -198,6 +199,18 @@ class StorageService {
             return products[index];
         }
         return null;
+    }
+
+    updateProductAvailability(productId, isAvailable) {
+        const products = this.getProducts();
+        const product = products.find(p => p.product_id === productId);
+        if (product) {
+            product.is_available = isAvailable;
+            product.updated_at = new Date().toISOString();
+            this.saveData('products', products);
+            return true;
+        }
+        return false;
     }
 
     deleteProduct(productId) {

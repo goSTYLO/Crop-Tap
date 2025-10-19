@@ -341,7 +341,7 @@ function loadProductsTable() {
     if (farmerProducts.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="8" style="text-align: center; padding: 2rem; color: #666;">
+                <td colspan="9" style="text-align: center; padding: 2rem; color: #666;">
                     No products added yet. <a href="#" onclick="openModal('productModal')">Add your first product</a>
                 </td>
             </tr>
@@ -363,6 +363,13 @@ function loadProductsTable() {
                 <td>₱${product.price.toFixed(2)}</td>
                 <td>${product.quantity}</td>
                 <td>${product.unit}</td>
+                <td>
+                    <button class="availability-toggle ${product.is_available !== false ? 'available' : 'unavailable'}" 
+                            onclick="toggleProductAvailability('${product.product_id}', ${product.is_available !== false})"
+                            title="Click to toggle availability">
+                        ${product.is_available !== false ? '✅ Available' : '❌ Out of Stock'}
+                    </button>
+                </td>
                 <td>${currentUser.name}</td>
                 <td class="action-buttons">
                     <button class="icon-btn" onclick="editProduct('${product.product_id}')" title="Edit">✏️</button>
@@ -372,6 +379,21 @@ function loadProductsTable() {
         `;
         tbody.innerHTML += row;
     });
+}
+
+function toggleProductAvailability(productId, currentStatus) {
+    const newStatus = !currentStatus;
+    const success = storage.updateProductAvailability(productId, newStatus);
+    
+    if (success) {
+        showNotification(
+            `Product ${newStatus ? 'marked as available' : 'marked as out of stock'}`, 
+            'success'
+        );
+        loadProductsTable();
+    } else {
+        showNotification('Failed to update product availability', 'error');
+    }
 }
 
 function handleProductSubmit(e) {
@@ -817,9 +839,11 @@ function createSampleData() {
                 }
             ];
 
-            sampleProducts.forEach(productData => {
-                productService.createProduct(productData);
-            });
+                sampleProducts.forEach(productData => {
+                    // Ensure all sample products have availability set to true
+                    productData.is_available = true;
+                    productService.createProduct(productData);
+                });
 
             showNotification('Sample data created successfully!', 'success');
             loadProductsTable();

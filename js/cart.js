@@ -28,6 +28,13 @@ class CartService {
             }
 
             // Check if product is available
+            if (product.is_available === false) {
+                return {
+                    success: false,
+                    message: 'This product is currently out of stock.'
+                };
+            }
+
             if (product.quantity < quantity) {
                 return {
                     success: false,
