@@ -33,7 +33,7 @@ function init() {
 // Load products from localStorage
 function loadProducts() {
     const products = productService.getAllProducts();
-    const availableProducts = products.filter(p => p.quantity > 0 && p.is_available !== false);
+    const availableProducts = products.filter(p => p.quantity > 0);
     
     // Debug: Log products and their categories
     console.log('All products loaded:', products.length);
@@ -64,7 +64,9 @@ function renderProducts(containerId, productList) {
                     `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
                     `<span>🌾</span>`
                 }
-                <span class="stock-badge" data-i18n-dynamic="stock_in" data-count="${product.quantity}"></span>
+                <span class="stock-badge ${product.is_available === false ? 'out-of-stock' : ''}">
+                    ${product.is_available === false ? 'No Stock' : `${product.quantity} in stock`}
+                </span>
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
@@ -75,8 +77,10 @@ function renderProducts(containerId, productList) {
                         <div class="product-unit" data-i18n-dynamic="unit_per" data-unit="${product.unit}"></div>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" onclick="addToCart('${product.product_id}')"
-                    data-i18n-dynamic="add_to_cart"></button>
+                <button class="add-to-cart-btn ${product.is_available === false ? 'disabled' : ''}" 
+                    onclick="${product.is_available === false ? 'showOutOfStockMessage()' : `addToCart('${product.product_id}')`}"
+                    ${product.is_available === false ? 'disabled' : ''}
+                    data-i18n-dynamic="add_to_cart">${product.is_available === false ? 'No Stock' : 'Add to Cart'}</button>
             </div>
         </div>
     `).join('');
@@ -228,6 +232,11 @@ function addToCartWithQuantity() {
 // Add to Cart (legacy function - now opens quantity modal)
 function addToCart(productId) {
     showQuantityModal(productId);
+}
+
+// Show out of stock message
+function showOutOfStockMessage() {
+    showToast('Out of Stock', 'This product is currently out of stock and cannot be added to cart.', 'warning');
 }
 
 // Update Cart UI
@@ -602,7 +611,9 @@ function renderFarmerProducts(products) {
                     `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
                     `<span>🌾</span>`
                 }
-                <span class="stock-badge">${product.quantity} in stock</span>
+                <span class="stock-badge ${product.is_available === false ? 'out-of-stock' : ''}">
+                    ${product.is_available === false ? 'No Stock' : `${product.quantity} in stock`}
+                </span>
             </div>
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
@@ -613,8 +624,10 @@ function renderFarmerProducts(products) {
                         <div class="product-unit">per ${product.unit}</div>
                     </div>
                 </div>
-                <button class="add-to-cart-btn" onclick="addToCart('${product.product_id}')">
-                    Add to Cart
+                <button class="add-to-cart-btn ${product.is_available === false ? 'disabled' : ''}" 
+                    onclick="${product.is_available === false ? 'showOutOfStockMessage()' : `addToCart('${product.product_id}')`}"
+                    ${product.is_available === false ? 'disabled' : ''}>
+                    ${product.is_available === false ? 'No Stock' : 'Add to Cart'}
                 </button>
             </div>
         </div>
@@ -992,7 +1005,7 @@ function toggleMobileNav() {
 // Desktop search input
 document.getElementById('searchInput')?.addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
-    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm) || 
         p.description.toLowerCase().includes(searchTerm)
@@ -1011,7 +1024,7 @@ document.getElementById('mobileSearchInput')?.addEventListener('input', function
     const desktopInput = document.getElementById('searchInput');
     if (desktopInput) desktopInput.value = e.target.value;
 
-    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
+    const allProducts = productService.getAllProducts().filter(p => p.quantity > 0);
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(searchTerm) || 
         p.description.toLowerCase().includes(searchTerm)
