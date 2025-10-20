@@ -35,8 +35,13 @@ function loadProducts() {
     const products = productService.getAllProducts();
     const availableProducts = products.filter(p => p.quantity > 0 && p.is_available !== false);
     
-    // Render featured products (first 4)
-    renderProducts('featuredProducts', availableProducts.slice(0, 4));
+    // Debug: Log products and their categories
+    console.log('All products loaded:', products.length);
+    console.log('Available products:', availableProducts.length);
+    console.log('Product categories:', [...new Set(products.map(p => p.category))]);
+    
+    // Render featured products (first 5)
+    renderProducts('featuredProducts', availableProducts.slice(0, 5));
     // Render all products
     renderProducts('allProducts', availableProducts);
 }
@@ -80,17 +85,33 @@ function renderProducts(containerId, productList) {
 }
 
 // Filter Products
-function filterProducts(category) {
+function filterProducts(category, event) {
+    console.log('Filtering products by category:', category);
     currentFilter = category;
     const allProducts = productService.getAllProducts().filter(p => p.quantity > 0 && p.is_available !== false);
     const filtered = category === 'all' ? allProducts : allProducts.filter(p => p.category === category);
+    
+    console.log('Total products:', allProducts.length);
+    console.log('Filtered products:', filtered.length);
+    console.log('Products in category "' + category + '":', filtered.map(p => p.name));
+    
     renderProducts('allProducts', filtered);
     
     // Update filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    event.target.classList.add('active');
+    
+    // Find and activate the clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    } else {
+        // Fallback: find button by category
+        const targetButton = document.querySelector(`[onclick*="filterProducts('${category}')"]`);
+        if (targetButton) {
+            targetButton.classList.add('active');
+        }
+    }
 }
 
 // Show Quantity Modal
@@ -497,12 +518,17 @@ function setupDashboardInteractions() {
 
 // Render Farmers Section
 function renderFarmers() {
+    console.log('Rendering farmers section...');
     const farmersContainer = document.getElementById('farmersContainer');
     if (!farmersContainer) return;
     
     // Get all farmers (users with role 'farmer')
     const allUsers = storage.getData('users') || [];
     const farmers = allUsers.filter(user => user.role === 'farmer');
+    
+    console.log('All users:', allUsers.length);
+    console.log('Farmers found:', farmers.length);
+    console.log('Farmers:', farmers.map(f => ({ id: f.user_id, name: f.name, email: f.email })));
     
     if (farmers.length === 0) {
         farmersContainer.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 2rem;">No farmers available</p>';
@@ -511,11 +537,13 @@ function renderFarmers() {
     
     // Get all products
     const allProducts = productService.getAllProducts();
+    console.log('All products for farmers:', allProducts.length);
     
     // Render each farmer with their products
     farmersContainer.innerHTML = farmers.map(farmer => {
-        // Get products for this farmer
+        // Get products for this farmer (ensure both IDs are numbers for comparison)
         const farmerProducts = allProducts.filter(p => p.farmer_id === farmer.user_id && p.quantity > 0);
+        console.log(`Farmer ${farmer.name} (ID: ${farmer.user_id}) has ${farmerProducts.length} products:`, farmerProducts.map(p => p.name));
         
         return `
             <div class="farmer-section">
@@ -530,11 +558,11 @@ function renderFarmers() {
                 </div>
                 
                 <div class="farmer-filter-bar">
-                    <button class="filter-btn active" onclick="filterFarmerProducts('${farmer.user_id}', 'all')">All Products</button>
-                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'vegetables')">Vegetables</button>
-                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'fruits')">Fruits</button>
-                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'grains')">Grains</button>
-                    <button class="filter-btn" onclick="filterFarmerProducts('${farmer.user_id}', 'herbs')">Herbs</button>
+                    <button class="filter-btn active" data-farmer-id="${farmer.user_id}" data-category="all">All Products</button>
+                    <button class="filter-btn" data-farmer-id="${farmer.user_id}" data-category="vegetables">Vegetables</button>
+                    <button class="filter-btn" data-farmer-id="${farmer.user_id}" data-category="fruits">Fruits</button>
+                    <button class="filter-btn" data-farmer-id="${farmer.user_id}" data-category="grains">Grains</button>
+                    <button class="filter-btn" data-farmer-id="${farmer.user_id}" data-category="herbs">Herbs</button>
                 </div>
                 
                 <div class="products-grid" id="farmer-products-${farmer.user_id}">
@@ -543,6 +571,21 @@ function renderFarmers() {
             </div>
         `;
     }).join('');
+    
+    // Add event delegation for farmer filter buttons
+    setTimeout(() => {
+        const farmersContainer = document.getElementById('farmersContainer');
+        if (farmersContainer) {
+            farmersContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('filter-btn') && e.target.hasAttribute('data-farmer-id')) {
+                    const farmerId = e.target.getAttribute('data-farmer-id');
+                    const category = e.target.getAttribute('data-category');
+                    console.log('Farmer filter clicked:', { farmerId, category });
+                    filterFarmerProducts(farmerId, category, e);
+                }
+            });
+        }
+    }, 100);
 }
 
 
@@ -579,10 +622,25 @@ function renderFarmerProducts(products) {
 }
 
 // Filter farmer products by category
-function filterFarmerProducts(farmerId, category) {
+function filterFarmerProducts(farmerId, category, event) {
+    console.log('Filtering farmer products:', { farmerId, category });
+    
+    // Convert farmerId to number since it comes as string from data attribute
+    const farmerIdNum = parseInt(farmerId);
+    console.log('Converted farmerId to number:', farmerIdNum);
+    
     const allProducts = productService.getAllProducts();
-    const farmerProducts = allProducts.filter(p => p.farmer_id === farmerId && p.quantity > 0);
+    
+    // Debug: Show data types and sample farmer_ids
+    console.log('Sample product farmer_ids:', allProducts.slice(0, 3).map(p => ({ id: p.farmer_id, type: typeof p.farmer_id })));
+    console.log('Looking for farmerId:', farmerIdNum, 'type:', typeof farmerIdNum);
+    
+    const farmerProducts = allProducts.filter(p => p.farmer_id === farmerIdNum && p.quantity > 0);
     const filtered = category === 'all' ? farmerProducts : farmerProducts.filter(p => p.category === category);
+    
+    console.log('Farmer products for farmer', farmerId, ':', farmerProducts.length);
+    console.log('Filtered products for category "' + category + '":', filtered.length);
+    console.log('Products in category:', filtered.map(p => p.name));
     
     const container = document.getElementById(`farmer-products-${farmerId}`);
     if (container) {
@@ -595,7 +653,17 @@ function filterFarmerProducts(farmerId, category) {
         farmerSection.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        event.target.classList.add('active');
+        
+        // Find and activate the clicked button
+        if (event && event.target) {
+            event.target.classList.add('active');
+        } else {
+            // Fallback: find button by data attributes
+            const targetButton = farmerSection.querySelector(`[data-farmer-id="${farmerId}"][data-category="${category}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+        }
     }
 }
 

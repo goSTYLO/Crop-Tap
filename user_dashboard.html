@@ -201,11 +201,11 @@
             <h2 class="section-title" data-i18n="browse_products">Browse Products</h2>
             
             <div class="filter-bar">
-                <button class="filter-btn active" data-i18n="filter_all" onclick="filterProducts('all')">All Products</button>
-                <button class="filter-btn" data-i18n="filter_vegetables" onclick="filterProducts('vegetables')">Vegetables</button>
-                <button class="filter-btn" data-i18n="filter_fruits" onclick="filterProducts('fruits')">Fruits</button>
-                <button class="filter-btn" data-i18n="filter_grains" onclick="filterProducts('grains')">Grains</button>
-                <button class="filter-btn" data-i18n="filter_herbs" onclick="filterProducts('herbs')">Herbs</button>
+                <button class="filter-btn active" data-i18n="filter_all" onclick="filterProducts('all', event)">All Products</button>
+                <button class="filter-btn" data-i18n="filter_vegetables" onclick="filterProducts('vegetables', event)">Vegetables</button>
+                <button class="filter-btn" data-i18n="filter_fruits" onclick="filterProducts('fruits', event)">Fruits</button>
+                <button class="filter-btn" data-i18n="filter_grains" onclick="filterProducts('grains', event)">Grains</button>
+                <button class="filter-btn" data-i18n="filter_herbs" onclick="filterProducts('herbs', event)">Herbs</button>
             </div>
 
             <div class="products-grid" id="allProducts"></div>

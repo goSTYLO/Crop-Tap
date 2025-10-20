@@ -2,8 +2,8 @@
 function handleLogin(e) {
     e.preventDefault();
 
-    const email = e.target.querySelector('input[type="email"]').value.trim();
-    const password = e.target.querySelector('input[type="password"]').value.trim();
+    const email = e.target.querySelector('input[name="email"]').value.trim();
+    const password = e.target.querySelector('input[name="password"]').value.trim();
 
     console.log('Login attempt:', { email, password: '***' });
 
@@ -71,18 +71,58 @@ function togglePassword() {
 
 // Make sure the login button always works
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, setting up login form...');
+    
     const loginForm = document.getElementById('loginFormElement');
     if (loginForm) {
+        console.log('Login form found, adding event listener');
         loginForm.addEventListener('submit', handleLogin);
+    } else {
+        console.error('Login form not found!');
+    }
+    
+    // Check if required services are available
+    if (typeof auth === 'undefined') {
+        console.error('Auth service not loaded!');
+    } else {
+        console.log('Auth service loaded successfully');
+    }
+    
+    if (typeof storage === 'undefined') {
+        console.error('Storage service not loaded!');
+    } else {
+        console.log('Storage service loaded successfully');
     }
     
     // Add reset function to window for easy access in console
     window.resetStorage = function() {
         if (confirm('This will reset all data and create test users. Continue?')) {
             storage.resetToDefaults();
-            alert('Storage reset! Test users created:\n\nConsumer: juan@example.com / password123\nFarmer: maria@example.com / password123');
+            alert('Storage reset! Test users created:\n\nConsumer: consumer@gmail.com / Pass123\nFarmer 1: farmer@gmail.com / Pass123\nFarmer 2: farmer2@gmail.com / Pass123');
         }
     };
     
     console.log('Login page loaded. Use resetStorage() in console to reset data with test users.');
+    
+    // Fallback: Add click event to login button as well
+    const loginButton = document.querySelector('button[type="submit"]');
+    if (loginButton) {
+        console.log('Adding fallback click event to login button');
+        loginButton.addEventListener('click', function(e) {
+            // Only prevent default if form submission fails
+            setTimeout(() => {
+                const form = document.getElementById('loginFormElement');
+                if (form) {
+                    const formData = new FormData(form);
+                    const email = formData.get('email') || form.querySelector('input[name="email"]').value;
+                    const password = formData.get('password') || form.querySelector('input[name="password"]').value;
+                    
+                    if (email && password) {
+                        console.log('Fallback login attempt:', { email, password: '***' });
+                        handleLogin({ preventDefault: () => {}, target: form });
+                    }
+                }
+            }, 100);
+        });
+    }
 });
