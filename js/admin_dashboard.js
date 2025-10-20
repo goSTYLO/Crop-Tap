@@ -341,17 +341,22 @@ function loadProductsTable() {
     if (farmerProducts.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="9" style="text-align: center; padding: 2rem; color: #666;">
+                <td colspan="10" style="text-align: center; padding: 2rem; color: #666;">
                     No products added yet. <a href="#" onclick="openModal('productModal')">Add your first product</a>
                 </td>
             </tr>
         `;
+        // Reset bulk actions when no products
+        updateBulkActions();
         return;
     }
 
     farmerProducts.forEach(product => {
         const row = `
             <tr>
+                <td>
+                    <input type="checkbox" class="product-checkbox" value="${product.product_id}" onchange="updateBulkActions()">
+                </td>
                 <td>
                     ${product.image_url ? 
                         `<img src="${product.image_url}" alt="${product.name}" class="image-preview">` :
@@ -379,6 +384,9 @@ function loadProductsTable() {
         `;
         tbody.innerHTML += row;
     });
+    
+    // Reset bulk actions after loading
+    updateBulkActions();
 }
 
 function toggleProductAvailability(productId, currentStatus) {
@@ -485,6 +493,95 @@ function deleteProduct(id) {
             updateDashboardStats();
         } else {
             showToast('Error', result.message, 'error');
+        }
+    }
+}
+
+// Bulk Operations Functions
+function toggleSelectAllProducts() {
+    const selectAllCheckbox = document.getElementById('selectAllProducts');
+    const productCheckboxes = document.querySelectorAll('.product-checkbox');
+    
+    productCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+    });
+    
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const productCheckboxes = document.querySelectorAll('.product-checkbox');
+    const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+    const selectAllCheckbox = document.getElementById('selectAllProducts');
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCount = document.getElementById('selectedCount');
+    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+    
+    const selectedCountValue = selectedCheckboxes.length;
+    const totalCount = productCheckboxes.length;
+    
+    // Update select all checkbox state
+    if (selectedCountValue === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (selectedCountValue === totalCount) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+    
+    // Show/hide bulk actions
+    if (selectedCountValue > 0) {
+        bulkActions.style.display = 'flex';
+        selectedCount.textContent = `${selectedCountValue} selected`;
+        bulkDeleteBtn.disabled = false;
+    } else {
+        bulkActions.style.display = 'none';
+        bulkDeleteBtn.disabled = true;
+    }
+}
+
+function bulkDeleteProducts() {
+    const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+    const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+    
+    if (selectedIds.length === 0) {
+        showToast('No Selection', 'Please select products to delete', 'warning');
+        return;
+    }
+    
+    const productNames = selectedIds.map(id => {
+        const product = productService.getProductById(id);
+        return product ? product.name : 'Unknown Product';
+    });
+    
+    const confirmMessage = `Are you sure you want to delete ${selectedIds.length} product(s)?\n\nProducts to delete:\n${productNames.join('\n')}`;
+    
+    if (confirm(confirmMessage)) {
+        let successCount = 0;
+        let errorCount = 0;
+        
+        selectedIds.forEach(id => {
+            const result = productService.deleteProduct(id);
+            if (result.success) {
+                successCount++;
+            } else {
+                errorCount++;
+            }
+        });
+        
+        if (successCount > 0) {
+            showToast(
+                'Bulk Delete Complete', 
+                `Successfully deleted ${successCount} product(s)${errorCount > 0 ? `. ${errorCount} failed.` : '.'}`, 
+                successCount === selectedIds.length ? 'success' : 'warning'
+            );
+            loadProductsTable();
+            updateDashboardStats();
+        } else {
+            showToast('Bulk Delete Failed', 'No products were deleted', 'error');
         }
     }
 }

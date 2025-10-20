@@ -92,6 +92,60 @@
         .toast-close:hover {
             color: #6b7280;
         }
+        
+        /* Bulk Actions Styles */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .bulk-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 6px;
+        }
+        
+        .selected-count {
+            font-size: 14px;
+            color: #dc2626;
+            font-weight: 500;
+        }
+        
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn-danger:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        /* Checkbox styles */
+        #selectAllProducts {
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        
+        .product-checkbox {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -281,12 +335,22 @@
                     <div class="card">
                         <div class="card-header">
                             <h2 class="card-title" data-i18n="all_products">All Products</h2>
-                            <button class="btn btn-primary" onclick="openModal('productModal')" data-i18n="add_product">+ Add Product</button>
+                            <div class="header-actions">
+                                <div class="bulk-actions" id="bulkActions" style="display: none;">
+                                    <span class="selected-count" id="selectedCount">0 selected</span>
+                                    <button class="btn btn-danger" onclick="bulkDeleteProducts()" id="bulkDeleteBtn">Delete Selected</button>
+                                </div>
+                                <button class="btn btn-primary" onclick="openModal('productModal')" data-i18n="add_product">+ Add Product</button>
+                            </div>
                         </div>
                         <div class="table-container">
                             <table id="productsTable">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            <input type="checkbox" id="selectAllProducts" onchange="toggleSelectAllProducts()" title="Select All">
+                                            <label for="selectAllProducts" style="margin-left: 4px; font-size: 12px; color: #666;">All</label>
+                                        </th>
                                         <th data-i18n="product_image">Image</th>
                                         <th data-i18n="product_name">Name</th>
                                         <th data-i18n="product_category">Category</th>
