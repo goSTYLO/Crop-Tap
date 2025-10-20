@@ -8,30 +8,483 @@ class StorageService {
 
     // Initialize localStorage with empty arrays if they don't exist
     initializeStorage() {
+        // Generate unique IDs for default products
+        const generateDefaultId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+        
         const defaultData = {
             users: [
                 {
                     user_id: 1,
                     name: "Juan Dela Cruz",
-                    email: "juan@example.com",
-                    password: "password123",
+                    email: "consumer@gmail.com",
+                    password: "Pass123",
                     role: "consumer",
                     phone: "09123456789",
                     address: "123 Main St, Manila",
-                    avatar_url: null
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
                 },
                 {
                     user_id: 2,
                     name: "Maria Santos",
-                    email: "maria@example.com",
-                    password: "password123",
+                    email: "farmer@gmail.com",
+                    password: "Pass123",
                     role: "farmer",
                     phone: "09876543210",
                     address: "456 Farm Road, Laguna",
-                    avatar_url: null
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
+                },
+                {
+                    user_id: 3,
+                    name: "Pedro Garcia",
+                    email: "farmer2@gmail.com",
+                    password: "Pass123",
+                    role: "farmer",
+                    phone: "09111222333",
+                    address: "789 Agricultural Ave, Pangasinan",
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
                 }
             ],
-            products: [],
+            products: [
+                // VEGETABLES (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2, // Maria Santos (farmer@gmail.com)
+                    name: 'Kamatis',
+                    description: 'Fresh red tomatoes',
+                    price: 70.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Sitaw',
+                    description: 'Fresh string beans',
+                    price: 15.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Kalabasa',
+                    description: 'Sweet squash',
+                    price: 40.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Ampalaya',
+                    description: 'Bitter gourd',
+                    price: 60.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Pechay',
+                    description: 'Chinese cabbage',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FRUITS (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Mangga',
+                    description: 'Sweet ripe mangoes',
+                    price: 120.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Lakatan',
+                    description: 'Sweet bananas',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Kalamansi',
+                    description: 'Fresh calamansi citrus',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Pinya',
+                    description: 'Sweet pineapples',
+                    price: 80.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Saging',
+                    description: 'Cooking bananas',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // GRAINS (3 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Bigas',
+                    description: 'Premium white rice',
+                    price: 45.00,
+                    unit: 'kg',
+                    quantity: 100,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Mais',
+                    description: 'Fresh corn kernels',
+                    price: 25.00,
+                    unit: 'kg',
+                    quantity: 50,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Oats',
+                    description: 'Organic rolled oats',
+                    price: 150.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // HERBS (2 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Oregano',
+                    description: 'Fresh oregano leaves',
+                    price: 200.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Basil',
+                    description: 'Sweet basil leaves',
+                    price: 180.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FARMER 2 PRODUCTS (Pedro Garcia - farmer2@gmail.com)
+                // VEGETABLES (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3, // Pedro Garcia (farmer2@gmail.com)
+                    name: 'Talong',
+                    description: 'Fresh eggplants',
+                    price: 65.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Okra',
+                    description: 'Fresh okra pods',
+                    price: 35.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Patola',
+                    description: 'Fresh sponge gourd',
+                    price: 55.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Mustasa',
+                    description: 'Fresh mustard greens',
+                    price: 45.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Kangkong',
+                    description: 'Fresh water spinach',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FRUITS (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Papaya',
+                    description: 'Sweet ripe papaya',
+                    price: 35.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Guyabano',
+                    description: 'Fresh soursop',
+                    price: 80.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Santol',
+                    description: 'Sweet santol fruit',
+                    price: 25.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Lansones',
+                    description: 'Fresh lanzones',
+                    price: 90.00,
+                    unit: 'kg',
+                    quantity: 18,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Rambutan',
+                    description: 'Fresh rambutan',
+                    price: 75.00,
+                    unit: 'kg',
+                    quantity: 22,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // GRAINS (3 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Monggo',
+                    description: 'Premium mung beans',
+                    price: 60.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Sesame',
+                    description: 'Organic sesame seeds',
+                    price: 120.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Quinoa',
+                    description: 'Premium quinoa grains',
+                    price: 200.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // HERBS (2 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Mint',
+                    description: 'Fresh mint leaves',
+                    price: 150.00,
+                    unit: 'kg',
+                    quantity: 12,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Rosemary',
+                    description: 'Fresh rosemary sprigs',
+                    price: 220.00,
+                    unit: 'kg',
+                    quantity: 10,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ],
             carts: [],
             cart_items: [],
             orders: [],
@@ -55,30 +508,483 @@ class StorageService {
 
     // Reset storage with default test users (useful for testing)
     resetToDefaults() {
+        // Generate unique IDs for default products
+        const generateDefaultId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
+        
         const defaultData = {
             users: [
                 {
                     user_id: 1,
                     name: "Juan Dela Cruz",
-                    email: "juan@example.com",
-                    password: "password123",
+                    email: "consumer@gmail.com",
+                    password: "Pass123",
                     role: "consumer",
                     phone: "09123456789",
                     address: "123 Main St, Manila",
-                    avatar_url: null
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
                 },
                 {
                     user_id: 2,
                     name: "Maria Santos",
-                    email: "maria@example.com",
-                    password: "password123",
+                    email: "farmer@gmail.com",
+                    password: "Pass123",
                     role: "farmer",
                     phone: "09876543210",
                     address: "456 Farm Road, Laguna",
-                    avatar_url: null
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
+                },
+                {
+                    user_id: 3,
+                    name: "Pedro Garcia",
+                    email: "farmer2@gmail.com",
+                    password: "Pass123",
+                    role: "farmer",
+                    phone: "09111222333",
+                    address: "789 Agricultural Ave, Pangasinan",
+                    avatar_url: null,
+                    created_at: new Date().toISOString()
                 }
             ],
-            products: [],
+            products: [
+                // VEGETABLES (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2, // Maria Santos (farmer@gmail.com)
+                    name: 'Kamatis',
+                    description: 'Fresh red tomatoes',
+                    price: 70.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Sitaw',
+                    description: 'Fresh string beans',
+                    price: 15.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Kalabasa',
+                    description: 'Sweet squash',
+                    price: 40.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Ampalaya',
+                    description: 'Bitter gourd',
+                    price: 60.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Pechay',
+                    description: 'Chinese cabbage',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 35,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FRUITS (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Mangga',
+                    description: 'Sweet ripe mangoes',
+                    price: 120.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Lakatan',
+                    description: 'Sweet bananas',
+                    price: 50.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Kalamansi',
+                    description: 'Fresh calamansi citrus',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Pinya',
+                    description: 'Sweet pineapples',
+                    price: 80.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Saging',
+                    description: 'Cooking bananas',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // GRAINS (3 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Bigas',
+                    description: 'Premium white rice',
+                    price: 45.00,
+                    unit: 'kg',
+                    quantity: 100,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Mais',
+                    description: 'Fresh corn kernels',
+                    price: 25.00,
+                    unit: 'kg',
+                    quantity: 50,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Oats',
+                    description: 'Organic rolled oats',
+                    price: 150.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // HERBS (2 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Oregano',
+                    description: 'Fresh oregano leaves',
+                    price: 200.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 2,
+                    name: 'Basil',
+                    description: 'Sweet basil leaves',
+                    price: 180.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FARMER 2 PRODUCTS (Pedro Garcia - farmer2@gmail.com)
+                // VEGETABLES (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3, // Pedro Garcia (farmer2@gmail.com)
+                    name: 'Talong',
+                    description: 'Fresh eggplants',
+                    price: 65.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Okra',
+                    description: 'Fresh okra pods',
+                    price: 35.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Patola',
+                    description: 'Fresh sponge gourd',
+                    price: 55.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Mustasa',
+                    description: 'Fresh mustard greens',
+                    price: 45.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Kangkong',
+                    description: 'Fresh water spinach',
+                    price: 30.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'vegetables',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // FRUITS (5 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Papaya',
+                    description: 'Sweet ripe papaya',
+                    price: 35.00,
+                    unit: 'kg',
+                    quantity: 20,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Guyabano',
+                    description: 'Fresh soursop',
+                    price: 80.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Santol',
+                    description: 'Sweet santol fruit',
+                    price: 25.00,
+                    unit: 'kg',
+                    quantity: 30,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Lansones',
+                    description: 'Fresh lanzones',
+                    price: 90.00,
+                    unit: 'kg',
+                    quantity: 18,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Rambutan',
+                    description: 'Fresh rambutan',
+                    price: 75.00,
+                    unit: 'kg',
+                    quantity: 22,
+                    category: 'fruits',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // GRAINS (3 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Monggo',
+                    description: 'Premium mung beans',
+                    price: 60.00,
+                    unit: 'kg',
+                    quantity: 40,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Sesame',
+                    description: 'Organic sesame seeds',
+                    price: 120.00,
+                    unit: 'kg',
+                    quantity: 25,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Quinoa',
+                    description: 'Premium quinoa grains',
+                    price: 200.00,
+                    unit: 'kg',
+                    quantity: 15,
+                    category: 'grains',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                
+                // HERBS (2 products)
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Mint',
+                    description: 'Fresh mint leaves',
+                    price: 150.00,
+                    unit: 'kg',
+                    quantity: 12,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                },
+                {
+                    product_id: generateDefaultId(),
+                    farmer_id: 3,
+                    name: 'Rosemary',
+                    description: 'Fresh rosemary sprigs',
+                    price: 220.00,
+                    unit: 'kg',
+                    quantity: 10,
+                    category: 'herbs',
+                    image_url: null,
+                    is_available: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ],
             carts: [],
             cart_items: [],
             orders: [],
@@ -94,7 +1000,7 @@ class StorageService {
         // Clear session
         sessionStorage.clear();
         
-        console.log('Storage reset to defaults with test users');
+        console.log('Storage reset to defaults with test users and sample products');
     }
 
     // Generic get data method
@@ -504,3 +1410,13 @@ class StorageService {
 
 // Create global instance
 const storage = new StorageService();
+
+// Global function for easy testing - can be called from browser console
+window.resetToDefaults = function() {
+    storage.resetToDefaults();
+    console.log('✅ Data reset to defaults! You can now use:');
+    console.log('👤 Consumer: consumer@gmail.com / Pass123');
+    console.log('🌾 Farmer 1: farmer@gmail.com / Pass123');
+    console.log('🌾 Farmer 2: farmer2@gmail.com / Pass123');
+    console.log('📦 15 sample products have been added for each farmer account (30 total)');
+};
