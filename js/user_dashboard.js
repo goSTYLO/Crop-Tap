@@ -1060,6 +1060,16 @@ function toggleMobileNav() {
     document.getElementById('navMenu').classList.toggle('open');
 }
 
+// Close mobile nav when clicking a nav link
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        const navMenu = document.getElementById('navMenu');
+        if (navMenu && navMenu.classList.contains('open')) {
+            navMenu.classList.remove('open');
+        }
+    });
+});
+
 // Search Functionality
 // Desktop search input
 document.getElementById('searchInput')?.addEventListener('input', function(e) {

@@ -54,6 +54,15 @@ function initializeApp() {
         item.addEventListener('click', function() {
             const page = this.getAttribute('data-page');
             navigateToPage(page);
+            
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('active');
+                    updateMenuVisibility();
+                }
+            }
         });
     });
 
