@@ -351,6 +351,11 @@ function deleteUser(id) {
 
 // Product Management Functions
 function loadProductsTable() {
+    const products = productService.getAllProducts();
+    console.log('🖼️ Admin Dashboard - Loading products table with', products.length, 'products');
+    if (products.length > 0) {
+        console.log('🖼️ Admin Dashboard - First product image_url:', products[0].image_url);
+    }
     const tbody = document.getElementById('productsTableBody');
     if (!tbody) return;
     
@@ -380,7 +385,7 @@ function loadProductsTable() {
                 </td>
                 <td>
                     ${product.image_url ? 
-                        `<img src="${product.image_url}" alt="${product.name}" class="image-preview">` :
+                        `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" class="image-preview" onerror="console.error('Failed to load admin image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="image-preview placeholder" style="display:none;">🌾</div>` :
                         `<div class="image-preview placeholder">🌾</div>`
                     }
                 </td>

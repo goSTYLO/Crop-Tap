@@ -1467,6 +1467,61 @@ class StorageService {
 // Create global instance
 const storage = new StorageService();
 
+// Function to update existing products with image URLs
+window.updateProductImages = function() {
+    console.log('🔄 Updating product images...');
+    const products = storage.getProducts();
+    let updated = false;
+    
+    const imageMap = {
+        'Kamatis': './assets/kamatis.jpg',
+        'Sitaw': './assets/sitaw.jpg',
+        'Kalabasa': './assets/kalabasa.jpg',
+        'Ampalaya': './assets/ampalaya.jpg',
+        'Pechay': './assets/pechay.jpg',
+        'Mangga': './assets/mangga.jpg',
+        'Lakatan': './assets/lakatan.jpg',
+        'Kalamansi': './assets/kalamansi.jpg',
+        'Pinya': './assets/pinya.jpg',
+        'Saging': './assets/saging.jpg',
+        'Bigas': './assets/bigas.jpg',
+        'Mais': './assets/mais.jpg',
+        'Oats': './assets/oats.jpg',
+        'Oregano': './assets/oregano.jpg',
+        'Basil': './assets/basil.jpg',
+        'Talong': './assets/talong.jpg',
+        'Okra': './assets/okra.jpg',
+        'Patola': './assets/patola.jpg',
+        'Mustasa': './assets/mustasa.jpg',
+        'Kangkong': './assets/kangkong.jpg',
+        'Papaya': './assets/papaya.jpg',
+        'Guyabano': './assets/guyabano.jpg',
+        'Santol': './assets/santol.jpg',
+        'Lansones': './assets/lansones.jpg',
+        'Rambutan': './assets/rambutan.jpg',
+        'Monggo': './assets/monggo.jpg',
+        'Sesame': './assets/sesame.jpg',
+        'Quinoa': './assets/quinoa.jpg',
+        'Mint': './assets/mint.jpg',
+        'Rosemary': './assets/rosemary.jpg'
+    };
+    
+    products.forEach(product => {
+        if (!product.image_url && imageMap[product.name]) {
+            product.image_url = imageMap[product.name];
+            updated = true;
+            console.log(`✅ Updated ${product.name} with image: ${product.image_url}`);
+        }
+    });
+    
+    if (updated) {
+        storage.saveData('products', products);
+        console.log('✅ All product images updated!');
+    } else {
+        console.log('ℹ️ No products needed image updates');
+    }
+};
+
 // Global function for easy testing - can be called from browser console
 window.resetToDefaults = function() {
     storage.resetToDefaults();
