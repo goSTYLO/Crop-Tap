@@ -104,25 +104,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Login page loaded. Use resetStorage() in console to reset data with test users.');
     
-    // Fallback: Add click event to login button as well
-    const loginButton = document.querySelector('button[type="submit"]');
-    if (loginButton) {
-        console.log('Adding fallback click event to login button');
-        loginButton.addEventListener('click', function(e) {
-            // Only prevent default if form submission fails
-            setTimeout(() => {
-                const form = document.getElementById('loginFormElement');
-                if (form) {
-                    const formData = new FormData(form);
-                    const email = formData.get('email') || form.querySelector('input[name="email"]').value;
-                    const password = formData.get('password') || form.querySelector('input[name="password"]').value;
-                    
-                    if (email && password) {
-                        console.log('Fallback login attempt:', { email, password: '***' });
-                        handleLogin({ preventDefault: () => {}, target: form });
-                    }
-                }
-            }, 100);
-        });
-    }
+    // Note: Removed redundant button click event listener to prevent double login
 });

@@ -121,7 +121,6 @@ function renderProducts(containerId, productList) {
                         <span class="unit">/ ${product.unit}</span>
                     </div>
                     <div class="product-actions">
-                        <button class="btn btn-primary" onclick="showProductDetail('${product.product_id}')">View Details</button>
                         <button class="btn btn-secondary" onclick="showAddToCartModal('${product.product_id}')">Add to Cart</button>
                     </div>
                 </div>
