@@ -130,7 +130,7 @@ function loadProducts() {
         <div class="price-card" data-product-id="${product.product_id}">
             <div class="product-image">
                 ${product.image_url ? 
-                    `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">` :
+                    `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
                     `<div class="placeholder-image">🌾</div>`
                 }
             </div>
@@ -176,7 +176,7 @@ function setupProductSearch() {
             <div class="price-card" data-product-id="${product.product_id}">
                 <div class="product-image">
                     ${product.image_url ? 
-                        `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;">` :
+                        `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
                         `<div class="placeholder-image">🌾</div>`
                     }
                 </div>

@@ -1,6 +1,24 @@
 // localStorage Service for Crop-Tap
 // Simple data management for the frontend-only application
 
+// Helper function to get correct image path for GitHub Pages
+function getImagePath(imageUrl) {
+    // Check if we're on GitHub Pages (URL contains github.io)
+    if (window.location.hostname.includes('github.io')) {
+        // Extract repository name from URL
+        const pathParts = window.location.pathname.split('/');
+        const repoName = pathParts[1]; // Repository name is usually the first part after domain
+        
+        if (repoName && repoName !== '') {
+            // Return absolute path for GitHub Pages
+            return `/${repoName}/${imageUrl}`;
+        }
+    }
+    
+    // For local development or other hosting, use relative path
+    return imageUrl;
+}
+
 class StorageService {
     constructor() {
         this.initializeStorage();
