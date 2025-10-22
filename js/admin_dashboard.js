@@ -394,7 +394,7 @@ function loadProductsTable() {
                 </td>
                 <td>
                     ${product.image_url ? 
-                        `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" class="image-preview" onerror="console.error('Failed to load admin image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="image-preview placeholder" style="display:none;">🌾</div>` :
+                        `<img src="${product.image_url}" alt="${product.name}" class="image-preview" onerror="console.error('Failed to load admin image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="image-preview placeholder" style="display:none;">🌾</div>` :
                         `<div class="image-preview placeholder">🌾</div>`
                     }
                 </td>
@@ -468,10 +468,30 @@ function handleProductSubmit(e) {
     const file = fileInput && fileInput.files && fileInput.files[0];
 
     if (file) {
+        // Create image element for compression
+        const img = new Image();
         const reader = new FileReader();
-        reader.onload = () => {
-            productData.image_url = reader.result; // base64 Data URL
-            submitProduct(productId, productData);
+        
+        reader.onload = (e) => {
+            img.onload = () => {
+                // Compress using same settings as sample images
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > 800) {
+                    height = (height * 800) / width;
+                    width = 800;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                
+                productData.image_url = canvas.toDataURL('image/jpeg', 0.7);
+                submitProduct(productId, productData);
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
         return;

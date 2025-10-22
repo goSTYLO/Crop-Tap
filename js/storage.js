@@ -30,6 +30,85 @@ function getImagePath(imageUrl) {
     return imageUrl;
 }
 
+// Image compression utility for converting images to Base64
+async function loadAndCompressImage(imagePath, maxWidth = 800, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        
+        img.onload = () => {
+            // Create canvas for compression
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            
+            // Resize if needed
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Convert to Base64 with compression
+            const base64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(base64);
+        };
+        
+        img.onerror = () => reject(new Error(`Failed to load image: ${imagePath}`));
+        
+        // Handle both local and GitHub Pages paths
+        img.src = typeof getImagePath === 'function' ? getImagePath(imagePath) : imagePath;
+    });
+}
+
+// Batch conversion function to convert all sample product images to Base64
+async function convertSampleImagesToBase64() {
+    console.log('🔄 Converting sample images to Base64...');
+    
+    const products = storage.getProducts();
+    let convertedCount = 0;
+    let skippedCount = 0;
+    
+    for (const product of products) {
+        // Skip if already Base64 (starts with 'data:')
+        if (product.image_url && product.image_url.startsWith('data:')) {
+            skippedCount++;
+            continue;
+        }
+        
+        // Skip if no image URL
+        if (!product.image_url) {
+            continue;
+        }
+        
+        try {
+            const base64Image = await loadAndCompressImage(product.image_url);
+            product.image_url = base64Image;
+            convertedCount++;
+            console.log(`✅ Converted: ${product.name}`);
+        } catch (error) {
+            console.error(`❌ Failed to convert ${product.name}:`, error);
+        }
+    }
+    
+    if (convertedCount > 0) {
+        storage.saveData('products', products);
+        console.log(`✅ Conversion complete! Converted: ${convertedCount}, Skipped: ${skippedCount}`);
+    } else {
+        console.log('ℹ️ No images needed conversion');
+    }
+    
+    return { converted: convertedCount, skipped: skippedCount };
+}
+
+// Expose globally for manual triggering
+window.convertSampleImagesToBase64 = convertSampleImagesToBase64;
+
 class StorageService {
     constructor() {
         this.initializeStorage();
@@ -533,6 +612,21 @@ class StorageService {
         if (localStorage.getItem('session')) {
             localStorage.removeItem('session');
         }
+        
+        // Auto-convert sample images to Base64 on first load
+        setTimeout(() => {
+            const products = this.getProducts();
+            const needsConversion = products.some(p => 
+                p.image_url && !p.image_url.startsWith('data:') && p.image_url.includes('./assets/')
+            );
+            
+            if (needsConversion) {
+                console.log('🔄 First load detected - converting images to Base64...');
+                convertSampleImagesToBase64().then(result => {
+                    console.log(`✅ Auto-conversion complete: ${result.converted} images converted`);
+                });
+            }
+        }, 1000); // Delay to ensure DOM is ready
     }
 
     // Reset storage with default test users (useful for testing)

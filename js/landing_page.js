@@ -127,11 +127,9 @@ function loadProducts() {
     }
 
     productGrid.innerHTML = products.map(product => {
-        const imageSrc = product.image_url ? 
-            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
-            null;
+        const imageSrc = product.image_url; // Direct use since it's Base64
         
-        console.log(`🖼️ Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        console.log(`🖼️ Product: ${product.name}, Image URL: ${product.image_url ? 'Base64 data' : 'null'}`);
         
         return `
         <div class="price-card" data-product-id="${product.product_id}">
@@ -180,11 +178,9 @@ function setupProductSearch() {
         }
 
         productGrid.innerHTML = products.map(product => {
-            const imageSrc = product.image_url ? 
-                (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
-                null;
+            const imageSrc = product.image_url; // Direct use since it's Base64
             
-            console.log(`🔍 Search - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+            console.log(`🔍 Search - Product: ${product.name}, Image URL: ${product.image_url ? 'Base64 data' : 'null'}`);
             
             return `
             <div class="price-card" data-product-id="${product.product_id}">

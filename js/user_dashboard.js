@@ -95,11 +95,9 @@ function renderProducts(containerId, productList) {
     }
 
     container.innerHTML = productList.map(product => {
-        const imageSrc = product.image_url ? 
-            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
-            null;
+        const imageSrc = product.image_url; // Direct use since it's Base64
         
-        console.log(`🖼️ User Dashboard - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        console.log(`🖼️ User Dashboard - Product: ${product.name}, Image URL: ${product.image_url ? 'Base64 data' : 'null'}`);
         
         return `
         <div class="product-card">
@@ -657,11 +655,9 @@ function renderFarmerProducts(products) {
     }
     
     return products.map(product => {
-        const imageSrc = product.image_url ? 
-            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
-            null;
+        const imageSrc = product.image_url; // Direct use since it's Base64
         
-        console.log(`🖼️ Farmer Products - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        console.log(`🖼️ Farmer Products - Product: ${product.name}, Image URL: ${product.image_url ? 'Base64 data' : 'null'}`);
         
         return `
         <div class="product-card">
