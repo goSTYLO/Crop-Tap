@@ -785,8 +785,8 @@ function updateSubscriptionStatus() {
         subscriptionBadge.textContent = `${daysUntilDue} Days Left`;
         subscriptionBadge.className = 'subscription-badge warning';
     } else {
-        const planText = subscription.plan === 'yearly' ? 'Yearly' : 'Monthly';
-        subscriptionBadge.textContent = `${planText} Plan`;
+        const planText = subscription.plan_name || subscription.plan;
+        subscriptionBadge.textContent = planText;
         subscriptionBadge.className = 'subscription-badge';
     }
 }
@@ -802,6 +802,7 @@ function logout() {
 // Load Subscription Details
 function loadSubscriptionDetails() {
     const subscription = storage.getSubscriptionByUserId(currentUser.user_id);
+    console.log('🔍 Current subscription:', subscription);
     
     const planElement = document.getElementById('subscriptionPlan');
     const statusElement = document.getElementById('subscriptionStatus');
@@ -809,6 +810,8 @@ function loadSubscriptionDetails() {
     const dueDateElement = document.getElementById('subscriptionDueDate');
     const upgradeBtn = document.getElementById('upgradeBtn');
     const renewBtn = document.getElementById('renewBtn');
+    
+    console.log('🔍 Buttons found:', { upgradeBtn, renewBtn });
     
     if (!subscription) {
         // No subscription - show free trial
@@ -819,6 +822,7 @@ function loadSubscriptionDetails() {
         dueDateElement.textContent = 'N/A';
         upgradeBtn.style.display = 'inline-block';
         renewBtn.style.display = 'none';
+        console.log('✅ Showing upgrade button for free trial user');
         return;
     }
     
@@ -829,7 +833,7 @@ function loadSubscriptionDetails() {
     const daysUntilDue = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24));
     
     // Update plan
-    const planText = subscription.plan === 'yearly' ? 'Yearly Plan' : 'Monthly Plan';
+    const planText = subscription.plan_name || subscription.plan;
     planElement.textContent = planText;
     
     // Update status
@@ -857,61 +861,11 @@ function loadSubscriptionDetails() {
 
 // Subscription Actions
 function upgradeSubscription() {
-    if (confirm('Subscribe to Crop-Tap service?\n\nMonthly Plan: ₱100/month\nYearly Plan: ₱1,000/year (Save 17%)\n\nChoose your plan:')) {
-        const plan = prompt('Enter your preferred plan:\n1. monthly (₱100/month)\n2. yearly (₱1,000/year)\n\nType "monthly" or "yearly":');
-        
-        if (plan && (plan.toLowerCase() === 'monthly' || plan.toLowerCase() === 'yearly')) {
-            const selectedPlan = plan.toLowerCase();
-            const startDate = new Date().toISOString();
-            const dueDate = storage.calculateDueDate(startDate, selectedPlan);
-            
-            // Create subscription
-            const subscription = storage.createSubscription({
-                user_id: currentUser.user_id,
-                plan: selectedPlan,
-                start_date: startDate,
-                due_date: dueDate
-            });
-            
-            if (subscription) {
-                showNotification(`Successfully subscribed to ${selectedPlan} plan!`, 'success');
-                loadSubscriptionDetails();
-                updateSubscriptionStatus();
-            } else {
-                showNotification('Failed to create subscription. Please try again.', 'error');
-            }
-        } else if (plan) {
-            alert('Invalid plan selection. Please enter "monthly" or "yearly".');
-        }
-    }
+    showSubscriptionModal();
 }
 
 function renewSubscription() {
-    const subscription = storage.getSubscriptionByUserId(currentUser.user_id);
-    if (!subscription) {
-        alert('No subscription found. Please subscribe first.');
-        return;
-    }
-    
-    if (confirm(`Renew your ${subscription.plan} subscription?\n\nThis will extend your subscription for another period.`)) {
-        const startDate = new Date().toISOString();
-        const dueDate = storage.calculateDueDate(startDate, subscription.plan);
-        
-        // Update existing subscription
-        const updatedSubscription = storage.updateSubscription(subscription.id, {
-            start_date: startDate,
-            due_date: dueDate,
-            status: 'active'
-        });
-        
-        if (updatedSubscription) {
-            showNotification(`Successfully renewed ${subscription.plan} subscription!`, 'success');
-            loadSubscriptionDetails();
-            updateSubscriptionStatus();
-        } else {
-            showNotification('Failed to renew subscription. Please try again.', 'error');
-        }
-    }
+    showSubscriptionModal();
 }
 
 function updateWelcomeMessage() {
@@ -1170,6 +1124,78 @@ function removeToast(toast) {
 // Show notification helper (legacy - now uses toast)
 function showNotification(message, type = 'info') {
     showToast(type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Info', message, type);
+}
+
+// Subscription Modal Functions
+function showSubscriptionModal() {
+    console.log('🔄 showSubscriptionModal called');
+    const modal = document.getElementById('subscriptionModal');
+    console.log('🔍 Modal element:', modal);
+    
+    if (modal) {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        console.log('✅ Modal opened successfully');
+    } else {
+        console.error('❌ Modal element not found!');
+    }
+}
+
+// Expose function globally
+window.showSubscriptionModal = showSubscriptionModal;
+
+function selectSubscription(planType) {
+    const planNames = {
+        'free': 'Free Trial',
+        'monthly': 'Monthly Plan',
+        'yearly': 'Yearly Plan'
+    };
+    
+    const planPrices = {
+        'free': 0,
+        'monthly': 100,
+        'yearly': 960
+    };
+    
+    const billingPeriod = planType === 'free' ? 'monthly' : planType;
+    const price = planPrices[planType];
+    const planName = planNames[planType];
+    
+    // Update subscription in localStorage
+    const subscription = {
+        plan: planType,
+        plan_name: planName,
+        billing_period: billingPeriod,
+        price: price,
+        start_date: new Date().toISOString(),
+        due_date: new Date(Date.now() + (planType === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString(),
+        status: 'active',
+        user_id: currentUser.user_id
+    };
+    
+    // Save subscription
+    const subscriptions = storage.getData('subscriptions') || [];
+    const existingIndex = subscriptions.findIndex(sub => sub.user_id === currentUser.user_id);
+    
+    if (existingIndex >= 0) {
+        subscriptions[existingIndex] = subscription;
+    } else {
+        subscriptions.push(subscription);
+    }
+    
+    storage.saveData('subscriptions', subscriptions);
+    
+    // Update UI
+    updateSubscriptionStatus();
+    loadSubscriptionDetails();
+    
+    // Close modal
+    closeModal('subscriptionModal');
+    
+    // Show success message
+    showToast('Success', `Successfully subscribed to ${planName}!`, 'success');
+    
+    console.log(`✅ User ${currentUser.name} subscribed to ${planName}`);
 }
 
 

@@ -111,6 +111,206 @@
             background: #9ca3af !important;
             color: #6b7280 !important;
         }
+        
+        /* Subscription Modal Styles */
+        .subscription-modal-content {
+            max-width: 90vw;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .subscription-plan {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: white;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .subscription-plan:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+        }
+        
+        .subscription-plan.featured {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        
+        .plan-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .plan-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .plan-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .plan-price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.25rem;
+            flex-direction: column;
+        }
+        
+        .price-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #10b981;
+        }
+        
+        .price-period {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .yearly-savings {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .original-price {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+        
+        .savings {
+            font-size: 0.75rem;
+            color: #10b981;
+            font-weight: 600;
+            background: #f0fdf4;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+        }
+        
+        .plan-features {
+            margin-bottom: 1.5rem;
+        }
+        
+        .plan-features ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .plan-features li {
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .plan-button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .plan-button:hover {
+            border-color: #10b981;
+            color: #10b981;
+        }
+        
+        .plan-button.primary {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        
+        .plan-button.primary:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+        
+        .subscription-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        
+        .subscription-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0;
+        }
+        
+        .note-icon {
+            font-size: 1rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .subscription-modal-content {
+                max-width: 95vw;
+                margin: 1rem;
+            }
+            
+            
+            .subscription-plans {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .subscription-plan {
+                padding: 1rem;
+            }
+            
+            .price-amount {
+                font-size: 1.5rem;
+            }
+            
+            .plan-features li {
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -311,10 +511,10 @@
                         </div>
                     </div>
                     <div class="subscription-actions" style="margin-top: 1rem;">
-                        <button class="btn-primary" onclick="upgradeSubscription()" style="display: none;" id="upgradeBtn" data-i18n="subscribe_now">
+                        <button class="btn-primary" onclick="showSubscriptionModal()" style="display: none;" id="upgradeBtn" data-i18n="subscribe_now">
                             Subscribe Now
                         </button>
-                        <button class="btn-secondary" onclick="renewSubscription()" style="display: none;" id="renewBtn" data-i18n="renew_subscription">
+                        <button class="btn-secondary" onclick="showSubscriptionModal()" style="display: none;" id="renewBtn" data-i18n="renew_subscription">
                             Renew Subscription
                         </button>
                     </div>
@@ -418,6 +618,95 @@
                 <button type="submit" class="btn-primary">Place Order</button>
                 <button type="button" class="btn-secondary" onclick="closeModal('checkoutModal')">Cancel</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Subscription Modal -->
+    <div class="modal" id="subscriptionModal">
+        <div class="modal-content subscription-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Choose Your Subscription Plan</h2>
+                <button class="close-modal-btn" onclick="closeModal('subscriptionModal')">✕</button>
+            </div>
+            
+            
+            <div class="subscription-plans">
+                <div class="subscription-plan" data-plan="free">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Free Trial</h3>
+                        <div class="plan-price">
+                            <span class="price-amount">₱0</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>✅ Browse all products</li>
+                            <li>✅ Add items to cart</li>
+                            <li>✅ Place orders</li>
+                            <li>✅ Basic customer support</li>
+                            <li>❌ Priority delivery</li>
+                            <li>❌ Exclusive farmer deals</li>
+                        </ul>
+                    </div>
+                    <button class="plan-button" onclick="selectSubscription('free')">Current Plan</button>
+                </div>
+
+                <div class="subscription-plan featured" data-plan="monthly">
+                    <div class="plan-badge">Monthly</div>
+                    <div class="plan-header">
+                        <h3 class="plan-name">Monthly Plan</h3>
+                        <div class="plan-price">
+                            <span class="price-amount">₱100</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>✅ Everything in Free</li>
+                            <li>✅ Priority delivery (24-48 hours)</li>
+                            <li>✅ Exclusive farmer deals (up to 20% off)</li>
+                            <li>✅ Early access to new products</li>
+                            <li>✅ Premium customer support</li>
+                            <li>✅ Order tracking notifications</li>
+                        </ul>
+                    </div>
+                    <button class="plan-button primary" onclick="selectSubscription('monthly')">Choose Monthly</button>
+                </div>
+
+                <div class="subscription-plan" data-plan="yearly">
+                    <div class="plan-badge">Yearly</div>
+                    <div class="plan-header">
+                        <h3 class="plan-name">Yearly Plan</h3>
+                        <div class="plan-price">
+                            <span class="price-amount">₱960</span>
+                            <span class="price-period">/year</span>
+                        </div>
+                        <div class="yearly-savings">
+                            <span class="original-price">₱1,200</span>
+                            <span class="savings">Save ₱240</span>
+                        </div>
+                    </div>
+                    <div class="plan-features">
+                        <ul>
+                            <li>✅ Everything in Monthly</li>
+                            <li>✅ Same-day delivery</li>
+                            <li>✅ Bulk order discounts (up to 30% off)</li>
+                            <li>✅ Dedicated account manager</li>
+                            <li>✅ Custom delivery scheduling</li>
+                            <li>✅ Advanced order analytics</li>
+                        </ul>
+                    </div>
+                    <button class="plan-button" onclick="selectSubscription('yearly')">Choose Yearly</button>
+                </div>
+            </div>
+            
+            <div class="subscription-footer">
+                <p class="subscription-note">
+                    <span class="note-icon">ℹ️</span>
+                    All plans include secure payment processing and 30-day money-back guarantee.
+                </p>
+            </div>
         </div>
     </div>
 
