@@ -58,7 +58,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kamatis.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -72,7 +72,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 35,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/sitaw.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -86,7 +86,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kalabasa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -100,7 +100,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/ampalaya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -114,7 +114,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 35,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/pechay.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -130,7 +130,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/mangga.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -144,7 +144,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/lakatan.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -158,7 +158,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/kalamansi.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -172,7 +172,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/pinya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -186,7 +186,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/saging.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -202,7 +202,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 100,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/bigas.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -216,7 +216,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 50,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/mais.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -230,7 +230,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/oats.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -246,7 +246,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/oregano.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -260,7 +260,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/basil.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -277,7 +277,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/talong.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -291,7 +291,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/okra.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -305,7 +305,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/patola.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -319,7 +319,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/mustasa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -333,7 +333,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kangkong.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -349,7 +349,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/papaya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -363,7 +363,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/guyabano.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -377,7 +377,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/santol.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -391,7 +391,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 18,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/lansones.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -405,7 +405,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 22,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/rambutan.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -421,7 +421,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/monggo.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -435,7 +435,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/sesame.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -449,7 +449,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/quinoa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -465,7 +465,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 12,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/mint.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -479,7 +479,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 10,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/rosemary.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -558,7 +558,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kamatis.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -572,7 +572,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 35,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/sitaw.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -586,7 +586,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kalabasa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -600,7 +600,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/ampalaya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -614,7 +614,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 35,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/pechay.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -630,7 +630,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/mangga.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -644,7 +644,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/lakatan.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -658,7 +658,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/kalamansi.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -672,7 +672,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/pinya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -686,7 +686,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/saging.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -702,7 +702,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 100,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/bigas.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -716,7 +716,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 50,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/mais.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -730,7 +730,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/oats.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -746,7 +746,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/oregano.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -760,7 +760,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/basil.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -777,7 +777,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/talong.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -791,7 +791,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/okra.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -805,7 +805,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/patola.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -819,7 +819,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/mustasa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -833,7 +833,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'vegetables',
-                    image_url: null,
+                    image_url: 'assets/kangkong.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -849,7 +849,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 20,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/papaya.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -863,7 +863,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/guyabano.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -877,7 +877,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 30,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/santol.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -891,7 +891,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 18,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/lansones.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -905,7 +905,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 22,
                     category: 'fruits',
-                    image_url: null,
+                    image_url: 'assets/rambutan.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -921,7 +921,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 40,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/monggo.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -935,7 +935,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 25,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/sesame.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -949,7 +949,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 15,
                     category: 'grains',
-                    image_url: null,
+                    image_url: 'assets/quinoa.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -965,7 +965,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 12,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/mint.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -979,7 +979,7 @@ class StorageService {
                     unit: 'kg',
                     quantity: 10,
                     category: 'herbs',
-                    image_url: null,
+                    image_url: 'assets/rosemary.jpg',
                     is_available: true,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -1018,6 +1018,16 @@ class StorageService {
     saveData(key, data) {
         try {
             localStorage.setItem(key, JSON.stringify(data));
+            
+            // Trigger sync event for cross-tab communication (debounced)
+            if (typeof window.TabSync !== 'undefined') {
+                // Use a small delay to prevent excessive calls
+                clearTimeout(this._syncTimeout);
+                this._syncTimeout = setTimeout(() => {
+                    window.TabSync.notifyChange(key, data);
+                }, 10);
+            }
+            
             return true;
         } catch (error) {
             console.error(`Error saving data for key ${key}:`, error);
@@ -1079,6 +1089,12 @@ class StorageService {
         
         products.push(newProduct);
         this.saveData('products', products);
+        
+        // Trigger custom event for product creation
+        if (typeof window.TabSync !== 'undefined') {
+            window.TabSync.triggerEvent('product_created', newProduct);
+        }
+        
         return newProduct;
     }
 
@@ -1168,6 +1184,12 @@ class StorageService {
         }
         
         this.saveData('cart_items', cartItems);
+        
+        // Trigger custom event for cart update
+        if (typeof window.TabSync !== 'undefined') {
+            window.TabSync.triggerEvent('cart_updated', { userId, productId, quantity });
+        }
+        
         return true;
     }
 
@@ -1249,6 +1271,11 @@ class StorageService {
         
         this.saveData('orders', orders);
         this.saveData('order_items', orderItems);
+        
+        // Trigger custom event for order creation
+        if (typeof window.TabSync !== 'undefined') {
+            window.TabSync.triggerEvent('order_placed', order);
+        }
         
         return order;
     }

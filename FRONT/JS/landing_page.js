@@ -49,7 +49,34 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAuth();
     loadProducts();
     setupProductSearch();
+    updateCartBadge();
 });
+
+// Global refresh functions for TabSync
+window.refreshProducts = function() {
+    console.log('🔄 refreshProducts called - reloading product display');
+    loadProducts();
+    setupProductSearch();
+};
+
+window.refreshCart = function() {
+    updateCartBadge();
+};
+
+window.updateCartBadge = function() {
+    const cartBadge = document.getElementById('cartBadge');
+    if (!cartBadge) return;
+
+    const currentUser = auth.getCurrentUser();
+    if (!currentUser || currentUser.role !== 'consumer') {
+        cartBadge.style.display = 'none';
+        return;
+    }
+
+    const cartCount = cartService.getCartItemCount(currentUser.user_id);
+    cartBadge.textContent = cartCount;
+    cartBadge.style.display = cartCount > 0 ? 'inline' : 'none';
+};
 
 // Initialize authentication state
 function initializeAuth() {
@@ -81,6 +108,7 @@ function loadProducts() {
     if (!productGrid) return;
 
     const products = productService.getAllProducts();
+    console.log('🔄 loadProducts called - refreshing product grid with', products.length, 'products');
     
     if (products.length === 0) {
         productGrid.innerHTML = `

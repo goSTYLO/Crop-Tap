@@ -30,31 +30,68 @@ function init() {
     setupDashboardInteractions();
 }
 
+// Global refresh functions for TabSync
+window.refreshProducts = function() {
+    console.log('🔄 refreshProducts called in user dashboard - reloading product display');
+    loadProducts();
+};
+
+window.refreshOrderHistory = function() {
+    renderOrders();
+    updateDashboardStats();
+};
+
+window.refreshCart = function() {
+    updateCartUI();
+};
+
+window.updateCartBadge = function() {
+    updateCartUI();
+};
+
 // Load products from localStorage
 function loadProducts() {
     const products = productService.getAllProducts();
-    const availableProducts = products.filter(p => p.quantity > 0);
+    // Show all products, not just available ones - let the UI handle out-of-stock display
+    const allProducts = products; // Don't filter by quantity
+    console.log('🔄 loadProducts called in user dashboard - refreshing product display with', allProducts.length, 'total products');
     
     // Debug: Log products and their categories
     console.log('All products loaded:', products.length);
-    console.log('Available products:', availableProducts.length);
+    console.log('Available products:', products.filter(p => p.quantity > 0).length);
+    console.log('Out of stock products:', products.filter(p => p.quantity === 0).length);
     console.log('Product categories:', [...new Set(products.map(p => p.category))]);
     
-    // Render featured products (first 5)
+    // Render featured products (first 5 available)
+    const availableProducts = products.filter(p => p.quantity > 0);
     renderProducts('featuredProducts', availableProducts.slice(0, 5));
-    // Render all products
-    renderProducts('allProducts', availableProducts);
+    // Render all products (including out of stock)
+    renderProducts('allProducts', allProducts);
 }
 
 // Render Products
 function renderProducts(containerId, productList) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container) {
+        console.log(`❌ Container ${containerId} not found - cannot render products`);
+        return;
+    }
+    console.log(`🔄 Rendering ${productList.length} products in container ${containerId}`);
 
     if (productList.length === 0) {
         container.innerHTML = `<div class="no-products" data-i18n-dynamic="no_products"></div>`;
         translateDynamicText(); // Translate immediately
         return;
+    }
+
+    // Debug: Log first product details to see if data is fresh
+    if (productList.length > 0) {
+        console.log('🔄 First product data:', {
+            name: productList[0].name,
+            quantity: productList[0].quantity,
+            is_available: productList[0].is_available,
+            updated_at: productList[0].updated_at
+        });
     }
 
     container.innerHTML = productList.map(product => `

@@ -4,6 +4,8 @@ let currentUserRole = 'farmer';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Admin Dashboard initializing...');
+    
     // Check authentication
     if (!auth.isLoggedIn() || !auth.isFarmer()) {
         alert('Access denied. Farmers only.');
@@ -12,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     currentUser = auth.getCurrentUser();
+    console.log('👤 Current user:', currentUser);
+    
     initializeApp();
     loadProductsTable();
     loadOrdersTable();
@@ -21,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof initLanguageControls === 'function') {
         initLanguageControls();
     }
+    
+    console.log('✅ Admin Dashboard initialized successfully');
 });
 
 function initializeApp() {
@@ -137,6 +143,21 @@ function initializeApp() {
     if (userNavItem) userNavItem.style.display = 'none';
     if (logsNavItem) logsNavItem.style.display = 'none';
 }
+
+// Global refresh functions for TabSync
+window.refreshProductList = function() {
+    loadProductsTable();
+    updateDashboardStats();
+};
+
+window.refreshOrderList = function() {
+    loadOrdersTable();
+    updateDashboardStats();
+};
+
+window.refreshDashboardStats = function() {
+    updateDashboardStats();
+};
 
 function navigateToPage(page) {
     // Update active nav item
