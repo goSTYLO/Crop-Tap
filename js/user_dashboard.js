@@ -117,13 +117,15 @@ function renderProducts(containerId, productList) {
                 <p class="product-description">${product.description}</p>
                 <div class="product-meta">
                     <div>
-                        <span class="price">₱${product.price.toFixed(2)}</span>
-                        <span class="unit">/ ${product.unit}</span>
-                    </div>
-                    <div class="product-actions">
-                        <button class="btn btn-secondary" onclick="addToCart('${product.product_id}')">Add to Cart</button>
+                        <div class="product-price">₱${product.price.toFixed(2)}</div>
+                        <div class="product-unit">per ${product.unit}</div>
                     </div>
                 </div>
+                <button class="add-to-cart-btn ${product.is_available === false ? 'disabled' : ''}" 
+                    onclick="${product.is_available === false ? 'showOutOfStockMessage()' : `addToCart('${product.product_id}')`}"
+                    ${product.is_available === false ? 'disabled' : ''}>
+                    ${product.is_available === false ? 'No Stock' : 'Add to Cart'}
+                </button>
             </div>
         </div>`;
     }).join('');
