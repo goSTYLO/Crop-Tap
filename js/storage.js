@@ -3,19 +3,30 @@
 
 // Helper function to get correct image path for GitHub Pages
 function getImagePath(imageUrl) {
+    console.log('🔍 getImagePath called with:', imageUrl);
+    console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 Hostname:', window.location.hostname);
+    console.log('🔍 Pathname:', window.location.pathname);
+    
     // Check if we're on GitHub Pages (URL contains github.io)
     if (window.location.hostname.includes('github.io')) {
         // Extract repository name from URL
         const pathParts = window.location.pathname.split('/');
         const repoName = pathParts[1]; // Repository name is usually the first part after domain
         
+        console.log('🔍 Path parts:', pathParts);
+        console.log('🔍 Repository name:', repoName);
+        
         if (repoName && repoName !== '') {
             // Return absolute path for GitHub Pages
-            return `/${repoName}/${imageUrl}`;
+            const fullPath = `/${repoName}/${imageUrl}`;
+            console.log('🔍 Generated GitHub Pages path:', fullPath);
+            return fullPath;
         }
     }
     
     // For local development or other hosting, use relative path
+    console.log('🔍 Using relative path:', imageUrl);
     return imageUrl;
 }
 

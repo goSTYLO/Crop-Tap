@@ -126,11 +126,18 @@ function loadProducts() {
         return;
     }
 
-    productGrid.innerHTML = products.map(product => `
+    productGrid.innerHTML = products.map(product => {
+        const imageSrc = product.image_url ? 
+            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
+            null;
+        
+        console.log(`🖼️ Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        
+        return `
         <div class="price-card" data-product-id="${product.product_id}">
             <div class="product-image">
                 ${product.image_url ? 
-                    `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
+                    `<img src="${imageSrc}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
                     `<div class="placeholder-image">🌾</div>`
                 }
             </div>
@@ -145,8 +152,8 @@ function loadProducts() {
                 `<button class="btn add-to-cart-btn" onclick="addToCart('${product.product_id}')">Add to Cart</button>` :
                 `<button class="btn" onclick="alert('Please log in as a buyer to add items to cart')">Login to Buy</button>`
             }
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 // Setup product search functionality
@@ -172,11 +179,18 @@ function setupProductSearch() {
             return;
         }
 
-        productGrid.innerHTML = products.map(product => `
+        productGrid.innerHTML = products.map(product => {
+            const imageSrc = product.image_url ? 
+                (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
+                null;
+            
+            console.log(`🔍 Search - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+            
+            return `
             <div class="price-card" data-product-id="${product.product_id}">
                 <div class="product-image">
                     ${product.image_url ? 
-                        `<img src="${typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
+                        `<img src="${imageSrc}" alt="${product.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="placeholder-image" style="display:none;">🌾</div>` :
                         `<div class="placeholder-image">🌾</div>`
                     }
                 </div>
@@ -191,8 +205,8 @@ function setupProductSearch() {
                     `<button class="btn add-to-cart-btn" onclick="addToCart('${product.product_id}')">Add to Cart</button>` :
                     `<button class="btn" onclick="alert('Please log in as a buyer to add items to cart')">Login to Buy</button>`
                 }
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     });
 }
 
