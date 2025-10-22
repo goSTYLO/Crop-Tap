@@ -94,11 +94,18 @@ function renderProducts(containerId, productList) {
         });
     }
 
-    container.innerHTML = productList.map(product => `
+    container.innerHTML = productList.map(product => {
+        const imageSrc = product.image_url ? 
+            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
+            null;
+        
+        console.log(`🖼️ User Dashboard - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        
+        return `
         <div class="product-card">
             <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
                 ${product.image_url ? 
-                    `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<img src="${imageSrc}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🌾</span>` :
                     `<span>🌾</span>`
                 }
                 <span class="stock-badge ${product.is_available === false ? 'out-of-stock' : ''}">
@@ -110,17 +117,17 @@ function renderProducts(containerId, productList) {
                 <p class="product-description">${product.description}</p>
                 <div class="product-meta">
                     <div>
-                        <div class="product-price">₱${product.price.toFixed(2)}</div>
-                        <div class="product-unit" data-i18n-dynamic="unit_per" data-unit="${product.unit}"></div>
+                        <span class="price">₱${product.price.toFixed(2)}</span>
+                        <span class="unit">/ ${product.unit}</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="showProductDetail('${product.product_id}')">View Details</button>
+                        <button class="btn btn-secondary" onclick="showAddToCartModal('${product.product_id}')">Add to Cart</button>
                     </div>
                 </div>
-                <button class="add-to-cart-btn ${product.is_available === false ? 'disabled' : ''}" 
-                    onclick="${product.is_available === false ? 'showOutOfStockMessage()' : `addToCart('${product.product_id}')`}"
-                    ${product.is_available === false ? 'disabled' : ''}
-                    data-i18n-dynamic="add_to_cart">${product.is_available === false ? 'No Stock' : 'Add to Cart'}</button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 
     translateDynamicText(); // Translate dynamic content
 }
@@ -443,6 +450,13 @@ function renderOrders() {
     const ordersList = document.getElementById('ordersList');
     if (!ordersList) return;
     
+    // Check if currentUser exists
+    if (!currentUser) {
+        console.log('⚠️ No current user found, skipping order rendering');
+        ordersList.innerHTML = '<p style="text-align: center; color: #6b7280;">Please log in to view orders</p>';
+        return;
+    }
+    
     const buyerOrders = storage.getOrdersByBuyer(currentUser.user_id);
     const orderItems = storage.getData('order_items') || [];
     const allProducts = productService.getAllProducts();
@@ -641,11 +655,18 @@ function renderFarmerProducts(products) {
         return '<p style="text-align: center; color: #6b7280; padding: 2rem; grid-column: 1/-1;">No products in this category</p>';
     }
     
-    return products.map(product => `
+    return products.map(product => {
+        const imageSrc = product.image_url ? 
+            (typeof getImagePath === 'function' ? getImagePath(product.image_url) : product.image_url) : 
+            null;
+        
+        console.log(`🖼️ Farmer Products - Product: ${product.name}, Original URL: ${product.image_url}, Final URL: ${imageSrc}`);
+        
+        return `
         <div class="product-card">
             <div class="product-image" style="background: linear-gradient(135deg, #4a7c2c 0%, #6ba83d 100%);">
                 ${product.image_url ? 
-                    `<img src="${product.image_url}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<img src="${imageSrc}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="console.error('Failed to load image:', this.src); this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none;">🌾</span>` :
                     `<span>🌾</span>`
                 }
                 <span class="stock-badge ${product.is_available === false ? 'out-of-stock' : ''}">
@@ -667,8 +688,8 @@ function renderFarmerProducts(products) {
                     ${product.is_available === false ? 'No Stock' : 'Add to Cart'}
                 </button>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
 // Filter farmer products by category
