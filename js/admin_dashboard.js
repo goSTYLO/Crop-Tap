@@ -450,9 +450,18 @@ function handleProductSubmit(e) {
         unit: document.getElementById('productUnit').value,
         description: document.getElementById('productDescription').value,
         category: document.getElementById('productCategory').value,
-        image_url: null,
         farmer_id: currentUser.user_id
     };
+
+    // If editing existing product, preserve existing image_url
+    if (productId) {
+        const existingProduct = productService.getProductById(productId);
+        if (existingProduct) {
+            productData.image_url = existingProduct.image_url;
+        }
+    } else {
+        productData.image_url = null; // New product starts with no image
+    }
 
     // If image file selected, convert to Base64 then submit
     const fileInput = document.getElementById('productImageFile');
@@ -506,6 +515,13 @@ function editProduct(id) {
         document.getElementById('productUnit').value = product.unit;
         document.getElementById('productDescription').value = product.description;
         document.getElementById('productCategory').value = product.category || 'vegetables';
+        
+        // Clear file input to prevent confusion
+        const fileInput = document.getElementById('productImageFile');
+        if (fileInput) {
+            fileInput.value = '';
+        }
+        
         const preview = document.getElementById('productImagePreview');
         if (product.image_url) {
             preview.src = product.image_url;
@@ -776,6 +792,31 @@ function handleSettingsSubmit(e) {
 // Modal Functions
 function openModal(modalId) {
     document.getElementById(modalId).classList.add('active');
+    
+    // Reset product form when opening for new product (only if productId is empty)
+    if (modalId === 'productModal') {
+        const productIdField = document.getElementById('productId');
+        
+        // Only reset if this is for a new product (productId is empty)
+        if (!productIdField.value) {
+            document.getElementById('productId').value = '';
+            document.getElementById('productModalTitle').textContent = 'Add New Product';
+            document.getElementById('productForm').reset();
+            
+            // Clear image preview
+            const preview = document.getElementById('productImagePreview');
+            if (preview) {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+            
+            // Clear file input
+            const fileInput = document.getElementById('productImageFile');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        }
+    }
 }
 
 function closeModal(modalId) {
